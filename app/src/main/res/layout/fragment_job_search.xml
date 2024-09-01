@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.jobsearch.JobSearchFragment">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="JobSearchFragment"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_search_filters"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_navigate_to_search_filters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Navigation to SearchFiltersFragment"
+        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_job_details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_navigate_to_job_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Navigation to JobDetailsFragment"
+        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_favorite_jobs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_navigate_to_favorite_jobs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Navigation to FavoriteJobsFragment"
+        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_team_information"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_navigate_to_team_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Navigation to TeamInformationFragment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

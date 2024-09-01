@@ -36,10 +36,14 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
 dependencies {
+    val nav_version = "2.7.7"
+    val fragment_version = "1.7.1"
+
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
 
@@ -55,4 +59,8 @@ dependencies {
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
+
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("androidx.fragment:fragment-ktx:$fragment_version")
 }
