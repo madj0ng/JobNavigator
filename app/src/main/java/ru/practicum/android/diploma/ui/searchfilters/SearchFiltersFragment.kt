@@ -8,14 +8,19 @@ import androidx.fragment.app.Fragment
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
 
 class SearchFiltersFragment : Fragment() {
-    private lateinit var binding: FragmentSearchFiltersBinding
+    private var binding: FragmentSearchFiltersBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         binding = FragmentSearchFiltersBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

@@ -10,30 +10,44 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
 
 class JobSearchFragment : Fragment() {
-    private lateinit var binding: FragmentJobSearchBinding
+    private var binding: FragmentJobSearchBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         binding = FragmentJobSearchBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonNavigateToSearchFilters.setOnClickListener { findNavController().navigate(
-            R.id.action_jobSearchFragment_to_searchFiltersFragment
-        ) }
-        binding.buttonNavigateToJobDetails.setOnClickListener { findNavController().navigate(
-            R.id.action_jobSearchFragment_to_jobDetailsFragment
-        ) }
-        binding.buttonNavigateToFavoriteJobs.setOnClickListener { findNavController().navigate(
-            R.id.action_jobSearchFragment_to_favoriteJobsFragment
-        ) }
-        binding.buttonNavigateToTeamInformation.setOnClickListener { findNavController().navigate(
-            R.id.action_jobSearchFragment_to_teamInformationFragment
-        ) }
+        binding?.buttonNavigateToSearchFilters?.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_jobSearchFragment_to_searchFiltersFragment
+            )
+        }
+        binding?.buttonNavigateToJobDetails?.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_jobSearchFragment_to_jobDetailsFragment
+            )
+        }
+        binding?.buttonNavigateToFavoriteJobs?.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_jobSearchFragment_to_favoriteJobsFragment
+            )
+        }
+        binding?.buttonNavigateToTeamInformation?.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_jobSearchFragment_to_teamInformationFragment
+            )
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

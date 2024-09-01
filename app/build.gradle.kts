@@ -41,8 +41,8 @@ android {
 }
 
 dependencies {
-    val nav_version = "2.7.7"
-    val fragment_version = "1.7.1"
+    val navVersion = "2.7.7"
+    val fragmentVersion = "1.8.2"
 
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
@@ -55,12 +55,12 @@ dependencies {
     testImplementation(libs.unitTests.junit)
     // endregion
 
-    // region UI tests
+    // region UI testss
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
 
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-    implementation("androidx.fragment:fragment-ktx:$fragment_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
 }
