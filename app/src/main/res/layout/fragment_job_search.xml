@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_search_filters"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/button_navigate_to_search_filters"
@@ -24,7 +25,8 @@
         android:text="Navigation to SearchFiltersFragment"
         app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_job_details"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <Button
         android:id="@+id/button_navigate_to_job_details"
@@ -33,7 +35,8 @@
         android:text="Navigation to JobDetailsFragment"
         app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_favorite_jobs"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_search_filters" />
 
     <Button
         android:id="@+id/button_navigate_to_favorite_jobs"
@@ -42,7 +45,8 @@
         android:text="Navigation to FavoriteJobsFragment"
         app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_team_information"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_job_details" />
 
     <Button
         android:id="@+id/button_navigate_to_team_information"
@@ -51,5 +55,6 @@
         android:text="Navigation to TeamInformationFragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_favorite_jobs" />
 </androidx.constraintlayout.widget.ConstraintLayout>
