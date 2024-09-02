@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
+    id("kotlin-kapt")
 }
 
 android {
@@ -41,8 +42,6 @@ android {
 }
 
 dependencies {
-    val navVersion = "2.7.7"
-    val fragmentVersion = "1.8.2"
 
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
@@ -60,7 +59,31 @@ dependencies {
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
 
-    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+    // navigation
+    implementation(libs.androidX.navigation.fragment)
+    implementation(libs.androidX.navigation.ui)
+    // end navigation
+
+    // fragment
+    implementation(libs.androidX.fragment)
+    // end fragment
+
+    // database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+    // end database
+
+    // dependency Injection
+    implementation(libs.koin)
+    // end dependency Injection
+
+    // network
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.retrofit2.converter.gson)
+    // end network
+
+    // image
+    implementation(libs.glide)
+    // end image
 }
