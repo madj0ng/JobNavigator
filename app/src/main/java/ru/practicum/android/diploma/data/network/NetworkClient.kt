@@ -4,6 +4,6 @@ import ru.practicum.android.diploma.data.dto.NetworkResponse
 
 interface NetworkClient {
 
-    suspend fun search(dto: Any): NetworkResponse
+    suspend fun doRequest(dto: Any): NetworkResponse
 
 }
