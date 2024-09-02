@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
+    id("kotlin-kapt")
 }
 
 android {
@@ -69,7 +70,8 @@ dependencies {
 
     // database
     implementation(libs.room.runtime)
-    implementation(libs.room.compiler)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
     // end database
 
     // dependency Injection

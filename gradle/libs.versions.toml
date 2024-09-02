@@ -64,6 +64,7 @@ androidX-fragment = { group = "androidx.fragment", name = "fragment-ktx", versio
 
 # Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 # Dependency Injection
