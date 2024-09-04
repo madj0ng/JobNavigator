@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_information_background"
+    android:background="@color/day_white_night_black"
     tools:context=".ui.teaminformation.TeamInformationFragment">
 
     <androidx.constraintlayout.widget.Guideline

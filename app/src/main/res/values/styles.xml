@@ -3,7 +3,7 @@
 
     <style name="CustomBottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
-        <item name="itemBackground">@color/white</item>
+        <item name="itemBackground">@color/white_universal</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
     </style>
 
@@ -19,17 +19,17 @@
 
     <style name="PageTitle" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_22sp</item>
-        <item name="android:textColor">@color/text_page_title_color</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
     </style>
 
     <style name="PageListItem" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_16sp</item>
-        <item name="android:textColor">@color/text_page_title_color</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
     </style>
 
     <style name="PageListTitle" parent="TextDisplayBold700">
         <item name="android:textSize">@dimen/dim_32sp</item>
-        <item name="android:textColor">@color/text_page_title_color</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
     </style>
 </resources>
 
