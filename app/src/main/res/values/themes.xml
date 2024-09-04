@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">@color/black_universal</item>
         <item name="colorAccent">@color/blue</item>
         <item name="colorOnBackground">@color/black_universal</item>
+        <item name="android:statusBarColor">@color/black_universal</item>
 
         <!-- Цвета текста -->
         <item name="android:textColorPrimary">@color/black_universal</item>
