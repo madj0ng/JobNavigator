@@ -2,6 +2,18 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PracticumAndroidDiploma" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/black_universal</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="colorOnBackground">@color/white_universal</item>
+        <item name="android:statusBarColor">@color/black_universal</item>
+
+        <!-- Цвета текста -->
+        <item name="android:textColorPrimary">@color/white_universal</item>
+        <item name="android:textColorSecondary">@color/white_universal</item>
+        <item name="android:background">@color/black_universal</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Цвет фона окна -->
+        <item name="android:windowBackground">@color/black_universal</item>
     </style>
 </resources>
