@@ -3,6 +3,20 @@
     <style name="Base.Theme.PracticumAndroidDiploma" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/black_universal</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="colorOnBackground">@color/white_universal</item>
+
+        <!-- Цвета текста -->
+        <color name="textColorPrimary">@color/black_universal</color>
+        <color name="textColorSecondary">@color/black_universal</color>
+        <color name="hintColor">@color/gray</color>
+
+        <!-- Цвет фона окна -->
+        <color name="windowBackground">@color/white_universal</color>
+
+
     </style>
 
     <style name="Theme.PracticumAndroidDiploma" parent="Base.Theme.PracticumAndroidDiploma" />
