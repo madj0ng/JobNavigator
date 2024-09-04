@@ -20,4 +20,3 @@ class Connected(private val context: Context) {
         return connectionStatus
     }
 }
-
