@@ -5,7 +5,7 @@ Clean Architecture, т.е. с разбиением на слои data, domain, p
 
 ## Макет
 
-(Ссылка на макет)[https://bit.ly/4cofZRb]
+[Ссылка на макет](https://bit.ly/4cofZRb)
 
 ## Технологии
 
