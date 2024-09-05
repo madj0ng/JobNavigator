@@ -8,6 +8,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.util.Connected
+import java.io.IOException
 
 class RetrofitNetworkClient(
     private val context: Context,
@@ -28,7 +29,7 @@ class RetrofitNetworkClient(
                 try {
                     val response = hhApi.search(dto.request, BuildConfig.HH_ACCESS_TOKEN)
                     response.apply { resultCode = RESULT_CODE_SUCCESS }
-                } catch (e: Throwable) {
+                } catch (e: IOException) {
                     NetworkResponse().apply {
                         resultCode = ERROR_CODE_SERVER
                         message = context.getString(R.string.search_error_server)
