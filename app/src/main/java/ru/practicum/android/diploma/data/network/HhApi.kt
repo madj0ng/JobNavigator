@@ -10,6 +10,9 @@ interface HhApi {
         "HH-User-Agent: Job Navigator (klimushin1996@mail.ru)"
     )
     @GET("/vacancies")
-    suspend fun search(@retrofit2.http.Query("search_field") request: String, accessToken: String) : VacancySearchResponse
+    suspend fun search(
+        @retrofit2.http.Query("search_field") request: String,
+        accessToken: String
+    ): VacancySearchResponse
 }
 
