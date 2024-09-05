@@ -17,6 +17,23 @@
         <item name="android:textFontWeight" tools:ignore="NewApi">700</item>
     </style>
 
+    <style name="TextDisplayRegylar400">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight" tools:ignore="NewApi">400</item>
+    </style>
+
+    <style name="SearchEditText" parent="TextDisplayRegylar400">
+        <item name="android:textColor">@color/black_universal</item>
+        <item name="android:textColorHint">@color/day_gray_night_white</item>
+        <item name="android:textSize">@dimen/dim_16sp</item>
+        <item name="android:paddingStart">@dimen/dim_16sp</item>
+        <item name="android:lines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:background">@drawable/sh_grey_round12</item>
+    </style>
+
+    <!-- Start Team Infromation -->
     <style name="PageTitle" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_22sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
@@ -31,13 +48,18 @@
         <item name="android:textSize">@dimen/dim_32sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
+    <!-- End Team Infromation -->
 
-<!--Start Search-->
+    <!-- Start Search -->
     <style name="PageErrorText" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_22sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
-<!--End Search-->
+
+    <style name="JobSearhEditText" parent="SearchEditText">
+        <item name="android:inputType">text</item>
+    </style>
+    <!-- End Search -->
 
 </resources>
 
