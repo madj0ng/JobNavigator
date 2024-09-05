@@ -31,5 +31,13 @@
         <item name="android:textSize">@dimen/dim_32sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
+
+<!--Start Search-->
+    <style name="PageErrorText" parent="TextDisplayMedium500">
+        <item name="android:textSize">@dimen/dim_22sp</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
+    </style>
+<!--End Search-->
+
 </resources>
 
