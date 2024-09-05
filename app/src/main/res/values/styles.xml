@@ -26,11 +26,9 @@
         <item name="android:textColor">@color/black_universal</item>
         <item name="android:textColorHint">@color/day_gray_night_white</item>
         <item name="android:textSize">@dimen/dim_16sp</item>
-        <item name="android:paddingStart">@dimen/dim_16sp</item>
         <item name="android:lines">1</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionSearch</item>
-        <item name="android:background">@drawable/sh_grey_round12</item>
     </style>
 
     <!-- Start Team Infromation -->
@@ -58,6 +56,12 @@
 
     <style name="JobSearhEditText" parent="SearchEditText">
         <item name="android:inputType">text</item>
+        <item name="android:background">@drawable/sh_day_lgrey_night_gray_round12</item>
+    </style>
+
+    <style name="ListTextCount" parent="TextDisplayRegylar400">
+        <item name="android:background">@drawable/sh_blue_round12</item>
+        <item name="android:textColor">@color/day_white_night_black</item>
     </style>
     <!-- End Search -->
 
