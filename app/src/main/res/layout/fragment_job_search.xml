@@ -202,7 +202,7 @@
         android:id="@+id/ivErrorServer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="@string/search_error_server"
+        android:contentDescription="@string/error_server"
         android:scaleType="centerCrop"
         android:src="@drawable/error_server"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -217,7 +217,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dim_16dp"
-        android:text="@string/search_error_server"
+        android:text="@string/error_server"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/ivErrorServer" />
