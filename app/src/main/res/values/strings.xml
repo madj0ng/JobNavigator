@@ -10,4 +10,7 @@
     <string name="information_page_list_second">Виктория Драенкова</string>
     <string name="information_page_list_third">Владимир Климушин</string>
     <string name="information_page_list_fourth">Максим Захаров</string>
+
+    <string name="search_connection_faild">Нет интернета</string>
+    <string name="search_error_server">Не удалось получить список вакансий</string>
 </resources>
