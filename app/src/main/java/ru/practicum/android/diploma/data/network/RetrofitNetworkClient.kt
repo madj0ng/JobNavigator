@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.data.network
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.NetworkResponse
@@ -29,7 +30,17 @@ class RetrofitNetworkClient(
                 try {
                     val response = hhApi.search(dto.request, BuildConfig.HH_ACCESS_TOKEN)
                     response.apply { resultCode = RESULT_CODE_SUCCESS }
+                } catch (e: HttpException) {
+                    NetworkResponse().apply {
+                        resultCode = ERROR_CODE_SERVER
+                        message = context.getString(R.string.search_error_server)
+                    }
                 } catch (e: IOException) {
+                    NetworkResponse().apply {
+                        resultCode = ERROR_CODE_SERVER
+                        message = context.getString(R.string.search_error_server)
+                    }
+                } catch (e: Exception) {
                     NetworkResponse().apply {
                         resultCode = ERROR_CODE_SERVER
                         message = context.getString(R.string.search_error_server)
