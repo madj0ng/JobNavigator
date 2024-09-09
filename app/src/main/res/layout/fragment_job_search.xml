@@ -7,13 +7,6 @@
     tools:context=".ui.jobsearch.JobSearchFragment">
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/test"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="textView, button_navigate_to_team_information, button_navigate_to_favorite_jobs, button_navigate_to_job_details, button_navigate_to_search_filters" />
-
-    <androidx.constraintlayout.widget.Group
         android:id="@+id/groupEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -90,12 +83,13 @@
 
     <EditText
         android:id="@+id/etSearch"
-        style="@style/JobSearhEditText"
+        style="@style/JobSearchEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dim_8dp"
         android:layout_marginBottom="@dimen/dim_8dp"
         android:drawableEnd="@drawable/ic_search_lens"
+        android:autofillHints="View."
         android:hint="@string/search_edit_text_hint"
         android:paddingStart="@dimen/dim_16dp"
         android:paddingTop="@dimen/dim_4dp"
@@ -227,56 +221,4 @@
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/ivErrorServer" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="JobSearchFragment"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_search_filters"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <Button
-        android:id="@+id/button_navigate_to_search_filters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation to SearchFiltersFragment"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_job_details"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView" />
-
-    <Button
-        android:id="@+id/button_navigate_to_job_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation to JobDetailsFragment"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_favorite_jobs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_search_filters" />
-
-    <Button
-        android:id="@+id/button_navigate_to_favorite_jobs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation to FavoriteJobsFragment"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_team_information"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_job_details" />
-
-    <Button
-        android:id="@+id/button_navigate_to_team_information"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation to TeamInformationFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_favorite_jobs" />
 </androidx.constraintlayout.widget.ConstraintLayout>

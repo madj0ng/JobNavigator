@@ -54,7 +54,7 @@
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
 
-    <style name="JobSearhEditText" parent="SearchEditText">
+    <style name="JobSearchEditText" parent="SearchEditText">
         <item name="android:inputType">text</item>
         <item name="android:background">@drawable/sh_day_lgrey_night_gray_round12</item>
     </style>
