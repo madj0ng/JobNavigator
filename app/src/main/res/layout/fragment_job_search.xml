@@ -89,7 +89,7 @@
         android:layout_marginTop="@dimen/dim_8dp"
         android:layout_marginBottom="@dimen/dim_8dp"
         android:drawableEnd="@drawable/ic_search_lens"
-        android:autofillHints="View."
+        android:importantForAutofill="no"
         android:hint="@string/search_edit_text_hint"
         android:paddingStart="@dimen/dim_16dp"
         android:paddingTop="@dimen/dim_4dp"
