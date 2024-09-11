@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.data.network
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
@@ -27,7 +26,7 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (connected.isConnected()) {
                 try {
-                    val response = hhApi.getVacancies(dto.request, BuildConfig.HH_ACCESS_TOKEN)
+                    val response = hhApi.getVacancies(dto.request)
                     response.apply { resultCode = RESULT_CODE_SUCCESS }
                 } catch (e: IOException) {
                     NetworkResponse().apply {
