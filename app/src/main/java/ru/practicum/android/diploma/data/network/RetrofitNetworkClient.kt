@@ -12,7 +12,7 @@ import java.io.IOException
 
 class RetrofitNetworkClient(
     private val context: Context,
-    private val hhApi: HhApi,
+    private val hhApi: HHApiService,
     private val connected: Connected
 ) : NetworkClient {
 
@@ -27,7 +27,7 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (connected.isConnected()) {
                 try {
-                    val response = hhApi.search(dto.request, BuildConfig.HH_ACCESS_TOKEN)
+                    val response = hhApi.getVacancies(dto.request, BuildConfig.HH_ACCESS_TOKEN)
                     response.apply { resultCode = RESULT_CODE_SUCCESS }
                 } catch (e: IOException) {
                     NetworkResponse().apply {
