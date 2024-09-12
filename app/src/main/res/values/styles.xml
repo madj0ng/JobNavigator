@@ -51,9 +51,15 @@
     <!-- End Team Infromation -->
 
     <!-- Start Search -->
-    <style name="PageErrorText" parent="TextDisplayMedium500">
-       <item name="android:textSize">@dimen/dim_22sp</item>
+    <style name="InformImage" parent="TextDisplayMedium500">
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="InformBottomText" parent="TextDisplayMedium500">
+        <item name="android:textSize">@dimen/dim_22sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
+        <item name="android:maxLength">255</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="VacancyItemBig" parent="TextDisplayMedium500">
@@ -69,6 +75,8 @@
     <style name="ListTextCount" parent="TextDisplayRegular400">
         <item name="android:background">@drawable/sh_blue_round12</item>
         <item name="android:textColor">@color/day_white_night_black</item>
+        <item name="android:lines">1</item>
+        <item name="android:singleLine">true</item>
     </style>
     <!-- End Search -->
 
