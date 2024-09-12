@@ -97,7 +97,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/vacancy_item" />
 
             <TextView
                 android:id="@+id/tvJobSearchCount"
@@ -115,14 +116,26 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@tools:sample/full_names" />
 
+            <ProgressBar
+                android:id="@+id/pbJobList"
+                android:layout_width="@dimen/dim_48dp"
+                android:layout_height="@dimen/dim_48dp"
+                android:layout_marginTop="@dimen/dim_16sp"
+                android:layout_marginBottom="@dimen/dim_16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvJobList" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <ProgressBar
-        android:id="@+id/pbProgressBar"
+        android:id="@+id/pbPage"
         android:layout_width="@dimen/dim_48dp"
         android:layout_height="@dimen/dim_48dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
@@ -133,9 +146,9 @@
         style="@style/InformImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/search_page_title"
         android:src="@drawable/search_empty"
         android:visibility="visible"
-        android:contentDescription="@string/search_page_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="h,16:9"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
