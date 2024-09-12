@@ -38,7 +38,7 @@ class RetrofitNetworkClient(
             } else {
                 NetworkResponse().apply {
                     resultCode = ERROR_CODE_INTERNET
-                    message = context.getString(R.string.search_connection_faild)
+                    message = context.getString(R.string.search_error_no_connect)
                 }
             }
 
