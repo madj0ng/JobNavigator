@@ -11,11 +11,15 @@
     <string name="information_page_list_third">Владимир Климушин</string>
     <string name="information_page_list_fourth">Максим Захаров</string>
 
+
     <string name="search_page_title">Поиск вакансий</string>
     <string name="search_job_list_count">Найдено $1 вакансий</string>
     <string name="search_edit_text_hint">Введите запрос</string>
     <string name="search_error_no_connect">Нет интернета</string>
-    <string name="search_error_server">Ошибка сервера</string>
-
+    <string name="error_server">Ошибка сервера</string>
+    <string name="search_error_no_data">Не удалось получить список вакансий</string>
     <string name="filter_page_title">Настройки фильтрации</string>
+    <string name="search_connection_faild">Нет интернета</string>
+    <string name="search_error_server">Не удалось получить список вакансий</string>
+
 </resources>

@@ -6,34 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.jobsearch.JobSearchFragment">
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        app:constraint_referenced_ids="ivEmpty" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupLoading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="pbPageLoading" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupErrorConnect"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="ivNoConnect, tvNoConnect" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupErrorServer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="ivErrorServer, tvErrorServer" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_guideline"
         android:layout_width="wrap_content"
@@ -89,8 +61,8 @@
         android:layout_marginTop="@dimen/dim_8dp"
         android:layout_marginBottom="@dimen/dim_8dp"
         android:drawableEnd="@drawable/ic_search_lens"
-        android:importantForAutofill="no"
         android:hint="@string/search_edit_text_hint"
+        android:importantForAutofill="no"
         android:paddingStart="@dimen/dim_16dp"
         android:paddingTop="@dimen/dim_4dp"
         android:paddingEnd="@dimen/dim_4dp"
@@ -115,23 +87,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/groupJobsList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                app:constraint_referenced_ids="rvJobList, tvJobSearchCount" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvJobList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dim_38dp"
                 android:clipToPadding="false"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/vacancy_item" />
 
             <TextView
                 android:id="@+id/tvJobSearchCount"
@@ -143,44 +110,45 @@
                 android:paddingTop="@dimen/dim_4dp"
                 android:paddingEnd="@dimen/dim_8dp"
                 android:paddingBottom="@dimen/dim_4dp"
-                android:text="@string/search_job_list_count"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@tools:sample/full_names" />
+
+            <ProgressBar
+                android:id="@+id/pbJobList"
+                android:layout_width="@dimen/dim_48dp"
+                android:layout_height="@dimen/dim_48dp"
+                android:layout_marginTop="@dimen/dim_16sp"
+                android:layout_marginBottom="@dimen/dim_16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvJobList" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <ProgressBar
-        android:id="@+id/pbPageLoading"
+        android:id="@+id/pbPage"
         android:layout_width="@dimen/dim_48dp"
         android:layout_height="@dimen/dim_48dp"
-        android:layout_marginBottom="@dimen/dim_48dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
 
     <ImageView
-        android:id="@+id/ivEmpty"
+        android:id="@+id/ivInformImage"
+        style="@style/InformImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/search_page_title"
-        android:scaleType="centerCrop"
         android:src="@drawable/search_empty"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="h,16:9"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
-
-    <ImageView
-        android:id="@+id/ivNoConnect"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/search_error_no_connect"
-        android:scaleType="centerCrop"
-        android:src="@drawable/error_no_connect"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="h,16:9"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
@@ -188,37 +156,14 @@
         app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
 
     <TextView
-        android:id="@+id/tvNoConnect"
-        style="@style/PageErrorText"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dim_16dp"
-        android:text="@string/search_error_no_connect"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/ivNoConnect" />
-
-    <ImageView
-        android:id="@+id/ivErrorServer"
+        android:id="@+id/ivInformBottomText"
+        style="@style/InformBottomText"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/search_error_server"
-        android:scaleType="centerCrop"
-        android:src="@drawable/error_server"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="h,16:9"
-        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-        app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
-
-    <TextView
-        android:id="@+id/tvErrorServer"
-        style="@style/PageErrorText"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dim_16dp"
-        android:text="@string/search_error_server"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/ivErrorServer" />
+        app:layout_constraintTop_toBottomOf="@+id/ivInformImage"
+        tools:text="@tools:sample/full_names" />
 </androidx.constraintlayout.widget.ConstraintLayout>
