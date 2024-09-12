@@ -26,14 +26,20 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (connected.isConnected()) {
                 try {
-                    val response = hhApi.getVacancies(dto.request)
+                    val response = hhApi.getVacancies(
+                        dto.vacancyName,
+                        dto.area,
+                        dto.salary,
+                        dto.onlyWithSalary,
+                        dto.professionalRole
+                    )
+
                     response.apply { resultCode = RESULT_CODE_SUCCESS }
                 } catch (e: IOException) {
                     NetworkResponse().apply {
                         resultCode = ERROR_CODE_SERVER
                         message = context.getString(R.string.search_error_server)
                     }
-                    throw NetworkExeption("Network error occurred", e)
                 }
             } else {
                 NetworkResponse().apply {
