@@ -4,7 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 import ru.practicum.android.diploma.BuildConfig
-import ru.practicum.android.diploma.data.dto.SearchResponse
+import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
 interface HHApiService {
     @GET("vacancies")
@@ -15,5 +15,5 @@ interface HHApiService {
         @Query("salary") salary: Int? = null,
         @Query("only_with_salary") onlyWithSalary: Boolean = false,
         @Query("professional_role") professionalRole: String? = null,
-    ): SearchResponse
+    ): VacancySearchResponse
 }
