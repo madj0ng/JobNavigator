@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.data.dto.SearchResponse
 interface HHApiService {
     @GET("vacancies")
     @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
-    suspend fun getVacancies(
+    suspend fun search(
         @Query("text") job: String = "",
         @Query("area") area: String? = null,
         @Query("salary") salary: Int? = null,
