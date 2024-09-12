@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.data.search
 
-import ru.practicum.android.diploma.data.dto.Vacancy
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
 interface SearchVacancyRepository {

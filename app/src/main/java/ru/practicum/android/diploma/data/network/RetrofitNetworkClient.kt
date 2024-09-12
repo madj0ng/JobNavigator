@@ -40,7 +40,6 @@ class RetrofitNetworkClient(
                         resultCode = ERROR_CODE_SERVER
                         message = context.getString(R.string.search_error_server)
                     }
-                    throw NetworkExeption("Network error occurred", e)
                 }
             } else {
                 NetworkResponse().apply {
