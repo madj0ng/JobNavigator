@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
-import ru.practicum.android.diploma.presentation.view_model.JobSearchViewModel
+import ru.practicum.android.diploma.presentation.viewModel.JobSearchViewModel
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null

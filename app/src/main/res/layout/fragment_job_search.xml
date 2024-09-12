@@ -10,7 +10,7 @@
         android:id="@+id/groupEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:constraint_referenced_ids="ivEmpty" />
 
     <androidx.constraintlayout.widget.Group
@@ -24,7 +24,7 @@
         android:id="@+id/groupErrorConnect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_ids="ivNoConnect, tvNoConnect" />
 
     <androidx.constraintlayout.widget.Group
@@ -119,7 +119,7 @@
                 android:id="@+id/groupJobsList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:constraint_referenced_ids="rvJobList, tvJobSearchCount" />
 
             <androidx.recyclerview.widget.RecyclerView
