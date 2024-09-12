@@ -1,1 +1,29 @@
-/build
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Eclipse project files
+.classpath
+.project
+
+# IDEA/Android Studio project files, because
+# the project can be imported from settings.gradle.kts
+.idea/*
+!.idea/copyright
+# Keep the code styles.
+!/.idea/codeStyles
+/.idea/codeStyles/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
+
+# Gradle cache
+.gradle
+
+# Sandbox stuff
+_sandbox
