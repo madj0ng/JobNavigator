@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">Practicum-Android-Diploma</string>
+    <string name="app_name">Job navigator</string>
+    <string name="bottom_nav_item_main">Главная</string>
+    <string name="bottom_nav_item_favorites">Избранное</string>
+    <string name="bottom_nav_item_team">Команда</string>
+
+    <string name="information_page_title">Команда</string>
+    <string name="information_page_list_title">Над приложением работали</string>
+    <string name="information_page_list_first">Алексей Кулаев</string>
+    <string name="information_page_list_second">Виктория Драенкова</string>
+    <string name="information_page_list_third">Владимир Климушин</string>
+    <string name="information_page_list_fourth">Максим Захаров</string>
 </resources>
