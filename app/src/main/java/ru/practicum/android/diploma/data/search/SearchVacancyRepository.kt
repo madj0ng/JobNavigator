@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.search
 
 import ru.practicum.android.diploma.data.dto.Vacancy
+import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 
 interface SearchVacancyRepository {
     suspend fun search(
@@ -9,6 +10,6 @@ interface SearchVacancyRepository {
         salary: Int,
         onlyWithSalary: Boolean = false,
         professionalRole: String = "",
-    ): List<Vacancy>?
+    ): VacancySearchResponse?
 
 }

@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.domain.search.Impl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.dto.Vacancy
+import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.search.SearchVacancyRepository
 import ru.practicum.android.diploma.domain.search.SearchVacancyInteractor
 
@@ -13,7 +14,7 @@ class SearchVacancyInteractorImpl(val searchVacancyRepository: SearchVacancyRepo
         salary: Int,
         onlyWithSalary: Boolean,
         professionalRole: String
-    ): Flow<List<Vacancy>?> = flow {
+    ): Flow<VacancySearchResponse?> = flow {
         emit(
             searchVacancyRepository.search(
                 vacancyName,

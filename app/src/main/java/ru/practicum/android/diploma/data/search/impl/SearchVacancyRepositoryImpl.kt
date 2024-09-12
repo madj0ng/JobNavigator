@@ -4,26 +4,28 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import ru.practicum.android.diploma.data.dto.Vacancy
-import ru.practicum.android.diploma.data.network.HHApiService
+import ru.practicum.android.diploma.data.dto.VacancySearchRequest
+import ru.practicum.android.diploma.data.dto.VacancySearchResponse
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.data.search.SearchVacancyRepository
 import java.io.IOException
 
-class SearchVacancyRepositoryImpl(val hhApiService: HHApiService) : SearchVacancyRepository {
+class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNetworkClient) : SearchVacancyRepository {
     override suspend fun search(
         vacancyName: String,
         area: String,
         salary: Int,
         onlyWithSalary: Boolean,
         professionalRole: String
-    ): List<Vacancy>? {
+    ): VacancySearchResponse? {
         if (vacancyName.isEmpty()) {
             return null
         }
+        val vacancyGoted = VacancySearchRequest(vacancyName, area, salary, onlyWithSalary, professionalRole)
         return withContext(Dispatchers.IO) {
             try {
-                val response = hhApiService.getVacancies(vacancyName, area, salary, onlyWithSalary, professionalRole)
-                response.items
+                val response = retrofitNetworkClient.doRequest(vacancyGoted)
+                response as VacancySearchResponse
             } catch (e: IOException) {
                 // Обработка ошибок сети, например, отсутствие соединения
                 // Логирование или уведомление пользователя
