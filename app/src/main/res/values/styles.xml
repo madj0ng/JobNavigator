@@ -3,7 +3,6 @@
 
     <style name="CustomBottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
-        <item name="itemBackground">@color/white_universal</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
     </style>
 
@@ -17,12 +16,14 @@
         <item name="android:textFontWeight" tools:ignore="NewApi">700</item>
     </style>
 
-    <style name="TextDisplayRegylar400">
+
+    <style name="TextDisplayRegular400">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight" tools:ignore="NewApi">400</item>
     </style>
 
-    <style name="SearchEditText" parent="TextDisplayRegylar400">
+
+    <style name="SearchEditText" parent="TextDisplayRegular400">
         <item name="android:textColor">@color/black_universal</item>
         <item name="android:textColorHint">@color/day_gray_night_white</item>
         <item name="android:textSize">@dimen/dim_16sp</item>
@@ -32,6 +33,7 @@
     </style>
 
     <!-- Start Team Infromation -->
+
     <style name="PageTitle" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_22sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
@@ -50,6 +52,11 @@
 
     <!-- Start Search -->
     <style name="PageErrorText" parent="TextDisplayMedium500">
+       <item name="android:textSize">@dimen/dim_22sp</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
+    </style>
+
+    <style name="VacancyItemBig" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_22sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
@@ -64,6 +71,11 @@
         <item name="android:textColor">@color/day_white_night_black</item>
     </style>
     <!-- End Search -->
+
+    <style name="VacancyItemSmall" parent="TextDisplayRegular400">
+        <item name="android:textSize">@dimen/dim_16sp</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
+    </style>
 
 </resources>
 
