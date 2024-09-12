@@ -26,7 +26,13 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (connected.isConnected()) {
                 try {
-                    val response = hhApi.getVacancies(dto.vacancyName, dto.area, dto.salary, dto.onlyWithSalary, dto.professionalRole)
+                    val response = hhApi.getVacancies(
+                        dto.vacancyName,
+                        dto.area,
+                        dto.salary,
+                        dto.onlyWithSalary,
+                        dto.professionalRole
+                    )
 
                     response.apply { resultCode = RESULT_CODE_SUCCESS }
                 } catch (e: IOException) {

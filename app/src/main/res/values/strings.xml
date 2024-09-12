@@ -17,11 +17,8 @@
     <string name="search_edit_text_hint">Введите запрос</string>
     <string name="search_error_no_connect">Нет интернета</string>
     <string name="error_server">Ошибка сервера</string>
-    <string name="search_error_server">Ошибка сервера</string>
     <string name="search_error_no_data">Не удалось получить список вакансий</string>
-
     <string name="filter_page_title">Настройки фильтрации</string>
-
     <string name="search_connection_faild">Нет интернета</string>
     <string name="search_error_server">Не удалось получить список вакансий</string>
 

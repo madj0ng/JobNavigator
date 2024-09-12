@@ -1,8 +1,7 @@
-package ru.practicum.android.diploma.domain.search.Impl
+package ru.practicum.android.diploma.domain.search.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.data.dto.Vacancy
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.search.SearchVacancyRepository
 import ru.practicum.android.diploma.domain.search.SearchVacancyInteractor
