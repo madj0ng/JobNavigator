@@ -49,13 +49,12 @@ dependencies {
     // UI layer libraries
     implementation(libs.ui.material)
     implementation(libs.ui.constraintLayout)
-    implementation(libs.room.common)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
     // endregion
 
-    // region UI testss
+    // region UI tests
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
     // endregion
@@ -70,6 +69,7 @@ dependencies {
     // end fragment
 
     // database
+    implementation(libs.room.common)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)

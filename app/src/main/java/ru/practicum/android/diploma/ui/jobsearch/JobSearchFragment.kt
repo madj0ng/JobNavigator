@@ -5,18 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
+import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
 
 class JobSearchFragment : Fragment() {
-    private var binding: FragmentJobSearchBinding? = null
+    private var _binding: FragmentJobSearchBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: JobSearchViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentJobSearchBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentJobSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -26,6 +31,6 @@ class JobSearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }
