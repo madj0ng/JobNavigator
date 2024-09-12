@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.data.search.impl
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -21,19 +22,18 @@ class SearchVacancyRepositoryImpl(val hhApiService: HHApiService) : SearchVacanc
         }
         return withContext(Dispatchers.IO) {
             try {
-                val response = hhApiService.search(vacancyName, area, salary, onlyWithSalary, professionalRole)
+                val response = hhApiService.getVacancies(vacancyName, area, salary, onlyWithSalary, professionalRole)
                 response.items
             } catch (e: IOException) {
                 // Обработка ошибок сети, например, отсутствие соединения
                 // Логирование или уведомление пользователя
+                Log.d("Exception", "IOException")
                 null
             } catch (e: HttpException) {
                 // Обработка ошибок HTTP, например, 404 или 500
                 // Логирование или уведомление пользователя
-                null
-            } catch (e: Exception) {
-                // Обработка всех остальных исключений
-                // Логирование или уведомление пользователя
+                Log.d("Exception", "HttpException")
+
                 null
             }
         }
