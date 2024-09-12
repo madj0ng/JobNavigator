@@ -6,55 +6,219 @@
     android:layout_height="match_parent"
     tools:context=".ui.jobsearch.JobSearchFragment">
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:constraint_referenced_ids="ivEmpty" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:constraint_referenced_ids="pbPageLoading" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupErrorConnect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:constraint_referenced_ids="ivNoConnect, tvNoConnect" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupErrorServer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:constraint_referenced_ids="ivErrorServer, tvErrorServer" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/dim_16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/dim_16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/dim_24dp" />
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvPageTitle"
+        style="@style/PageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="JobSearchFragment"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_search_filters"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:layout_marginTop="@dimen/dim_20dp"
+        android:layout_marginBottom="@dimen/dim_20dp"
+        android:text="@string/search_page_title"
+        app:layout_constraintBottom_toTopOf="@+id/etSearch"
+        app:layout_constraintEnd_toStartOf="@+id/ifbFilter"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
 
-    <Button
-        android:id="@+id/button_navigate_to_search_filters"
+    <ImageView
+        android:id="@+id/ifbFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Navigation to SearchFiltersFragment"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_job_details"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView" />
+        android:layout_margin="@dimen/dim_4dp"
+        android:contentDescription="@string/filter_page_title"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPageTitle"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/tvPageTitle"
+        app:layout_constraintTop_toTopOf="@+id/tvPageTitle"
+        app:srcCompat="@drawable/ic_menu_filter" />
 
-    <Button
-        android:id="@+id/button_navigate_to_job_details"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etSearch"
+        style="@style/JobSearchEditText"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Navigation to JobDetailsFragment"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_favorite_jobs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_search_filters" />
+        android:layout_marginTop="@dimen/dim_8dp"
+        android:layout_marginBottom="@dimen/dim_8dp"
+        android:drawableEnd="@drawable/ic_search_lens"
+        android:importantForAutofill="no"
+        android:hint="@string/search_edit_text_hint"
+        android:paddingStart="@dimen/dim_16dp"
+        android:paddingTop="@dimen/dim_4dp"
+        android:paddingEnd="@dimen/dim_4dp"
+        android:paddingBottom="@dimen/dim_4dp"
+        app:layout_constraintBottom_toTopOf="@+id/svSearch"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/tvPageTitle" />
 
-    <Button
-        android:id="@+id/button_navigate_to_favorite_jobs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation to FavoriteJobsFragment"
-        app:layout_constraintBottom_toTopOf="@+id/button_navigate_to_team_information"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_job_details" />
-
-    <Button
-        android:id="@+id/button_navigate_to_team_information"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Navigation to TeamInformationFragment"
+    <ScrollView
+        android:id="@+id/svSearch"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dim_48dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_navigate_to_favorite_jobs" />
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/etSearch">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/groupJobsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:constraint_referenced_ids="rvJobList, tvJobSearchCount" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvJobList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dim_38dp"
+                android:clipToPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvJobSearchCount"
+                style="@style/ListTextCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dim_4dp"
+                android:paddingStart="@dimen/dim_8dp"
+                android:paddingTop="@dimen/dim_4dp"
+                android:paddingEnd="@dimen/dim_8dp"
+                android:paddingBottom="@dimen/dim_4dp"
+                android:text="@string/search_job_list_count"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/pbPageLoading"
+        android:layout_width="@dimen/dim_48dp"
+        android:layout_height="@dimen/dim_48dp"
+        android:layout_marginBottom="@dimen/dim_48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <ImageView
+        android:id="@+id/ivEmpty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/search_page_title"
+        android:scaleType="centerCrop"
+        android:src="@drawable/search_empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <ImageView
+        android:id="@+id/ivNoConnect"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/search_error_no_connect"
+        android:scaleType="centerCrop"
+        android:src="@drawable/error_no_connect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <TextView
+        android:id="@+id/tvNoConnect"
+        style="@style/PageErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dim_16dp"
+        android:text="@string/search_error_no_connect"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/ivNoConnect" />
+
+    <ImageView
+        android:id="@+id/ivErrorServer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/search_error_server"
+        android:scaleType="centerCrop"
+        android:src="@drawable/error_server"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <TextView
+        android:id="@+id/tvErrorServer"
+        style="@style/PageErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dim_16dp"
+        android:text="@string/search_error_server"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/ivErrorServer" />
 </androidx.constraintlayout.widget.ConstraintLayout>
