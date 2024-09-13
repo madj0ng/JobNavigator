@@ -6,5 +6,4 @@ data class VacancySearchRequest(
     val salary: Int,
     val onlyWithSalary: Boolean,
     val professionalRole: String
-) // класс создан только для начальной настройки ретрофита
-
+)

@@ -60,17 +60,41 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dim_8dp"
         android:layout_marginBottom="@dimen/dim_8dp"
-        android:drawableEnd="@drawable/ic_search_lens"
         android:hint="@string/search_edit_text_hint"
         android:importantForAutofill="no"
         android:paddingStart="@dimen/dim_16dp"
-        android:paddingTop="@dimen/dim_4dp"
-        android:paddingEnd="@dimen/dim_4dp"
-        android:paddingBottom="@dimen/dim_4dp"
+        android:paddingTop="@dimen/dim_16dp"
+        android:paddingEnd="@dimen/dim_60dp"
+        android:paddingBottom="@dimen/dim_16dp"
         app:layout_constraintBottom_toTopOf="@+id/svSearch"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/tvPageTitle" />
+
+    <ImageView
+        android:id="@+id/ivSearchLens"
+        style="@style/IconBackgroundNone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dim_4dp"
+        android:src="@drawable/ic_search_lens"
+        android:contentDescription="@string/search_page_title"
+        app:layout_constraintBottom_toBottomOf="@+id/etSearch"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/etSearch" />
+
+    <ImageView
+        android:id="@+id/ivSearchClear"
+        style="@style/IconBackgroundNone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dim_4dp"
+        android:src="@drawable/ic_close_cross"
+        android:contentDescription="@string/search_page_title"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/etSearch"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/etSearch" />
 
     <ScrollView
         android:id="@+id/svSearch"

@@ -17,4 +17,3 @@ interface HHApiService {
         @Query("professional_role") professionalRole: String? = null,
     ): VacancySearchResponse
 }
-
