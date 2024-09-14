@@ -21,7 +21,25 @@
     <string name="filter_page_title">Настройки фильтрации</string>
     <string name="search_connection_faild">Нет интернета</string>
     <string name="search_error_server">Не удалось получить список вакансий</string>
+
     <string name="favourites">Избранное</string>
     <string name="list_is_empty">Список пуст</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="back">back</string>
+    <string name="vacancyNameTemp">Название вакансии</string>
+    <string name="like_btn">like_btn</string>
+    <string name="share_btn">share_btn</string>
+    <string name="salary_from_to">Вилка зп</string>
+    <string name="spheare">spheare</string>
+    <string name="city">city</string>
+    <string name="placeholder_or_icon">placeholder_or_icon</string>
+    <string name="required_experience">Требуемый опыт</string>
+    <string name="is_fulltime_is_remote">Полный ли рабочий день, удалённая ли работа</string>
+    <string name="vacancy_discription">Описание вакансии</string>
+    <string name="duties">Обязанности</string>
+    <string name="requirements">Требования</string>
+    <string name="key_skills">Ключевые навыки</string>
+    <string name="conditions">Условия</string>
+
 
 </resources>
