@@ -39,6 +39,15 @@
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
 
+    <style name="PageTitleReverseColor" parent="TextDisplayMedium500">
+        <item name="android:textSize">@dimen/dim_22sp</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
+    </style>
+
+    <style name="VacancyTitle" parent="TextDisplayBold700">
+        <item name="android:textSize">@dimen/dim_32sp</item>
+    </style>
+
     <style name="PageListItem" parent="TextDisplayMedium500">
         <item name="android:textSize">@dimen/dim_16sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
@@ -85,5 +94,9 @@
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
 
+    <style name="VacancyItemSmallReverseColor" parent="TextDisplayRegular400">
+        <item name="android:textSize">@dimen/dim_16sp</item>
+        <item name="android:textColor">@color/day_black_night_white</item>
+    </style>
 </resources>
 
