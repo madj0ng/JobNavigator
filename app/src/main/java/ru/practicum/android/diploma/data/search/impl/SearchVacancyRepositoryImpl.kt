@@ -17,7 +17,6 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
     override fun search(
         params: VacancySearchParams
     ): Flow<Resource<List<VacancyModel>>> = flow {
-
         val queryOptions = mapVacancySearchParamsToQueryMap(params)
         val response = retrofitNetworkClient.doRequest(VacancySearchRequest(queryOptions))
 
