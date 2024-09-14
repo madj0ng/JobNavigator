@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.data.dto
 
+import ru.practicum.android.diploma.data.dto.vacancy_detail.Salary
+
 data class Vacancy(
     val id: String,
     val address: Address,
