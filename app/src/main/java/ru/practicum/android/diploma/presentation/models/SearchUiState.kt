@@ -1,7 +1,5 @@
 package ru.practicum.android.diploma.presentation.models
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import ru.practicum.android.diploma.R
 
 sealed interface SearchUiState {
@@ -22,9 +20,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
-        @DrawableRes override val url: Int = R.drawable.error_no_connect,
-        @StringRes override val bottomText: Int = R.string.search_error_no_connect,
-        @StringRes override val topText: Int? = null
+        override val url: Int = R.drawable.error_no_connect,
+        override val bottomText: Int = R.string.search_error_no_connect,
+        override val topText: Int? = null
     ) : SearchUiState
 
     data class ErrorServer(
@@ -34,9 +32,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
-        @DrawableRes override val url: Int = R.drawable.error_server,
-        @StringRes override val bottomText: Int = R.string.error_server,
-        @StringRes override val topText: Int? = null,
+        override val url: Int = R.drawable.error_server,
+        override val bottomText: Int = R.string.error_server,
+        override val topText: Int? = null,
     ) : SearchUiState
 
     data class ErrorData(
@@ -46,9 +44,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
-        @DrawableRes override val url: Int = R.drawable.error_no_data,
-        @StringRes override val bottomText: Int = R.string.search_error_no_data,
-        @StringRes override val topText: Int = R.string.search_job_list_empty,
+        override val url: Int = R.drawable.error_no_data,
+        override val bottomText: Int = R.string.search_error_no_data,
+        override val topText: Int = R.string.search_job_list_empty,
     ) : SearchUiState
 
     data class Empty(
@@ -58,9 +56,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
-        @DrawableRes override val url: Int = R.drawable.search_empty,
-        @StringRes override val bottomText: Int? = null,
-        @StringRes override val topText: Int? = null,
+        override val url: Int = R.drawable.search_empty,
+        override val bottomText: Int? = null,
+        override val topText: Int? = null,
     ) : SearchUiState
 
     data class Loading(
@@ -70,9 +68,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = true,
         override val isInformImage: Boolean = false,
         override val isBottomText: Boolean = false,
-        @DrawableRes override val url: Int?,
-        @StringRes override val topText: Int?,
-        @StringRes override val bottomText: Int?,
+        override val url: Int?,
+        override val topText: Int?,
+        override val bottomText: Int?,
     ) : SearchUiState
 
     data class Content(
@@ -82,9 +80,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = false,
         override val isInformImage: Boolean = false,
         override val isBottomText: Boolean = false,
-        @DrawableRes override val url: Int?,
-        @StringRes override val topText: Int?,
-        @StringRes override val bottomText: Int?,
+        override val url: Int?,
+        override val topText: Int?,
+        override val bottomText: Int?,
         val data: List<VacancyInfo>,
     ) : SearchUiState
 }

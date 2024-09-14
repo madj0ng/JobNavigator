@@ -22,7 +22,7 @@
     </style>
 
     <style name="IconBackgroundNone">
-        <item name="android:background">none</item>
+        <item name="android:background">@drawable/sh_day_lgrey_night_gray_round12</item>
     </style>
 
     <style name="SearchEditText" parent="TextDisplayRegular400">

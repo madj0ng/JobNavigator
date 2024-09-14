@@ -47,11 +47,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dim_4dp"
         android:contentDescription="@string/filter_page_title"
+        android:src="@drawable/ic_menu_filter"
         app:layout_constraintBottom_toBottomOf="@+id/tvPageTitle"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/tvPageTitle"
-        app:layout_constraintTop_toTopOf="@+id/tvPageTitle"
-        app:srcCompat="@drawable/ic_menu_filter" />
+        app:layout_constraintTop_toTopOf="@+id/tvPageTitle" />
 
     <EditText
         android:id="@+id/etSearch"
@@ -77,8 +77,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dim_4dp"
-        android:src="@drawable/ic_search_lens"
         android:contentDescription="@string/search_page_title"
+        android:src="@drawable/ic_search_lens"
         app:layout_constraintBottom_toBottomOf="@+id/etSearch"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/etSearch" />
@@ -89,8 +89,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dim_4dp"
-        android:src="@drawable/ic_close_cross"
         android:contentDescription="@string/search_page_title"
+        android:src="@drawable/ic_close_cross"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/etSearch"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
