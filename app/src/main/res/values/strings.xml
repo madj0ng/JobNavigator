@@ -14,6 +14,7 @@
 
     <string name="search_page_title">Поиск вакансий</string>
     <string name="search_job_list_count">Найдено $1 вакансий</string>
+    <string name="search_job_list_empty">Таких вакансий нет</string>
     <string name="search_edit_text_hint">Введите запрос</string>
     <string name="search_error_no_connect">Нет интернета</string>
     <string name="error_server">Ошибка сервера</string>
