@@ -21,5 +21,7 @@
     <string name="filter_page_title">Настройки фильтрации</string>
     <string name="search_connection_faild">Нет интернета</string>
     <string name="search_error_server">Не удалось получить список вакансий</string>
+    <string name="favourites">Избранное</string>
+    <string name="list_is_empty">Список пуст</string>
 
 </resources>
