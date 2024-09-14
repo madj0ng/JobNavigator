@@ -1,14 +1,12 @@
 package ru.practicum.android.diploma.data.search
 
+import kotlinx.coroutines.flow.Flow
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
+import ru.practicum.android.diploma.domain.models.Resource
+import ru.practicum.android.diploma.domain.models.VacancyModel
+import ru.practicum.android.diploma.domain.models.VacancySearchParams
 
 interface SearchVacancyRepository {
-    suspend fun search(
-        vacancyName: String,
-        area: String = "",
-        salary: Int,
-        onlyWithSalary: Boolean = false,
-        professionalRole: String = "",
-    ): VacancySearchResponse?
-
+    fun search( params: VacancySearchParams
+    ): Flow<Resource<List<VacancyModel>>>
 }
