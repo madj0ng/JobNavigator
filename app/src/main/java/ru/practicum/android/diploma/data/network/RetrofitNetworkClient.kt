@@ -6,8 +6,8 @@ import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
-import ru.practicum.android.diploma.data.dto.vacancy_detail.VacancyDetailsRequest
-import ru.practicum.android.diploma.data.dto.vacancy_detail.VacancyDetailsResponse
+import ru.practicum.android.diploma.data.dto.vacancydetail.VacancyDetailsRequest
+import ru.practicum.android.diploma.data.dto.vacancydetail.VacancyDetailsResponse
 import ru.practicum.android.diploma.util.Connected
 import java.io.IOException
 

@@ -19,58 +19,56 @@ import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.presentation.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.presentation.viewmodel.VacancyDetailsViewModel
 
+
+private const val ICON_RADIUS = 12
+
 class JobDetailsFragment : Fragment() {
     private var binding: FragmentJobDetailsBinding? = null
     private val viewModel: VacancyDetailsViewModel by viewModel()
-    private lateinit var vacancyId: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.let {
-            vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
-        }
+
         binding = FragmentJobDetailsBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        var vacancyId: String = ""
+        arguments?.let {
+            vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
+        }
         viewModel.getScreenLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is VacancyDetailsScreenState.Content -> {
                     showContent(state.data)
-                    Log.d("Content", "Content")
                 }
 
                 is VacancyDetailsScreenState.Loading -> {
                     showLoading()
-                    Log.d("Content", "Loading")
 
                 }
 
                 is VacancyDetailsScreenState.NotFound -> {
                     vacancyNotFoundOrDeleted()
-                    Log.d("Content", "NotFound")
 
                 }
 
                 else -> {
                     serverError()
-                    Log.d("Content", "serverError")
-
                 }
             }
         }
 
         viewModel.getVacancy(vacancyId)
 
-        binding?.backButton?.setOnClickListener{
+        binding?.backButton?.setOnClickListener {
             findNavController().popBackStack()
         }
-
     }
 
 
@@ -114,12 +112,11 @@ class JobDetailsFragment : Fragment() {
                 .load(vacancy.employerIcon)
                 .placeholder(R.drawable.company_logo_placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(12))
+                .transform(RoundedCorners(ICON_RADIUS))
                 .into(it.cardVacancy)
         }
         binding?.city?.text = vacancy.address
         binding?.companyName?.text = vacancy.employerName
-
     }
 
     fun generateHtmlList(inputList: List<String>): String {
