@@ -10,4 +10,6 @@ sealed interface JobSearchScreenState {
     data object ErrorServer : JobSearchScreenState
 
     data object Empty : JobSearchScreenState
+
+    data object Default : JobSearchScreenState
 }

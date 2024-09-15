@@ -20,7 +20,7 @@ class JobSearchViewModel(
 
     private val toastLiveData = SingleLiveEvent<String>()
 
-    private val _screenLiveData = MutableLiveData<JobSearchScreenState>(JobSearchScreenState.Empty)
+    private val _screenLiveData = MutableLiveData<JobSearchScreenState>(JobSearchScreenState.Default)
     val screenLiveData: LiveData<JobSearchScreenState> get() = _screenLiveData
 
     fun onSearchQueryChanged(query: String) {

@@ -63,8 +63,12 @@ class JobSearchFragment : Fragment() {
                     showLoading()
                 }
 
-                else -> {
+                is JobSearchScreenState.Empty -> {
                     showEmptyState()
+                }
+
+                else -> {
+                    showDefault()
                 }
             }
         }
@@ -78,7 +82,12 @@ class JobSearchFragment : Fragment() {
 
     private fun showEmptyState() {
         hideAll()
+        binding.ivInformImage.setImageResource(R.drawable.error_no_data)
         binding.ivInformImage.visibility = View.VISIBLE
+        binding.tvJobSearchCount.text = getString(R.string.search_job_no_such_vacancies)
+        binding.tvJobSearchCount.visibility = View.VISIBLE
+        binding.ivInformBottomText.text = getString(R.string.search_job_no_such_vacancies)
+        binding.ivInformBottomText.visibility = View.VISIBLE
     }
 
     private fun showContent(data: List<VacancyInfo>, found: Int) {
@@ -89,10 +98,17 @@ class JobSearchFragment : Fragment() {
         binding.tvJobSearchCount.text = getString(R.string.search_job_list_count, found)
     }
 
+    private fun showDefault() {
+        hideAll()
+        binding.ivInformImage.visibility = View.VISIBLE
+    }
+
     private fun hideAll() {
         binding.rvJobList.visibility = View.GONE
         binding.pbJobList.visibility = View.GONE
         binding.ivInformImage.visibility = View.GONE
+        binding.tvJobSearchCount.visibility = View.GONE
+        binding.ivInformBottomText.visibility = View.GONE
     }
 
     override fun onDestroyView() {
