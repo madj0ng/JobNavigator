@@ -66,7 +66,7 @@ class JobSearchViewModel(
 
     private fun mapListVacancyModelToListVacancyInfo(vacancies: List<VacancyModel>): List<VacancyInfo> {
         return vacancies.map { item ->
-            return@map VacancyInfo(
+            VacancyInfo(
                 id = item.id,
                 vacancyName = item.name,
                 departamentName = item.employer?.name ?: "",
@@ -78,18 +78,26 @@ class JobSearchViewModel(
 
     private fun getSalary(salary: SalaryModel?): String {
         if (salary == null) {
-            "Зарплата не указана"
+            return "Зарплата не указана"
         }
 
-        val from = salary?.from?.let { "от $it" } ?: ""
-        val to = salary?.to?.let { " до $it" } ?: ""
-        val currency = salary?.currency?.let { " $it" } ?: ""
+        val from = getSalaryFrom(salary.from)
+        val to = getSalaryTo(salary.to)
+        val currency = salary.currency?.let { " $it" } ?: ""
 
         return if (from.isEmpty() && to.isEmpty()) {
             "Зарплата не указана"
         } else {
             "$from$to$currency"
         }
+    }
+
+    private fun getSalaryFrom(from: Int?): String {
+        return from?.let { "от $it" } ?: ""
+    }
+
+    private fun getSalaryTo(to: Int?): String {
+        return to?.let { " до $it" } ?: ""
     }
 
 }

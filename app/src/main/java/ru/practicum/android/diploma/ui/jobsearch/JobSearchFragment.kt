@@ -21,7 +21,7 @@ class JobSearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: JobSearchViewModel by viewModel()
-    private lateinit var jobSearchViewAdapter: JobSearchViewAdapter
+    private var jobSearchViewAdapter: JobSearchViewAdapter? = null
 
     private val debounceSearch = debounce<String>(
         delayMillis = 2000L,
@@ -35,7 +35,7 @@ class JobSearchFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentJobSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -77,11 +77,13 @@ class JobSearchFragment : Fragment() {
     }
 
     private fun showEmptyState() {
+        hideAll()
+        binding.ivInformImage.visibility = View.VISIBLE
     }
 
     private fun showContent(data: List<VacancyInfo>, found: Int) {
         hideAll()
-        jobSearchViewAdapter.setList(data)
+        jobSearchViewAdapter?.setList(data)
         binding.rvJobList.visibility = View.VISIBLE
         binding.tvJobSearchCount.visibility = View.VISIBLE
         binding.tvJobSearchCount.text = getString(R.string.search_job_list_count, found)
@@ -96,5 +98,6 @@ class JobSearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        jobSearchViewAdapter = null
     }
 }

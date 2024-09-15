@@ -21,7 +21,7 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
         val response = retrofitNetworkClient.doRequest(VacancySearchRequest(queryOptions))
 
         when (response.resultCode) {
-            200 -> {
+            SUCCESS_CODE -> {
                 with(response as VacancySearchResponse) {
                     val vacancies = items.map { dto ->
                         val logoModel = LogoModel(
@@ -30,11 +30,7 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
                             siz240 = dto.employer?.logoUrls?.logo240
                         )
                         val employer =
-                            EmployerModel(
-                                id = dto.employer?.id,
-                                name = dto.employer?.name,
-                                logoUrls = logoModel
-                            )
+                            EmployerModel(id = dto.employer?.id, name = dto.employer?.name, logoUrls = logoModel)
                         val salary = SalaryModel(
                             currency = dto.salary?.currency,
                             from = dto.salary?.from,
@@ -54,7 +50,7 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
                 }
             }
 
-            -1 -> {
+            ERROR_CODE -> {
                 emit(Resource.Error(response.message))
             }
 
@@ -77,4 +73,8 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
         return options
     }
 
+    companion object {
+        private const val SUCCESS_CODE = 200
+        private const val ERROR_CODE = -1
+    }
 }

@@ -35,6 +35,7 @@ class RetrofitNetworkClient(
                         resultCode = ERROR_CODE_SERVER
                         message = context.getString(R.string.search_error_server)
                     }
+                    throw e
                 }
             } else {
                 NetworkResponse().apply {
