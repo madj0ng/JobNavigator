@@ -17,7 +17,6 @@ data class VacancyDetailsDto(
     @SerializedName("description")
     val description: String,
     val employer: EmployerDto,
-
 )
 
 data class KeySkill(
@@ -26,8 +25,7 @@ data class KeySkill(
 
 data class Experience(
     val name: String,
-
-    )
+)
 
 data class Address(
     val city: String,
@@ -47,8 +45,3 @@ data class Salary(
     val currency: String,
     val from: Int
 )
-
-
-
-
-

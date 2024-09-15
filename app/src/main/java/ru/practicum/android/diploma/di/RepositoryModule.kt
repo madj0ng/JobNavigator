@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.di
 
-
 import org.koin.dsl.module
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyRepository
 import ru.practicum.android.diploma.data.dto.vacancy.impl.VacancyRepositoryImpl
@@ -12,7 +11,6 @@ val repositoryModule = module {
     single<SearchVacancyRepository> {
         SearchVacancyRepositoryImpl(get())
     }
-
     single<VacancyRepository> {
         VacancyRepositoryImpl(get())
     }

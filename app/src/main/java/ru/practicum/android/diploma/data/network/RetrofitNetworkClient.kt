@@ -12,9 +12,7 @@ import ru.practicum.android.diploma.util.Connected
 import java.io.IOException
 
 class RetrofitNetworkClient(
-    private val context: Context,
-    private val hhApi: HHApiService,
-    private val connected: Connected
+    private val context: Context, private val hhApi: HHApiService, private val connected: Connected
 ) : NetworkClient {
 
     override suspend fun doRequest(dto: Any): NetworkResponse {
@@ -28,14 +26,12 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (connected.isConnected()) {
                 try {
-
                     when (dto) {
                         is VacancySearchRequest -> {
                             val response = hhApi.getVacancies(
                                 dto.queryOptions
                             )
                             response.apply { resultCode = RESULT_CODE_SUCCESS }
-
                         }
 
                         is VacancyDetailsRequest -> {
