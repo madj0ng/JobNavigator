@@ -29,7 +29,6 @@ class JobDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentJobDetailsBinding.inflate(inflater, container, false)
         return binding?.root
     }

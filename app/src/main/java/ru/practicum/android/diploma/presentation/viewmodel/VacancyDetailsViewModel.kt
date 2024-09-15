@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
-import ru.practicum.android.diploma.domain.vacancy_details.VacancyDetailsInteractor
+import ru.practicum.android.diploma.domain.vacancydetails.VacancyDetailsInteractor
 import ru.practicum.android.diploma.presentation.models.VacancyDetailsScreenState
 
-class VacancyDetailsViewModel(val vacancyDetailsInteractor: VacancyDetailsInteractor) : ViewModel() {
+class VacancyDetailsViewModel(private val vacancyDetailsInteractor: VacancyDetailsInteractor) : ViewModel() {
 
     private val stateLiveData: MutableLiveData<VacancyDetailsScreenState> = MutableLiveData()
     fun getVacancy(vacancyId: String) {
