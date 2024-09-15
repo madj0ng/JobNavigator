@@ -5,5 +5,5 @@ data class VacancyInfo(
     val vacancyName: String,
     val departamentName: String,
     val salary: String,
-    val logoUrl: String,
+    val logoUrl: String? = null,
 )
