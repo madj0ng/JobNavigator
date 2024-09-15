@@ -8,12 +8,13 @@
 
     <ImageView
         android:id="@+id/companyLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:paddingEnd="@dimen/dim_16dp"
         android:src="@drawable/company_logo_placeholder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/vacancyName"

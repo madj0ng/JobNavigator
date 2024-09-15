@@ -19,6 +19,7 @@ class JobSearchViewAdapter(
     fun setList(list: List<VacancyInfo>) {
         this.vacancies.clear()
         this.vacancies.addAll(list)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
