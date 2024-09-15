@@ -11,5 +11,5 @@ sealed interface VacancyDetailsScreenState{
 
     data object ErrorServer : VacancyDetailsScreenState
 
-    data object Empty : VacancyDetailsScreenState
+    data object NotFound : VacancyDetailsScreenState
 }

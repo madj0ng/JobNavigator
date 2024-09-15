@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.domain.vacancy_details.impl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.dto.vacancy.VacancyRepository
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.domain.models.VacancyDetailsModelOrError
 import ru.practicum.android.diploma.domain.vacancy_details.VacancyDetailsInteractor
@@ -31,7 +32,7 @@ class VacancyDetailsInteractorImpl(val vacancyRepository: VacancyRepository) : V
                             skill.name
                         },
                         vacancyRepositoryDto.description
-                    ), error = 0
+                    ), error = RetrofitNetworkClient.RESULT_CODE_SUCCESS
                 )
             )
         }
