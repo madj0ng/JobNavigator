@@ -12,7 +12,7 @@ import ru.practicum.android.diploma.domain.vacancy_details.VacancyDetailsInterac
 class VacancyDetailsInteractorImpl(val vacancyRepository: VacancyRepository) : VacancyDetailsInteractor {
     override suspend fun getVacancy(vacancyId: String): Flow<VacancyDetailsModelOrError> = flow {
         val vacancyResponse = vacancyRepository.getVacancy(vacancyId)
-        if (vacancyResponse?.resultCode != 200) {
+        if (vacancyResponse?.resultCode != RetrofitNetworkClient.RESULT_CODE_SUCCESS) {
             if (vacancyResponse != null) {
                 emit(VacancyDetailsModelOrError(error = vacancyResponse.resultCode, vacancyDetailsModel = null))
             }
