@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.domain.vacancy_details.impl
+package ru.practicum.android.diploma.domain.vacancydetails.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

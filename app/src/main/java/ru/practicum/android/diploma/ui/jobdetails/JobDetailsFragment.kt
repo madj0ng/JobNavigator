@@ -3,7 +3,6 @@ package ru.practicum.android.diploma.ui.jobdetails
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ import ru.practicum.android.diploma.databinding.FragmentJobDetailsBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.presentation.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.presentation.viewmodel.VacancyDetailsViewModel
-
 
 private const val ICON_RADIUS = 12
 
@@ -50,12 +48,10 @@ class JobDetailsFragment : Fragment() {
 
                 is VacancyDetailsScreenState.Loading -> {
                     showLoading()
-
                 }
 
                 is VacancyDetailsScreenState.NotFound -> {
                     vacancyNotFoundOrDeleted()
-
                 }
 
                 else -> {
@@ -65,12 +61,10 @@ class JobDetailsFragment : Fragment() {
         }
 
         viewModel.getVacancy(vacancyId)
-
         binding?.backButton?.setOnClickListener {
             findNavController().popBackStack()
         }
     }
-
 
     private fun showLoading() {
         hideAll()

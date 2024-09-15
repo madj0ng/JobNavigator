@@ -13,7 +13,6 @@ interface HHApiService {
     @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
     suspend fun getVacancies(@QueryMap options: Map<String, String>): VacancySearchResponse
 
-
     @GET("vacancies/{vacancy_id}")
     @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
     suspend fun getVacancy(
