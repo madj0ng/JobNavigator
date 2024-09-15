@@ -9,4 +9,7 @@ data class VacancyDetailsModel(
     val experience: String,
     val keySkills: List<String>,
     val description: String,
+    val employerIcon: String?,
+    val employerName: String,
+
 )
