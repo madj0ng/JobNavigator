@@ -7,9 +7,9 @@ import ru.practicum.android.diploma.data.dto.vacancy.VacancyRepository
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.domain.models.VacancyDetailsModelOrError
-import ru.practicum.android.diploma.domain.vacancy_details.VacancyDetailsInteractor
+import ru.practicum.android.diploma.domain.vacancydetails.VacancyDetailsInteractor
 
-class VacancyDetailsInteractorImpl(val vacancyRepository: VacancyRepository) : VacancyDetailsInteractor {
+class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyRepository) : VacancyDetailsInteractor {
     override suspend fun getVacancy(vacancyId: String): Flow<VacancyDetailsModelOrError> = flow {
         val vacancyResponse = vacancyRepository.getVacancy(vacancyId)
         if (vacancyResponse?.resultCode != RetrofitNetworkClient.RESULT_CODE_SUCCESS) {
