@@ -5,7 +5,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.network.HHApiService
-import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 
 val dataModule = module {
@@ -18,7 +17,7 @@ val dataModule = module {
             .create(HHApiService::class.java)
     }
 
-    single<NetworkClient> {
+    single<RetrofitNetworkClient> {
         RetrofitNetworkClient(androidContext(), get(), get())
     }
 }
