@@ -6,14 +6,128 @@
     android:layout_height="match_parent"
     tools:context=".ui.favoritejobs.FavoriteJobsFragment">
 
-    <TextView
-        android:id="@+id/textView2"
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FavoriteJobsFragment"
-        android:textSize="22sp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/dim_16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/dim_16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/dim_24dp" />
+
+
+    <TextView
+        android:id="@+id/favouritesTitle"
+        style="@style/PageTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dim_20dp"
+        android:paddingVertical="@dimen/dim_20dp"
+        android:text="@string/favourites"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <ScrollView
+        android:id="@+id/favouritesList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dim_48dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/favouritesTitle">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvJobList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_38dp"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            tools:listitem="@layout/vacancy_item" />
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/ivInformImage"
+        style="@style/InformImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/favourites"
+        android:src="@drawable/error_no_data"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <TextView
+        android:id="@+id/ivInformBottomText"
+        style="@style/InformBottomText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dim_16dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/ivInformImage"
+        tools:text="Не удалось получить список вакансий" />
+
+    <ImageView
+        android:id="@+id/ivNoLikedVacancies"
+        style="@style/InformImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/favourites"
+        android:src="@drawable/empty_vacancy_list"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <TextView
+        android:id="@+id/noLikedVacancies"
+        style="@style/InformBottomText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dim_16dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toEndOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/ivNoLikedVacancies"
+        tools:text="@string/list_is_empty" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupNoListVacancies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="ivInformBottomText, ivInformImage"
+        />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupNoVacancies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="noLikedVacancies, ivNoLikedVacancies"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
