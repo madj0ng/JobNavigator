@@ -41,4 +41,7 @@
     <string name="requirements">Требования</string>
     <string name="key_skills">Ключевые навыки</string>
     <string name="conditions">Условия</string>
+    <string name="vacancy_description">vacancy description</string>
+    <string name="server_error_cats">Ошибка сервера</string>
+    <string name="vacancy_not_found_or_deleted">Вакансия не найдена или удалена</string>
 </resources>
