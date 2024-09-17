@@ -35,6 +35,7 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
                         vacancyRepositoryDto.description,
                         vacancyRepositoryDto.employer.logoUrls?.logo90,
                         vacancyRepositoryDto.employer.name,
+                        vacancyRepositoryDto.alternativeUrl,
                     ),
                     error = RetrofitNetworkClient.RESULT_CODE_SUCCESS
                 )
@@ -65,5 +66,7 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
     private fun getSalaryTo(to: Int?): String {
         return to?.let { " до $it" } ?: ""
     }
+
+
 }
 

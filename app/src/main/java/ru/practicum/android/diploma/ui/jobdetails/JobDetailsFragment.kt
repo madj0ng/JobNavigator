@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.ui.jobdetails
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -36,6 +37,7 @@ class JobDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var vacancyId: String = ""
+        var vacancyUrl: String = ""
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
         }
@@ -43,6 +45,7 @@ class JobDetailsFragment : Fragment() {
             when (state) {
                 is VacancyDetailsScreenState.Content -> {
                     showContent(state.data)
+                    vacancyUrl = state.data.alternativeUrl
                 }
 
                 is VacancyDetailsScreenState.Loading -> {
@@ -60,9 +63,15 @@ class JobDetailsFragment : Fragment() {
         }
 
         viewModel.getVacancy(vacancyId)
+
         binding?.backButton?.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding?.shareButton?.setOnClickListener {
+            shareVacancy(vacancyUrl)
+        }
+
     }
 
     private fun showLoading() {
@@ -135,4 +144,14 @@ class JobDetailsFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+    private fun shareVacancy(vacancyUrl: String) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_SEND
+        intent.putExtra(Intent.EXTRA_TEXT, vacancyUrl)
+        intent.type = "text/plain"
+        startActivity(Intent.createChooser(intent, ""))
+
+    }
+
 }
