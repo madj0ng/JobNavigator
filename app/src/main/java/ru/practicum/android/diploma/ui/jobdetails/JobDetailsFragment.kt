@@ -21,7 +21,8 @@ import ru.practicum.android.diploma.presentation.viewmodel.VacancyDetailsViewMod
 private const val ICON_RADIUS = 12
 
 class JobDetailsFragment : Fragment() {
-    private var binding: FragmentJobDetailsBinding? = null
+    private var _binding: FragmentJobDetailsBinding? = null
+    private val binding get(): FragmentJobDetailsBinding = _binding!!
     private val viewModel: VacancyDetailsViewModel by viewModel()
 
     override fun onCreateView(
@@ -29,8 +30,8 @@ class JobDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentJobDetailsBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentJobDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -133,6 +134,6 @@ class JobDetailsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }
