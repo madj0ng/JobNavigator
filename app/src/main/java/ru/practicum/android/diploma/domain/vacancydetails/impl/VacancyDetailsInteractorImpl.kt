@@ -35,6 +35,7 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
                         vacancyRepositoryDto.description,
                         vacancyRepositoryDto.employer.logoUrls?.logo90,
                         vacancyRepositoryDto.employer.name,
+                        vacancyRepositoryDto.alternativeUrl,
                     ),
                     error = RetrofitNetworkClient.RESULT_CODE_SUCCESS
                 )
@@ -50,7 +51,6 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
         val from = getSalaryFrom(salary.from)
         val to = getSalaryTo(salary.to)
         val currency = salary.currency?.let { " $it" } ?: ""
-
         return if (from.isEmpty() && to.isEmpty()) {
             "Зарплата не указана"
         } else {
@@ -66,4 +66,3 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
         return to?.let { " до $it" } ?: ""
     }
 }
-
