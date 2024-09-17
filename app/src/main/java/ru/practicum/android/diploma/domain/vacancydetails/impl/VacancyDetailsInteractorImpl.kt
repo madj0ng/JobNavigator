@@ -51,7 +51,6 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
         val from = getSalaryFrom(salary.from)
         val to = getSalaryTo(salary.to)
         val currency = salary.currency?.let { " $it" } ?: ""
-
         return if (from.isEmpty() && to.isEmpty()) {
             "Зарплата не указана"
         } else {
@@ -66,7 +65,4 @@ class VacancyDetailsInteractorImpl(private val vacancyRepository: VacancyReposit
     private fun getSalaryTo(to: Int?): String {
         return to?.let { " до $it" } ?: ""
     }
-
-
 }
-
