@@ -5,11 +5,11 @@ import ru.practicum.android.diploma.presentation.models.VacancyInfo
 
 interface FavoriteJobsRepository {
 
-    suspend fun insertJob (vacancy: VacancyInfo)
+    suspend fun insertJob(vacancy: VacancyInfo)
 
-    suspend fun deleteJob (vacancy: VacancyInfo)
+    suspend fun deleteJob(vacancy: VacancyInfo)
 
-    suspend fun getJob (id: String) : VacancyInfo
+    suspend fun getJob(id: String): VacancyInfo
 
     suspend fun getJobs(): Flow<List<VacancyInfo>>
 }

@@ -25,7 +25,7 @@ class MapperVacansyToJob {
         )
     }
 
-    fun mapList (list: List<JobEntity>): List<VacancyInfo> {
+    fun mapList(list: List<JobEntity>): List<VacancyInfo> {
         return list.map {
             map(it)
         }
