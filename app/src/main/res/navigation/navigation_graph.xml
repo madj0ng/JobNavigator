@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/jobSearchFragment"
         android:name="ru.practicum.android.diploma.ui.jobsearch.JobSearchFragment"
-        android:label="JobSearchFragment" >
+        android:label="JobSearchFragment">
         <action
             android:id="@+id/action_jobSearchFragment_to_searchFiltersFragment"
             app:destination="@id/searchFiltersFragment" />
@@ -20,6 +20,7 @@
         <action
             android:id="@+id/action_jobSearchFragment_to_teamInformationFragment"
             app:destination="@id/teamInformationFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/searchFiltersFragment"
@@ -28,7 +29,14 @@
     <fragment
         android:id="@+id/jobDetailsFragment"
         android:name="ru.practicum.android.diploma.ui.jobdetails.JobDetailsFragment"
-        android:label="JobDetailsFragment" />
+        android:label="JobDetailsFragment">
+        <argument
+            android:name="vacancyId"
+            app:nullable="false"
+            app:argType="string" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/teamInformationFragment"
         android:name="ru.practicum.android.diploma.ui.teaminformation.TeamInformationFragment"

@@ -6,17 +6,19 @@ import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.VacancySearchRequest
+import ru.practicum.android.diploma.data.dto.vacancydetail.VacancyDetailsRequest
+import ru.practicum.android.diploma.data.dto.vacancydetail.VacancyDetailsResponse
 import ru.practicum.android.diploma.util.Connected
 import java.io.IOException
 
 class RetrofitNetworkClient(
     private val context: Context,
     private val hhApi: HHApiService,
-    private val connected: Connected
+    private val connected: Connected,
 ) : NetworkClient {
 
     override suspend fun doRequest(dto: Any): NetworkResponse {
-        if (dto !is VacancySearchRequest) {
+        if (dto !is VacancySearchRequest && dto !is VacancyDetailsRequest) {
             return NetworkResponse().apply {
                 resultCode = ERROR_CODE_BAD_REQUEST
                 message = context.getString(R.string.search_error_server)
@@ -26,21 +28,33 @@ class RetrofitNetworkClient(
         return withContext(Dispatchers.IO) {
             if (connected.isConnected()) {
                 try {
-                    val response = hhApi.getVacancies(
-                        dto.vacancyName,
-                        dto.area,
-                        dto.salary,
-                        dto.onlyWithSalary,
-                        dto.professionalRole
-                    )
+                    when (dto) {
+                        is VacancySearchRequest -> {
+                            val response = hhApi.getVacancies(
+                                dto.queryOptions
+                            )
+                            response.apply { resultCode = RESULT_CODE_SUCCESS }
+                        }
 
-                    response.apply { resultCode = RESULT_CODE_SUCCESS }
+                        is VacancyDetailsRequest -> {
+                            val responseDto = hhApi.getVacancy(dto.vacancyId)
+                            val response = VacancyDetailsResponse(responseDto)
+                            response.apply { resultCode = RESULT_CODE_SUCCESS }
+                        }
+
+                        else -> {
+                            NetworkResponse().apply {
+                                resultCode = ERROR_CODE_SERVER
+                                message = context.getString(R.string.search_error_server)
+                            }
+                        }
+                    }
                 } catch (e: IOException) {
                     NetworkResponse().apply {
                         resultCode = ERROR_CODE_SERVER
                         message = context.getString(R.string.search_error_server)
                     }
-                    throw NetworkExeption(context.getString(R.string.search_error_server), e)
+                    throw e
                 }
             } else {
                 NetworkResponse().apply {

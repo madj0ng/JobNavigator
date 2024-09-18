@@ -14,23 +14,4 @@ import ru.practicum.android.diploma.data.db.entity.JobEntity
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun jobDao(): JobDao
-
-    companion object {
-        private const val DB_JOB = "jobs.db"
-
-        @Volatile
-        private var instance: AppDatabase? = null
-
-        fun getInstance(context: Context): AppDatabase {
-            if (instance == null) {
-                synchronized(this) {
-                    instance = Room.databaseBuilder(
-                        context,
-                        AppDatabase::class.java, DB_JOB
-                    ).allowMainThreadQueries().build()
-                }
-            }
-            return instance!!
-        }
-    }
 }
