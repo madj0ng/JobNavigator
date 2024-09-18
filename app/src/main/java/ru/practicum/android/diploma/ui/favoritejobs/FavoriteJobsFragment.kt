@@ -8,19 +8,20 @@ import androidx.fragment.app.Fragment
 import ru.practicum.android.diploma.databinding.FragmentFavoriteJobsBinding
 
 class FavoriteJobsFragment : Fragment() {
-    private var binding: FragmentFavoriteJobsBinding? = null
+    private var _binding: FragmentFavoriteJobsBinding? = null
+    private val binding get(): FragmentFavoriteJobsBinding = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFavoriteJobsBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentFavoriteJobsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }

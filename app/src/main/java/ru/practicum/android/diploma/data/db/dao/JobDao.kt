@@ -15,7 +15,7 @@ interface JobDao {
     @Delete(entity = JobEntity::class)
     suspend fun deleteJob(jobEntity: JobEntity)
 
-    @Query("SELECT * FROM job_table WHERE vacancyId = :vacancyId")
+    @Query("SELECT * FROM job_table WHERE id = :vacancyId")
     suspend fun getJob(vacancyId: String): JobEntity
 
     @Query("SELECT * FROM job_table")

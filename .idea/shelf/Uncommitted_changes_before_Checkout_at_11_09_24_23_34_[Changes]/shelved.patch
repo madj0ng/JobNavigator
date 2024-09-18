@@ -1,0 +1,44 @@
+Index: app/src/main/java/ru/practicum/android/diploma/data/network/RetrofitNetworkClient.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.practicum.android.diploma.data.network\r\n\r\nimport android.content.Context\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.withContext\r\nimport retrofit2.HttpException\r\nimport ru.practicum.android.diploma.BuildConfig\r\nimport ru.practicum.android.diploma.R\r\nimport ru.practicum.android.diploma.data.dto.NetworkResponse\r\nimport ru.practicum.android.diploma.data.dto.VacancySearchRequest\r\nimport ru.practicum.android.diploma.util.Connected\r\nimport java.io.IOException\r\n\r\nclass RetrofitNetworkClient(\r\n    private val context: Context,\r\n    private val hhApi: HhApi,\r\n    private val connected: Connected\r\n) : NetworkClient {\r\n\r\n    override suspend fun doRequest(dto: Any): NetworkResponse {\r\n        if (dto !is VacancySearchRequest) {\r\n            return NetworkResponse().apply {\r\n                resultCode = ERROR_CODE_BAD_REQUEST\r\n                message = context.getString(R.string.search_error_server)\r\n            }\r\n        }\r\n\r\n        return withContext(Dispatchers.IO) {\r\n            if (connected.isConnected()) {\r\n                try {\r\n                    val response = hhApi.search(dto.request, BuildConfig.HH_ACCESS_TOKEN)\r\n                    response.apply { resultCode = RESULT_CODE_SUCCESS }\r\n                } catch (e: HttpException) {\r\n                    NetworkResponse().apply {\r\n                        resultCode = ERROR_CODE_SERVER\r\n                        message = context.getString(R.string.search_error_server)\r\n                    }\r\n                } catch (e: IOException) {\r\n                    NetworkResponse().apply {\r\n                        resultCode = ERROR_CODE_SERVER\r\n                        message = context.getString(R.string.search_error_server)\r\n                    }\r\n                } catch (e: Exception) {\r\n                    NetworkResponse().apply {\r\n                        resultCode = ERROR_CODE_SERVER\r\n                        message = context.getString(R.string.search_error_server)\r\n                    }\r\n                }\r\n            } else {\r\n                NetworkResponse().apply {\r\n                    resultCode = ERROR_CODE_INTERNET\r\n                    message = context.getString(R.string.search_connection_faild)\r\n                }\r\n            }\r\n\r\n        }\r\n    }\r\n\r\n    companion object {\r\n        const val RESULT_CODE_SUCCESS = 200\r\n        const val ERROR_CODE_INTERNET = -1\r\n        const val ERROR_CODE_SERVER = 500\r\n        const val ERROR_CODE_BAD_REQUEST = 400\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/ru/practicum/android/diploma/data/network/RetrofitNetworkClient.kt b/app/src/main/java/ru/practicum/android/diploma/data/network/RetrofitNetworkClient.kt
+--- a/app/src/main/java/ru/practicum/android/diploma/data/network/RetrofitNetworkClient.kt	
++++ b/app/src/main/java/ru/practicum/android/diploma/data/network/RetrofitNetworkClient.kt	
+@@ -2,14 +2,15 @@
+ 
+ import android.content.Context
+ import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.handleCoroutineException
+ import kotlinx.coroutines.withContext
+-import retrofit2.HttpException
+ import ru.practicum.android.diploma.BuildConfig
+ import ru.practicum.android.diploma.R
+ import ru.practicum.android.diploma.data.dto.NetworkResponse
+ import ru.practicum.android.diploma.data.dto.VacancySearchRequest
+ import ru.practicum.android.diploma.util.Connected
+ import java.io.IOException
++import java.util.IllegalFormatException
+ 
+ class RetrofitNetworkClient(
+     private val context: Context,
+@@ -30,17 +31,7 @@
+                 try {
+                     val response = hhApi.search(dto.request, BuildConfig.HH_ACCESS_TOKEN)
+                     response.apply { resultCode = RESULT_CODE_SUCCESS }
+-                } catch (e: HttpException) {
+-                    NetworkResponse().apply {
+-                        resultCode = ERROR_CODE_SERVER
+-                        message = context.getString(R.string.search_error_server)
+-                    }
+-                } catch (e: IOException) {
+-                    NetworkResponse().apply {
+-                        resultCode = ERROR_CODE_SERVER
+-                        message = context.getString(R.string.search_error_server)
+-                    }
+-                } catch (e: Exception) {
++                } catch (e: Throwable) {
+                     NetworkResponse().apply {
+                         resultCode = ERROR_CODE_SERVER
+                         message = context.getString(R.string.search_error_server)
