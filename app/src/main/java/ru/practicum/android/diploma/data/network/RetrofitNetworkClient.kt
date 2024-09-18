@@ -10,6 +10,8 @@ import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.dto.vacancydetail.VacancyDetailsRequest
 import ru.practicum.android.diploma.data.dto.vacancydetail.VacancyDetailsResponse
+import ru.practicum.android.diploma.data.filter.AreasRequest
+import ru.practicum.android.diploma.data.filter.IndustriasRequest
 import ru.practicum.android.diploma.util.Connected
 import java.io.IOException
 
@@ -20,8 +22,9 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     override suspend fun doRequest(dto: Any): NetworkResponse {
-        if (dto !is VacancySearchRequest && dto !is VacancyDetailsRequest) {
+        if (dto !is VacancySearchRequest && dto !is VacancyDetailsRequest && dto !is AreasRequest && dto !is IndustriasRequest) {
             return errorResponse(ERROR_CODE_BAD_REQUEST, R.string.search_error_server)
+
         }
 
         return withContext(Dispatchers.IO) {
@@ -29,6 +32,15 @@ class RetrofitNetworkClient(
                 try {
                     when (dto) {
                         is VacancySearchRequest -> vacancySearchRequest(dto)
+                        is IndustriasRequest -> {
+                            val response = hhApi.getIndustries()
+                            ListResponseWrapper(response).apply { resultCode = RESULT_CODE_SUCCESS }
+                        }
+
+                        is AreasRequest -> {
+                            val response = hhApi.getAreas()
+                            ListResponseWrapper(response).apply { resultCode = RESULT_CODE_SUCCESS }
+                        }
 
                         is VacancyDetailsRequest -> vacancyDetailsRequest(dto)
 

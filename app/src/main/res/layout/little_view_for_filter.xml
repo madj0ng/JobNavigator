@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dim_60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        style="@style/VacancyItemSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dim_20dp"
+        android:layout_marginLeft="@dimen/dim_16dp"
+        android:layout_weight="1"
+        android:text="@string/country"
+        android:textColor="@color/day_black_night_white" />
+
+    <ImageView
+        app:srcCompat="@drawable/icon_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dim_4dp"
+        android:layout_marginEnd="@dimen/dim_16dp"
+        android:contentDescription="@string/filter_page_title" />
+
+</LinearLayout>
