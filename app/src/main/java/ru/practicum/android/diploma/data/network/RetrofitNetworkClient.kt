@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.network
 
 import android.content.Context
+import androidx.annotation.StringRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.R
@@ -20,10 +21,7 @@ class RetrofitNetworkClient(
 
     override suspend fun doRequest(dto: Any): NetworkResponse {
         if (dto !is VacancySearchRequest && dto !is VacancyDetailsRequest) {
-            return NetworkResponse().apply {
-                resultCode = ERROR_CODE_BAD_REQUEST
-                message = context.getString(R.string.search_error_server)
-            }
+            return errorResponse(ERROR_CODE_BAD_REQUEST, R.string.search_error_server)
         }
 
         return withContext(Dispatchers.IO) {
@@ -59,9 +57,9 @@ class RetrofitNetworkClient(
         }
     }
 
-    private fun errorResponse(errCode: Int, mesInt: Int): NetworkResponse {
+    private fun errorResponse(errCode: Int, @StringRes mesInt: Int): NetworkResponse {
         return NetworkResponse().apply {
-            resultCode = ERROR_CODE_SERVER
+            resultCode = errCode
             message = context.getString(mesInt)
         }
     }
