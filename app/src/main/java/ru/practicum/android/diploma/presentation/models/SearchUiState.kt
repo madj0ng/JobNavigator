@@ -46,10 +46,10 @@ sealed interface SearchUiState {
         override val isBottomText: Boolean = true,
         override val url: Int = R.drawable.error_no_data,
         override val bottomText: Int = R.string.search_error_no_data,
-        override val topText: Int = R.string.search_job_list_empty,
+        override val topText: Int = R.string.search_job_no_such_vacancies,
     ) : SearchUiState
 
-    data class Empty(
+    data class Default(
         override val isJobsCount: Boolean = false,
         override val isJobsList: Boolean = false,
         override val isJobsListBrogressBar: Boolean = false,
@@ -68,9 +68,9 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = true,
         override val isInformImage: Boolean = false,
         override val isBottomText: Boolean = false,
-        override val url: Int?,
-        override val topText: Int?,
-        override val bottomText: Int?,
+        override val url: Int? = null,
+        override val topText: Int? = null,
+        override val bottomText: Int? = null,
     ) : SearchUiState
 
     data class Content(
@@ -80,9 +80,10 @@ sealed interface SearchUiState {
         override val isBrogressBar: Boolean = false,
         override val isInformImage: Boolean = false,
         override val isBottomText: Boolean = false,
-        override val url: Int?,
-        override val topText: Int?,
-        override val bottomText: Int?,
+        override val url: Int? = null,
+        override val topText: Int? = R.string.search_job_list_count,
+        override val bottomText: Int? = null,
         val data: List<VacancyInfo>,
+        val found: Int,
     ) : SearchUiState
 }
