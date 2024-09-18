@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.domain.models.SalaryModel
 import ru.practicum.android.diploma.domain.models.VacancyModel
 import ru.practicum.android.diploma.domain.models.VacancySearchParams
 import ru.practicum.android.diploma.domain.search.SearchVacancyInteractor
-import ru.practicum.android.diploma.presentation.models.JobSearchScreenState
+import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.util.SingleLiveEvent
 
@@ -20,8 +20,8 @@ class JobSearchViewModel(
 
     private val toastLiveData = SingleLiveEvent<String>()
 
-    private val _screenLiveData = MutableLiveData<JobSearchScreenState>(JobSearchScreenState.Default)
-    val screenLiveData: LiveData<JobSearchScreenState> get() = _screenLiveData
+    private val _screenLiveData = MutableLiveData<SearchUiState>(SearchUiState.Default())
+    val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
 
     fun onSearchQueryChanged(query: String) {
         searchRequest(query)
@@ -36,7 +36,7 @@ class JobSearchViewModel(
             vacancyName = newSearchQuery
         )
 
-        _screenLiveData.value = JobSearchScreenState.Loading
+        _screenLiveData.value = SearchUiState.Loading()
 
         viewModelScope.launch {
             searchVacancyInteractor.searchVacancy(searchParams).collect { result ->
@@ -49,16 +49,16 @@ class JobSearchViewModel(
         when (result) {
             is Resource.Success -> {
                 if (result.data.isEmpty()) {
-                    _screenLiveData.value = JobSearchScreenState.Empty
+                    _screenLiveData.value = SearchUiState.ErrorData()
                 } else {
                     val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
                     val found = result.found ?: 0
-                    _screenLiveData.value = JobSearchScreenState.Content(vacancyInfoList, found)
+                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = found)
                 }
             }
 
             is Resource.Error -> {
-                _screenLiveData.value = JobSearchScreenState.ErrorServer
+                _screenLiveData.value = SearchUiState.ErrorServer()
                 toastLiveData.value = result.message
             }
         }
