@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.favoritejobs.FavoriteJobsInteractor
 import ru.practicum.android.diploma.presentation.models.FavoriteJobsScreenState
-import java.io.IOException
 
 class FavoriteJobsViewModel(
     private val favoriteJobsInteractor: FavoriteJobsInteractor
@@ -19,17 +18,19 @@ class FavoriteJobsViewModel(
 
     fun getFavoriteJobs() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                favoriteJobsInteractor.getJobs().collect { list ->
-                    if (list.isEmpty()) {
-                        _screenLiveData.postValue(FavoriteJobsScreenState.Empty)
-                    } else {
-                        _screenLiveData.postValue(FavoriteJobsScreenState.Content(list))
+            kotlin.runCatching { favoriteJobsInteractor.getJobs() }
+                .onFailure {
+                    _screenLiveData.postValue(FavoriteJobsScreenState.Error)
+                }
+                .onSuccess { flow ->
+                    flow.collect { list ->
+                        if (list.isEmpty()) {
+                            _screenLiveData.postValue(FavoriteJobsScreenState.Empty)
+                        } else {
+                            _screenLiveData.postValue(FavoriteJobsScreenState.Content(list))
+                        }
                     }
                 }
-            } catch (e: IOException) {
-                _screenLiveData.postValue(FavoriteJobsScreenState.Error)
-            }
         }
     }
 }
