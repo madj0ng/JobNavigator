@@ -120,6 +120,11 @@ class JobDetailsFragment : Fragment() {
         }
         binding?.city?.text = vacancy.address
         binding?.companyName?.text = vacancy.employerName
+        if (vacancy.isFavorite) {
+            binding.likeButton.setImageResource(R.drawable.icon_is_liked)
+        } else {
+            binding.likeButton.setImageResource(R.drawable.icon_liked)
+        }
     }
 
     fun generateHtmlList(inputList: List<String>): String {

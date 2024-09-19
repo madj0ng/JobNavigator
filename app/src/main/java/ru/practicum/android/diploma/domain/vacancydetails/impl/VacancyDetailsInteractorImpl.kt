@@ -21,7 +21,7 @@ class VacancyDetailsInteractorImpl(
                 emit(VacancyDetailsModelOrError(error = vacancyResponse.resultCode, vacancyDetailsModel = null))
             }
         } else {
-            val isfavoriteVacancy = favoriteRepository.getJob(vacancyId) == null
+            val isfavoriteVacancy = favoriteRepository.getJob(vacancyId) != null
             val vacancyDetailsModel = mapper.map(vacancyResponse.vacancyDetails)
             emit(
                 VacancyDetailsModelOrError(
