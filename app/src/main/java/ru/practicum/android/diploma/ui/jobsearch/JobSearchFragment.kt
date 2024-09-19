@@ -58,6 +58,9 @@ class JobSearchFragment : Fragment() {
         }
 
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
+        binding.ifbFilter.setOnClickListener{
+            findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
+        }
 
     }
 

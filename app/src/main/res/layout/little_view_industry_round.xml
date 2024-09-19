@@ -7,13 +7,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
+        android:id="@+id/industry"
         style="@style/VacancyItemSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/dim_20dp"
         android:layout_marginLeft="@dimen/dim_16dp"
         android:layout_weight="1"
-        android:text="@string/country"
+        android:text="@string/industry_choosing"
         android:textColor="@color/day_black_night_white" />
 
     <ImageView

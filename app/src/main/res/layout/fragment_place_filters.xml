@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.jobdetails.JobDetailsFragment">
+    tools:context=".ui.searchfilters.PlaceOfWorkFragment">
 
     <LinearLayout
         android:id="@+id/button_back"
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dim_20dp"
-            android:text="@string/filter_page_title" />
+            android:text="@string/choosing_place_of_work" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,7 +39,7 @@
             android:layout_marginVertical="@dimen/dim_20dp"
             android:layout_marginLeft="@dimen/dim_16dp"
             android:layout_weight="1"
-            android:text="Место работы"
+            android:text="@string/country"
             android:textColor="@color/gray" />
 
         <ImageView
@@ -63,7 +63,7 @@
             android:layout_marginVertical="@dimen/dim_20dp"
             android:layout_marginLeft="@dimen/dim_16dp"
             android:layout_weight="1"
-            android:text="@string/Industry"
+            android:text="@string/region"
             android:textColor="@color/gray" />
 
         <ImageView
@@ -73,55 +73,6 @@
             android:layout_marginEnd="@dimen/dim_16dp"
             android:contentDescription="@string/filter_page_title"
             app:srcCompat="@drawable/icon_next" />
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/Search"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        android:autofillHints=""
-        android:background="@drawable/rounded_corners_8dp_grey"
-        android:drawablePadding="8dp"
-        android:hint="@string/enter_salary"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:maxLength="45"
-        android:maxLines="1"
-        android:paddingStart="@dimen/dim_16dp"
-        android:singleLine="true"
-        android:textColor="@color/black_universal"
-        android:textColorHint="@color/day_gray_night_white"
-        android:textCursorDrawable="@drawable/cursor"
-        android:textSize="@dimen/dim_16sp"
-        tools:ignore="TouchTargetSizeCheck" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dim_24dp"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/VacancyItemSmallReverseColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dim_16dp"
-            android:layout_marginLeft="@dimen/dim_16dp"
-            android:text="@string/show_without_salary"
-            android:layout_weight="0.5"/>
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/checkbox_custom_click"
-            android:checked="true"
-            android:layout_marginTop="@dimen/dim_18dp"
-            android:theme="@style/CheckBoxTheme"
-            android:layout_weight="0.1"/>
 
     </LinearLayout>
-
 </LinearLayout>
