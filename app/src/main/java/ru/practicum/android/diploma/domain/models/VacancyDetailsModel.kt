@@ -12,4 +12,5 @@ data class VacancyDetailsModel(
     val employerIcon: String?,
     val employerName: String,
     val alternativeUrl: String,
+    val isFavorite: Boolean,
 )

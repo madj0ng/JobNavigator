@@ -20,9 +20,9 @@ class FavoriteJobsRepositoryImpl(
         appDatabase.jobDao().deleteJob(converter.map(vacancy))
     }
 
-    override suspend fun getJob(id: String): VacancyInfo {
+    override suspend fun getJob(id: String): VacancyInfo? {
         val vacancy = appDatabase.jobDao().getJob(id)
-        return converter.map(vacancy)
+        return if (vacancy != null) converter.map(vacancy) else null
     }
 
     override suspend fun getJobs(): Flow<List<VacancyInfo>> = flow {
