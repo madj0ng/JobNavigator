@@ -9,7 +9,7 @@ interface FavoriteJobsInteractor {
 
     suspend fun deleteJob(vacancy: VacancyInfo)
 
-    suspend fun getJob(id: String): VacancyInfo
+    suspend fun getJob(id: String): VacancyInfo?
 
     suspend fun getJobs(): Flow<List<VacancyInfo>>
 }

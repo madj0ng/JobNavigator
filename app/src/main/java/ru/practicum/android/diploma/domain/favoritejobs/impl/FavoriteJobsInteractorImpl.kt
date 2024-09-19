@@ -17,7 +17,7 @@ class FavoriteJobsInteractorImpl(
         repository.deleteJob(vacancy)
     }
 
-    override suspend fun getJob(id: String): VacancyInfo {
+    override suspend fun getJob(id: String): VacancyInfo? {
         return repository.getJob(id)
     }
 

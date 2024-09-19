@@ -50,7 +50,7 @@ class JobSearchViewAdapter(
             private const val IMG_RADIUS_PX = 12F
         }
 
-        private val imgRadius = converter.dpToPx(IMG_RADIUS_PX, itemView.context)
+        private val imgRadius = converter.dpToPx(IMG_RADIUS_PX)
 
         fun bind(vacancy: VacancyInfo) {
             binding.departmentName.text = vacancy.departamentName
