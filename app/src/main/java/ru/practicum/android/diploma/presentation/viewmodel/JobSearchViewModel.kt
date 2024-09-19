@@ -61,7 +61,11 @@ class JobSearchViewModel(
             }
 
             is Resource.Error -> {
-                _screenLiveData.value = SearchUiState.ErrorServer()
+                if (result.resultCode == ERROR_INTERNET){
+                    _screenLiveData.value = SearchUiState.ErrorConnect()
+                } else {
+                    _screenLiveData.value = SearchUiState.ErrorServer()
+                }
                 toastLiveData.value = result.message
             }
         }
@@ -101,6 +105,10 @@ class JobSearchViewModel(
 
     private fun getSalaryTo(to: Int?): String {
         return to?.let { " до $it" } ?: ""
+    }
+
+    companion object {
+        const val ERROR_INTERNET = -1
     }
 
 }
