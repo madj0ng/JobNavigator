@@ -5,6 +5,7 @@ import ru.practicum.android.diploma.domain.favoritejobs.FavoriteJobsInteractor
 import ru.practicum.android.diploma.domain.favoritejobs.impl.FavoriteJobsInteractorImpl
 import ru.practicum.android.diploma.domain.search.SearchVacancyInteractor
 import ru.practicum.android.diploma.domain.search.impl.SearchVacancyInteractorImpl
+import ru.practicum.android.diploma.domain.vacancydetails.MapperVacancyDetails
 import ru.practicum.android.diploma.domain.vacancydetails.VacancyDetailsInteractor
 import ru.practicum.android.diploma.domain.vacancydetails.impl.VacancyDetailsInteractorImpl
 
@@ -15,7 +16,15 @@ val interactorModule = module {
     }
 
     single<VacancyDetailsInteractor> {
-        VacancyDetailsInteractorImpl(get())
+        VacancyDetailsInteractorImpl(
+            vacancyRepository = get(),
+            favoriteRepository = get(),
+            mapper = get()
+        )
+    }
+
+    factory {
+        MapperVacancyDetails(get())
     }
 
     single<FavoriteJobsInteractor> {
