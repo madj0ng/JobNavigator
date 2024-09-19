@@ -26,6 +26,7 @@ class JobDetailsFragment : Fragment() {
     private var _binding: FragmentJobDetailsBinding? = null
     private val binding get(): FragmentJobDetailsBinding = _binding!!
     private val viewModel: VacancyDetailsViewModel by viewModel()
+    private lateinit var vacancyInfo: VacancyInfo
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +41,7 @@ class JobDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var vacancyId: String = ""
         var vacancyUrl: String = ""
-        var vacancyInfo: VacancyInfo? = null
+
         var isFavorite: Boolean = false
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
