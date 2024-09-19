@@ -14,7 +14,7 @@ gen/
 
 # IDEA/Android Studio project files, because
 # the project can be imported from settings.gradle.kts
-.idea/*
+.idea/
 !.idea/copyright
 # Keep the code styles.
 !/.idea/codeStyles
