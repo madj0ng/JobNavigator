@@ -42,14 +42,14 @@ class FilterLocalStorage(
         saveStorage(filter.copy(onlyWithSalary = isOnlyWithSalary))
     }
 
-    suspend fun getFromStorage(): FilterDto {
+    private suspend fun getFromStorage(): FilterDto {
         return withContext(Dispatchers.IO) {
             val filterString = pref.getString(FILTER_KEY, null)
             if (filterString != null) gson.fromJson(filterString, FilterDto::class.java) else FilterDto()
         }
     }
 
-    suspend fun saveStorage(filter: FilterDto) {
+    private suspend fun saveStorage(filter: FilterDto) {
         withContext(Dispatchers.IO) {
             val filterString = gson.toJson(filter)
             pref.edit().putString(FILTER_KEY, filterString).apply()
