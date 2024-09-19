@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import org.koin.java.KoinJavaComponent.getKoin
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.VacancyItemBinding
 import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.util.FormatConverter
+import ru.practicum.android.diploma.util.GlideApp
 
 class JobSearchViewAdapter(
     private val clickListener: OnClickListener,
@@ -55,7 +57,7 @@ class JobSearchViewAdapter(
             binding.vacancyName.text = vacancy.vacancyName
             binding.sallary.text = vacancy.salary
 
-            Glide.with(itemView)
+            GlideApp.with(itemView)
                 .load(vacancy.logoUrl)
                 .placeholder(R.drawable.company_logo_placeholder)
                 .centerCrop()

@@ -44,5 +44,9 @@
     <fragment
         android:id="@+id/favoriteJobsFragment"
         android:name="ru.practicum.android.diploma.ui.favoritejobs.FavoriteJobsFragment"
-        android:label="FavoriteJobsFragment" />
+        android:label="FavoriteJobsFragment" >
+        <action
+            android:id="@+id/action_favoriteJobsFragment_to_jobDetailsFragment"
+            app:destination="@id/jobDetailsFragment" />
+    </fragment>
 </navigation>

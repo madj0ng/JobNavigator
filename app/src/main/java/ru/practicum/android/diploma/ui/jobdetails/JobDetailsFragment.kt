@@ -43,6 +43,7 @@ class JobDetailsFragment : Fragment() {
         var vacancyName: String = ""
         var departamentName: String = ""
         var salary: String = ""
+        var logoUrl: String = ""
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
         }
@@ -54,6 +55,7 @@ class JobDetailsFragment : Fragment() {
                     vacancyName = state.data.name
                     departamentName = state.data.employerName
                     salary = state.data.salary ?: ""
+                    logoUrl = state.data.employerIcon ?: ""
                 }
 
                 is VacancyDetailsScreenState.Loading -> {
@@ -81,7 +83,7 @@ class JobDetailsFragment : Fragment() {
         }
 
         binding.likeButton.setOnClickListener {
-            viewModel.addVacansyAtFavorite(VacancyInfo(vacancyId, vacancyName, departamentName, salary, vacancyUrl))
+            viewModel.addVacansyAtFavorite(VacancyInfo(vacancyId, vacancyName, departamentName, salary, logoUrl))
         }
     }
 

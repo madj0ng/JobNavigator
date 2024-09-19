@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,7 @@ class FavoriteJobsViewModel(
     private val favoriteJobsInteractor: FavoriteJobsInteractor
 ) : ViewModel() {
 
-    private val _screenLiveData = MutableLiveData<FavoriteJobsScreenState>()
+    private var _screenLiveData = MutableLiveData<FavoriteJobsScreenState>()
     val screenLiveData: LiveData<FavoriteJobsScreenState> get() = _screenLiveData
 
     fun getFavoriteJobs() {
