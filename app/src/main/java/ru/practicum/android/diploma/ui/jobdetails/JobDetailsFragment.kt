@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.jobdetails
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -170,9 +169,9 @@ class JobDetailsFragment : Fragment() {
 
     fun setLikeButton(isFavorite: Boolean) {
         if (isFavorite) {
-            binding.likeButton.setImageResource(R.drawable.icon_is_liked)
+            binding.likeButton.setImageResource(R.drawable.ic_is_liked)
         } else {
-            binding.likeButton.setImageResource(R.drawable.icon_liked)
+            binding.likeButton.setImageResource(R.drawable.ic_liked)
         }
     }
 
