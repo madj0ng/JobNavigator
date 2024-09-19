@@ -44,7 +44,7 @@ class FavoriteJobsFragment : Fragment() {
         }
 
         viewModel.screenLiveData.observe(viewLifecycleOwner) { state ->
-            when(state) {
+            when (state) {
                 is FavoriteJobsScreenState.Empty -> showEmptyState()
                 is FavoriteJobsScreenState.Error -> showErrorState()
                 is FavoriteJobsScreenState.Content -> showContent(state.data)
@@ -71,7 +71,7 @@ class FavoriteJobsFragment : Fragment() {
     }
 
     fun hideAll() {
-        with(binding){
+        with(binding) {
             rvJobList.visibility = View.GONE
             groupNoListVacancies.visibility = View.GONE
             groupNoVacancies.visibility = View.GONE

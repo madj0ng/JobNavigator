@@ -74,7 +74,7 @@ class JobDetailsFragment : Fragment() {
             }
         }
 
-        viewModel.likeLiveData.observe(viewLifecycleOwner){ state ->
+        viewModel.likeLiveData.observe(viewLifecycleOwner) { state ->
             setLikeButton(state)
         }
 
@@ -182,7 +182,7 @@ class JobDetailsFragment : Fragment() {
         }
     }
 
-    fun setLikeButton (isFavorite: Boolean) {
+    fun setLikeButton(isFavorite: Boolean) {
         if (isFavorite) {
             binding.likeButton.setImageResource(R.drawable.icon_is_liked)
         } else {
