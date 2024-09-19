@@ -40,10 +40,7 @@ class JobDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var vacancyId: String = ""
         var vacancyUrl: String = ""
-        var vacancyName: String = ""
-        var departamentName: String = ""
-        var salary: String = ""
-        var logoUrl: String = ""
+        var vacancyInfo: VacancyInfo? = null
         var isFavorite: Boolean = false
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
@@ -53,10 +50,14 @@ class JobDetailsFragment : Fragment() {
                 is VacancyDetailsScreenState.Content -> {
                     showContent(state.data)
                     vacancyUrl = state.data.alternativeUrl
-                    vacancyName = state.data.name
-                    departamentName = state.data.employerName
-                    salary = state.data.salary ?: ""
-                    logoUrl = state.data.employerIcon ?: ""
+
+                    vacancyInfo = VacancyInfo(
+                        vacancyId,
+                        state.data.name,
+                        state.data.employerName,
+                        state.data.salary ?: "",
+                        state.data.employerIcon
+                    )
                     isFavorite = state.data.isFavorite
                 }
 
@@ -90,26 +91,10 @@ class JobDetailsFragment : Fragment() {
 
         binding.likeButton.setOnClickListener {
             if (isFavorite) {
-                viewModel.deleteVcancyFromFavorite(
-                    VacancyInfo(
-                        vacancyId,
-                        vacancyName,
-                        departamentName,
-                        salary,
-                        logoUrl
-                    )
-                )
+                viewModel.deleteVcancyFromFavorite(vacancyInfo!!)
                 isFavorite = false
             } else {
-                viewModel.addVacansyAtFavorite(
-                    VacancyInfo(
-                        vacancyId,
-                        vacancyName,
-                        departamentName,
-                        salary,
-                        logoUrl
-                    )
-                )
+                viewModel.addVacansyAtFavorite(vacancyInfo!!)
                 isFavorite = true
             }
         }
