@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.ui.jobsearch
+package ru.practicum.android.diploma.ui.favoritejobs
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,9 +11,9 @@ import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.util.FormatConverter
 import ru.practicum.android.diploma.util.GlideApp
 
-class JobSearchViewAdapter(
-    private val clickListener: OnClickListener,
-) : RecyclerView.Adapter<JobSearchViewAdapter.ViewHolder>() {
+class FavoriteJobsViewAdapter(
+    private val clickListener: ViewHolder.OnClickListener
+) : RecyclerView.Adapter<FavoriteJobsViewAdapter.ViewHolder>() {
     private var vacancies = mutableListOf<VacancyInfo>()
 
     fun setList(list: List<VacancyInfo>) {
@@ -44,7 +44,6 @@ class JobSearchViewAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         companion object {
-            // Округление в пикселяхr
             private const val IMG_RADIUS_PX = 12F
         }
 
@@ -62,12 +61,11 @@ class JobSearchViewAdapter(
                 .transform(RoundedCorners(imgRadius))
                 .into(binding.companyLogo)
 
-            // Событие нажатия кнопки
             itemView.setOnClickListener { clickListener.onTrackClick(vacancy.id) }
         }
-    }
 
-    fun interface OnClickListener {
-        fun onTrackClick(vacancyId: String)
+        fun interface OnClickListener {
+            fun onTrackClick(vacancyId: String)
+        }
     }
 }
