@@ -5,5 +5,5 @@ data class FilterDto(
     val area: AreasDto? = null,
     val industries: IndustriesDto? = null,
     val salary: Int? = null,
-    val only_with_salary: Boolean? = null,
+    val onlyWithSalary: Boolean? = null,
 )

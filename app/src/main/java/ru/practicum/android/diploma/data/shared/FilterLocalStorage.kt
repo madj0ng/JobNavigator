@@ -37,9 +37,9 @@ class FilterLocalStorage(
         saveStorage(filter.copy(salary = salary))
     }
 
-    suspend fun addToStorage(only_with_salary: Boolean) {
+    suspend fun addToStorage(isOnlyWithSalary: Boolean) {
         val filter = getFromStorage()
-        saveStorage(filter.copy(only_with_salary = only_with_salary))
+        saveStorage(filter.copy(only_with_salary = isOnlyWithSalary))
     }
 
     suspend fun getFromStorage(): FilterDto {
