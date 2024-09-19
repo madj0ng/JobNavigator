@@ -87,7 +87,7 @@ class JobDetailsFragment : Fragment() {
         }
 
         binding.shareButton.setOnClickListener {
-            shareVacancy(vacancyUrl)
+            viewModel.sharingVacancy(vacancyUrl)
         }
 
         binding.likeButton.setOnClickListener {
@@ -180,14 +180,4 @@ class JobDetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    private fun shareVacancy(vacancyUrl: String) {
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, vacancyUrl)
-        intent.type = "text/plain"
-        startActivity(Intent.createChooser(intent, ""))
-
-    }
-
 }

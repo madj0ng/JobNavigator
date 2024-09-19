@@ -8,13 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.favoritejobs.FavoriteJobsInteractor
+import ru.practicum.android.diploma.domain.sharing.SharingInteractor
 import ru.practicum.android.diploma.domain.vacancydetails.VacancyDetailsInteractor
 import ru.practicum.android.diploma.presentation.models.VacancyDetailsScreenState
 import ru.practicum.android.diploma.presentation.models.VacancyInfo
 
 class VacancyDetailsViewModel(
     private val vacancyDetailsInteractor: VacancyDetailsInteractor,
-    private val favoriteJobsInteractor: FavoriteJobsInteractor
+    private val favoriteJobsInteractor: FavoriteJobsInteractor,
+    private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
 
     private val stateLiveData: MutableLiveData<VacancyDetailsScreenState> = MutableLiveData()
@@ -54,5 +56,9 @@ class VacancyDetailsViewModel(
             favoriteJobsInteractor.deleteJob(vacancyInfo)
             _likeLiveData.postValue(false)
         }
+    }
+
+    fun sharingVacancy(vacancyUrl: String) {
+        sharingInteractor.sharingVacancy(vacancyUrl)
     }
 }

@@ -8,6 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.data.network.HHApiService
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
+import ru.practicum.android.diploma.data.sharing.SharingRepositoryImpl
+import ru.practicum.android.diploma.domain.sharing.SharingRepository
 
 val dataModule = module {
 

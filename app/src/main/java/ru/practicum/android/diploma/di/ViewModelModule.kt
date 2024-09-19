@@ -13,7 +13,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        VacancyDetailsViewModel(get(), get())
+        VacancyDetailsViewModel(get(), get(), get())
     }
 
     viewModel {
