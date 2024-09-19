@@ -44,6 +44,7 @@ class JobDetailsFragment : Fragment() {
         var departamentName: String = ""
         var salary: String = ""
         var logoUrl: String = ""
+        var isFavorite: Boolean = false
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
         }
@@ -56,6 +57,7 @@ class JobDetailsFragment : Fragment() {
                     departamentName = state.data.employerName
                     salary = state.data.salary ?: ""
                     logoUrl = state.data.employerIcon ?: ""
+                    isFavorite = state.data.isFavorite
                 }
 
                 is VacancyDetailsScreenState.Loading -> {
@@ -72,6 +74,10 @@ class JobDetailsFragment : Fragment() {
             }
         }
 
+        viewModel.likeLiveData.observe(viewLifecycleOwner){ state ->
+            setLikeButton(state)
+        }
+
         viewModel.getVacancy(vacancyId)
 
         binding.backButton.setOnClickListener {
@@ -83,7 +89,29 @@ class JobDetailsFragment : Fragment() {
         }
 
         binding.likeButton.setOnClickListener {
-            viewModel.addVacansyAtFavorite(VacancyInfo(vacancyId, vacancyName, departamentName, salary, logoUrl))
+            if (isFavorite) {
+                viewModel.deleteVcancyFromFavorite(
+                    VacancyInfo(
+                        vacancyId,
+                        vacancyName,
+                        departamentName,
+                        salary,
+                        logoUrl
+                    )
+                )
+                isFavorite = false
+            } else {
+                viewModel.addVacansyAtFavorite(
+                    VacancyInfo(
+                        vacancyId,
+                        vacancyName,
+                        departamentName,
+                        salary,
+                        logoUrl
+                    )
+                )
+                isFavorite = true
+            }
         }
     }
 
@@ -132,11 +160,7 @@ class JobDetailsFragment : Fragment() {
         }
         binding?.city?.text = vacancy.address
         binding?.companyName?.text = vacancy.employerName
-        if (vacancy.isFavorite) {
-            binding.likeButton.setImageResource(R.drawable.icon_is_liked)
-        } else {
-            binding.likeButton.setImageResource(R.drawable.icon_liked)
-        }
+        setLikeButton(vacancy.isFavorite)
     }
 
     fun generateHtmlList(inputList: List<String>): String {
@@ -155,6 +179,14 @@ class JobDetailsFragment : Fragment() {
             Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
         } else {
             Html.fromHtml(html)
+        }
+    }
+
+    fun setLikeButton (isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.likeButton.setImageResource(R.drawable.icon_is_liked)
+        } else {
+            binding.likeButton.setImageResource(R.drawable.icon_liked)
         }
     }
 

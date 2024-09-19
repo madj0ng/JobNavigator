@@ -39,9 +39,20 @@ class VacancyDetailsViewModel(
         return stateLiveData
     }
 
+    private var _likeLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val likeLiveData: LiveData<Boolean> get() = _likeLiveData
+
     fun addVacansyAtFavorite(vacancyInfo: VacancyInfo) {
         viewModelScope.launch(Dispatchers.IO) {
             favoriteJobsInteractor.insertJob(vacancyInfo)
+            _likeLiveData.postValue(true)
+        }
+    }
+
+    fun deleteVcancyFromFavorite(vacancyInfo: VacancyInfo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteJobsInteractor.deleteJob(vacancyInfo)
+            _likeLiveData.postValue(false)
         }
     }
 }
