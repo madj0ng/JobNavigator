@@ -61,7 +61,7 @@ class JobSearchViewModel(
             }
 
             is Resource.Error -> {
-                if (result.resultCode == ERROR_INTERNET){
+                if (result.resultCode == ERROR_INTERNET) {
                     _screenLiveData.value = SearchUiState.ErrorConnect()
                 } else {
                     _screenLiveData.value = SearchUiState.ErrorServer()
