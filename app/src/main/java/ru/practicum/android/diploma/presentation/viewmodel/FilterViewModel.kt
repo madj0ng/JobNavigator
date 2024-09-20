@@ -119,34 +119,35 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
                     if (res !is Resource.Error) {
                         areaList = (res as Resource.Success).data
                         if (selectedCountry != null) {
-                            regionsLiveData.value = selectedCountry!!.regions
-                            regionsList = selectedCountry!!.regions
+                            setSelectedCountry()
                         } else {
-                            val result = mutableListOf<RegionModel>()
-                            for (country in areaList) {
-                                result.addAll(country.regions)
-                            }
-                            regionsList = result
-                            regionsLiveData.value = result
+                            setCountry()
                         }
                     } else {
                         // недописанный участок
                     }
                 }
             }
-
         }
         if (selectedCountry != null) {
-            regionsLiveData.value = selectedCountry!!.regions
-            regionsList = selectedCountry!!.regions
+            setSelectedCountry()
         } else {
-            val result = mutableListOf<RegionModel>()
-            for (country in areaList) {
-                result.addAll(country.regions)
-            }
-            regionsList = result
-            regionsLiveData.value = result
+            setCountry()
         }
+    }
+
+    private fun setCountry() {
+        val result = mutableListOf<RegionModel>()
+        for (country in areaList) {
+            result.addAll(country.regions)
+        }
+        regionsList = result
+        regionsLiveData.value = result
+    }
+
+    private fun setSelectedCountry () {
+        regionsLiveData.value = selectedCountry!!.regions
+        regionsList = selectedCountry!!.regions
     }
 
     fun getIndustries() {

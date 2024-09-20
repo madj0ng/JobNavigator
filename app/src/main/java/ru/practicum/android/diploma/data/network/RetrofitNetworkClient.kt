@@ -21,7 +21,7 @@ class RetrofitNetworkClient(
     private val connected: Connected,
 ) : NetworkClient {
 
-    fun setCondition (dto: Any): Boolean {
+    fun setCondition(dto: Any): Boolean {
         return (dto !is VacancySearchRequest
             && dto !is VacancyDetailsRequest
             && dto !is AreasRequest
