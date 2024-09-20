@@ -34,7 +34,8 @@ class JobSearchFragment : Fragment() {
         useLastParam = true
     ) { query ->
         viewModel.onSearchQueryChanged(
-            VacancySearchParams(query,
+            VacancySearchParams(
+                query,
                 if (filtersViewModel.getRegionSaved() != null) {
                     filtersViewModel.getRegionSaved()!!.id
                 } else {
@@ -42,7 +43,9 @@ class JobSearchFragment : Fragment() {
                 },
                 filtersViewModel.getSalary(),
                 filtersViewModel.getDontShowWithoutSalary(),
-                filtersViewModel.getSavedIndustry()?.id))
+                filtersViewModel.getSavedIndustry()?.id
+            )
+        )
     }
 
     override fun onCreateView(
@@ -83,16 +86,19 @@ class JobSearchFragment : Fragment() {
                     val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                     val itemsCount = jobSearchViewAdapter!!.itemCount
                     if (pos >= itemsCount - 1) {
-                        viewModel.onLastItemReached(VacancySearchParams(
-                            viewModel.getLastSearchQuery(),
-                            if (filtersViewModel.getRegionSaved() != null) {
-                                filtersViewModel.getRegionSaved()!!.id
-                            } else {
-                                filtersViewModel.getCountrySaved()?.id
-                            },
-                            filtersViewModel.getSalary(),
-                            filtersViewModel.getDontShowWithoutSalary(),
-                            filtersViewModel.getSavedIndustry()?.id))
+                        viewModel.onLastItemReached(
+                            VacancySearchParams(
+                                viewModel.getLastSearchQuery(),
+                                if (filtersViewModel.getRegionSaved() != null) {
+                                    filtersViewModel.getRegionSaved()!!.id
+                                } else {
+                                    filtersViewModel.getCountrySaved()?.id
+                                },
+                                filtersViewModel.getSalary(),
+                                filtersViewModel.getDontShowWithoutSalary(),
+                                filtersViewModel.getSavedIndustry()?.id
+                            )
+                        )
                     }
                 }
             }
@@ -135,16 +141,19 @@ class JobSearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.onSearchQueryChanged(VacancySearchParams(
-            viewModel.getLastSearchQuery(),
-            if (filtersViewModel.getRegionSaved() != null) {
-                filtersViewModel.getRegionSaved()!!.id
-            } else {
-                filtersViewModel.getCountrySaved()?.id
-            },
-            filtersViewModel.getSalary(),
-            filtersViewModel.getDontShowWithoutSalary(),
-            filtersViewModel.getSavedIndustry()?.id))
+        viewModel.onSearchQueryChanged(
+            VacancySearchParams(
+                viewModel.getLastSearchQuery(),
+                if (filtersViewModel.getRegionSaved() != null) {
+                    filtersViewModel.getRegionSaved()!!.id
+                } else {
+                    filtersViewModel.getCountrySaved()?.id
+                },
+                filtersViewModel.getSalary(),
+                filtersViewModel.getDontShowWithoutSalary(),
+                filtersViewModel.getSavedIndustry()?.id
+            )
+        )
     }
 
     override fun onDestroyView() {

@@ -40,7 +40,6 @@ class JobSearchViewModel(
 
     private var currentSearchQuery: String = ""
 
-
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         lastSearchQuery = vacancySearchParams.vacancyName
 
@@ -71,7 +70,6 @@ class JobSearchViewModel(
     fun onSearchQueryChanged(vacancySearchParams: VacancySearchParams) {
         searchRequest(vacancySearchParams)
     }
-
 
     private fun renderState(result: Resource<List<VacancyModel>>) {
         when (result) {
@@ -142,16 +140,19 @@ class JobSearchViewModel(
         val nextPage = _currentPage.value ?: 0 + 1
         _currentPage.value = nextPage
         _isNextPageLoading.value = true
-        searchRequest(VacancySearchParams(vacancySearchParams.vacancyName,
-            vacancySearchParams.area,
-            vacancySearchParams.salary,
-            vacancySearchParams.onlyWithSalary,
-            vacancySearchParams.professionalRole,
-            nextPage))
+        searchRequest(
+            VacancySearchParams(
+                vacancySearchParams.vacancyName,
+                vacancySearchParams.area,
+                vacancySearchParams.salary,
+                vacancySearchParams.onlyWithSalary,
+                vacancySearchParams.professionalRole,
+                nextPage
+            )
+        )
     }
 
     companion object {
         const val ERROR_INTERNET = -1
     }
-
 }
