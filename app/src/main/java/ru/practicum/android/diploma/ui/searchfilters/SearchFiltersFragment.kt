@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
+import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
-
+    private val viewModel: FilterViewModel by activityViewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -18,6 +21,61 @@ class SearchFiltersFragment : Fragment() {
     ): View? {
         _binding = FragmentSearchFiltersBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding?.industryBtn?.setOnClickListener {
+            findNavController()
+                .navigate(
+                    SearchFiltersFragmentDirections.actionSearchFiltersFragmentToIndustryChooseFragment()
+                )
+        }
+
+        binding?.placeOfWork?.setOnClickListener {
+            findNavController()
+                .navigate(
+                    SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
+                )
+        }
+        binding?.buttonBack?.setOnClickListener {
+            findNavController().popBackStack()
+            viewModel.setDontShowWithoutSalary(binding!!.ischeced.isChecked)
+            viewModel.setSalary(binding.earn.text.toString())
+        }
+        init()
+    }
+
+    fun init() {
+        if (viewModel.getSalary() != null) {
+            binding.earn.setText(viewModel.getSalary().toString())
+        }
+        binding.ischeced.isChecked = viewModel.getDontShowWithoutSalary()
+        val tempI = viewModel?.getSavedIndustry()
+        val tempR = viewModel?.getRegionSaved()
+        val tempC = viewModel?.getCountrySaved()
+        val area = StringBuilder()
+        if (tempI != null) {
+            binding?.industryPlace?.text = tempI.name
+        }
+        if (tempC != null) {
+            area.append(tempC.name)
+        }
+        if (tempR != null) {
+            if (area.isNotEmpty()) {
+                area.append(", ")
+            }
+            area.append(tempR.name)
+        }
+        if (area.isNotEmpty()) {
+            binding?.placeOfWorkCountryRegion?.text = area
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        init()
     }
 
     override fun onDestroyView() {

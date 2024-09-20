@@ -101,5 +101,24 @@
         <item name="android:textSize">@dimen/dim_16sp</item>
         <item name="android:textColor">@color/day_black_night_white</item>
     </style>
+
+    <style name="CheckBoxTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:textColorSecondary">@color/blue</item>
+    </style>
+
+    <style name="ButtonBlueRounded12">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/dim_16sp</item>
+        <item name="android:textColor">@color/white_universal</item>
+        <item name="android:layout_marginHorizontal">@dimen/dim_16dp</item>
+        <item name="android:backgroundTint">@color/blue</item>
+        <item name="android:layout_marginBottom">@dimen/dim_24dp</item>
+        <item name="android:background">@drawable/rounded_corners_12</item>
+        <item name="android:paddingVertical">@dimen/dim_12dp</item>
+    </style>
+
 </resources>
 

@@ -24,6 +24,7 @@ class JobSearchViewModel(
 ) : ViewModel() {
 
     private val toastLiveData = SingleLiveEvent<String>()
+    private var lastSearchQuery: String = ""
     private val queryLiveData = MutableLiveData<QueryUiState>(QueryUiState.Search(query = ""))
     fun observeSearch(): LiveData<QueryUiState> = queryLiveData
 
@@ -51,16 +52,35 @@ class JobSearchViewModel(
         }
     }
 
-    private fun searchRequest(newSearchQuery: String) {
-        if (newSearchQuery.isEmpty()) {
+    private val _currentPage = MutableLiveData<Int?>(null)
+    val currentPage: LiveData<Int?> get() = _currentPage
+
+    private val _maxPages = MutableLiveData<Int?>(null)
+    val maxPages: LiveData<Int?> get() = _maxPages
+
+    private val _vacanciesList = MutableLiveData<List<VacancyInfo>>(emptyList())
+    val vacanciesLis: LiveData<List<VacancyInfo>> get() = _vacanciesList
+
+    private val _isNextPageLoading = MutableLiveData<Boolean>(false)
+    private val isNextPageLoading: LiveData<Boolean> get() = _isNextPageLoading
+
+    private var currentSearchQuery: String = ""
+
+    private fun searchRequest(vacancySearchParams: VacancySearchParams) {
+        lastSearchQuery = vacancySearchParams.vacancyName
+        val skipSearchIf = vacancySearchParams.vacancyName.isEmpty() &&
+            vacancySearchParams.professionalRole == null &&
+            vacancySearchParams.area == null &&
+            vacancySearchParams.salary == null
+        if (skipSearchIf) {
             return
         }
 
-        val searchParams = VacancySearchParams(
-            vacancyName = newSearchQuery,
-        )
-
-        _screenLiveData.value = SearchUiState.Loading()
+        if (vacancySearchParams.page == 0) {
+            _screenLiveData.value = SearchUiState.Loading()
+        } else {
+            _screenLiveData.value = SearchUiState.LoadingPagination()
+        }
 
         viewModelScope.launch {
             searchVacancyInteractor.searchVacancy(searchParams).collect { result ->
@@ -69,15 +89,26 @@ class JobSearchViewModel(
         }
     }
 
+    fun getLastSearchQuery(): String {
+        return lastSearchQuery
+    }
+
+    fun onSearchQueryChanged(vacancySearchParams: VacancySearchParams) {
+        searchRequest(vacancySearchParams)
+    }
+
     private fun renderState(result: Resource<List<VacancyModel>>) {
         when (result) {
             is Resource.Success -> {
+                _isNextPageLoading.value = false
                 if (result.data.isEmpty()) {
                     _screenLiveData.value = SearchUiState.ErrorData()
                 } else {
                     val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
-                    val found = result.found ?: 0
-                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = found)
+                    _vacanciesList.value = _vacanciesList.value.orEmpty() + vacancyInfoList
+                    _currentPage.value = result.page
+                    _maxPages.value = result.pages
+                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = result.found ?: 0)
                 }
             }
 
@@ -126,6 +157,25 @@ class JobSearchViewModel(
 
     private fun getSalaryTo(to: Int?): String {
         return to?.let { " до $it" } ?: ""
+    }
+
+    fun onLastItemReached(vacancySearchParams: VacancySearchParams) {
+        if (_isNextPageLoading.value == true || _currentPage.value ?: 0 >= _maxPages.value ?: 0) {
+            return
+        }
+        val nextPage = _currentPage.value ?: 0 + 1
+        _currentPage.value = nextPage
+        _isNextPageLoading.value = true
+        searchRequest(
+            VacancySearchParams(
+                vacancySearchParams.vacancyName,
+                vacancySearchParams.area,
+                vacancySearchParams.salary,
+                vacancySearchParams.onlyWithSalary,
+                vacancySearchParams.professionalRole,
+                nextPage
+            )
+        )
     }
 
     companion object {

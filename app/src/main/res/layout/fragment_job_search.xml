@@ -167,7 +167,7 @@
         app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
 
     <TextView
-        android:id="@+id/tvInformBottomText"
+        android:id="@+id/ivInformBottomText"
         style="@style/InformBottomText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
