@@ -51,11 +51,11 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
             }
 
             ERROR_CODE -> {
-                emit(Resource.Error(response.message))
+                emit(Resource.Error(response.resultCode, response.message))
             }
 
             else -> {
-                emit(Resource.Error(response.message))
+                emit(Resource.Error(response.resultCode, response.message))
             }
         }
     }

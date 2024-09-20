@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.jobdetails
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -87,7 +86,7 @@ class JobDetailsFragment : Fragment() {
         }
 
         binding.shareButton.setOnClickListener {
-            shareVacancy(vacancyUrl)
+            viewModel.sharingVacancy(vacancyUrl)
         }
 
         binding.likeButton.setOnClickListener {
@@ -170,9 +169,9 @@ class JobDetailsFragment : Fragment() {
 
     fun setLikeButton(isFavorite: Boolean) {
         if (isFavorite) {
-            binding.likeButton.setImageResource(R.drawable.icon_is_liked)
+            binding.likeButton.setImageResource(R.drawable.ic_is_liked)
         } else {
-            binding.likeButton.setImageResource(R.drawable.icon_liked)
+            binding.likeButton.setImageResource(R.drawable.ic_liked)
         }
     }
 
@@ -180,14 +179,4 @@ class JobDetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    private fun shareVacancy(vacancyUrl: String) {
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, vacancyUrl)
-        intent.type = "text/plain"
-        startActivity(Intent.createChooser(intent, ""))
-
-    }
-
 }
