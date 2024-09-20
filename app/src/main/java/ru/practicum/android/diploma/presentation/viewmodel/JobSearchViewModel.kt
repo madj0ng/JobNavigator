@@ -42,11 +42,11 @@ class JobSearchViewModel(
 
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         lastSearchQuery = vacancySearchParams.vacancyName
-
-        if (vacancySearchParams.vacancyName.isEmpty() &&
+        val skipSearchIf = (vacancySearchParams.vacancyName.isEmpty() &&
             vacancySearchParams.professionalRole == null &&
             vacancySearchParams.area == null &&
-            vacancySearchParams.salary == null) {
+            vacancySearchParams.salary == null)
+        if (skipSearchIf) {
             return
         }
 
@@ -94,6 +94,8 @@ class JobSearchViewModel(
                 }
                 toastLiveData.value = result.message
             }
+
+            else -> {}
         }
     }
 
