@@ -21,7 +21,7 @@ class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor 
                     })
                 })
             } else {
-                Resource.Error("")
+                Resource.Error(-1, "")
             }
         }
     }
@@ -37,7 +37,7 @@ class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor 
                 }
                 Resource.Success(industryResultList)
             } else {
-                Resource.Error("")
+                Resource.Error(-1, "")
             }
         }
 

@@ -18,7 +18,7 @@
             android:layout_marginHorizontal="@dimen/dim_4dp"
             android:layout_marginVertical="@dimen/dim_8dp"
             android:contentDescription="@string/back"
-            app:srcCompat="@drawable/icon_back" />
+            app:srcCompat="@drawable/ic_back" />
 
         <TextView
             style="@style/PageTitle"

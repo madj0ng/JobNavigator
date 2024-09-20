@@ -38,7 +38,6 @@ class SearchFiltersFragment : Fragment() {
         binding?.buttonBack?.setOnClickListener {
             findNavController().popBackStack()
             viewModel.setDontShowWithoutSalary(binding!!.ischeced.isChecked)
-            viewModel.setSalary(binding!!.earn.text.toString())
         }
     }
 

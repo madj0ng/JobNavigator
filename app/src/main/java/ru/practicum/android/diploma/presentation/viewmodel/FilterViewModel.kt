@@ -39,7 +39,11 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun setSalary(salary: String) {
-        salarybase = salary.toInt()
+        if (salary.isEmpty()) {
+            salarybase = null
+        } else {
+            salarybase = salary.toInt()
+        }
     }
 
     fun getSalary(): Int? {
