@@ -5,5 +5,7 @@ data class VacancySearchParams(
     val area: String? = null,
     val salary: Int? = null,
     val onlyWithSalary: Boolean = true,
-    val professionalRole: String? = null
+    val professionalRole: String? = null,
+    val page: Int = 0,
+    val perPage: Int = 20
 )
