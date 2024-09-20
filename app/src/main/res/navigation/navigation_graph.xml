@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/jobSearchFragment">
 
@@ -8,9 +9,6 @@
         android:id="@+id/jobSearchFragment"
         android:name="ru.practicum.android.diploma.ui.jobsearch.JobSearchFragment"
         android:label="JobSearchFragment">
-        <action
-            android:id="@+id/action_jobSearchFragment_to_searchFiltersFragment"
-            app:destination="@id/searchFiltersFragment" />
         <action
             android:id="@+id/action_jobSearchFragment_to_jobDetailsFragment"
             app:destination="@id/jobDetailsFragment" />
@@ -20,20 +18,19 @@
         <action
             android:id="@+id/action_jobSearchFragment_to_teamInformationFragment"
             app:destination="@id/teamInformationFragment" />
+        <action
+            android:id="@+id/action_jobSearchFragment_to_searchFiltersFragment"
+            app:destination="@id/searchFiltersFragment" />
 
     </fragment>
-    <fragment
-        android:id="@+id/searchFiltersFragment"
-        android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersFragment"
-        android:label="SearchFiltersFragment" />
     <fragment
         android:id="@+id/jobDetailsFragment"
         android:name="ru.practicum.android.diploma.ui.jobdetails.JobDetailsFragment"
         android:label="JobDetailsFragment">
         <argument
             android:name="vacancyId"
-            app:nullable="false"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="false" />
     </fragment>
 
 
@@ -44,9 +41,48 @@
     <fragment
         android:id="@+id/favoriteJobsFragment"
         android:name="ru.practicum.android.diploma.ui.favoritejobs.FavoriteJobsFragment"
-        android:label="FavoriteJobsFragment" >
+        android:label="FavoriteJobsFragment">
         <action
             android:id="@+id/action_favoriteJobsFragment_to_jobDetailsFragment"
             app:destination="@id/jobDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/countryChooseFragment"
+        android:name="ru.practicum.android.diploma.ui.searchfilters.CountryChooseFragment"
+        android:label="fragment_country_choosing"
+        tools:layout="@layout/country_choose_fragment" />
+    <fragment
+        android:id="@+id/searchFiltersRegionFragment"
+        android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersRegionFragment"
+        android:label="fragment_region_choosing"
+        tools:layout="@layout/search_filters_region_fragment" />
+    <fragment
+        android:id="@+id/placeOfWorkFragment"
+        android:name="ru.practicum.android.diploma.ui.searchfilters.PlaceOfWorkFragment"
+        android:label="fragment_search_filters"
+        tools:layout="@layout/place_of_work_fragment" >
+        <action
+            android:id="@+id/action_placeOfWorkFragment_to_searchFiltersRegionFragment"
+            app:destination="@id/searchFiltersRegionFragment" />
+        <action
+            android:id="@+id/action_placeOfWorkFragment_to_countryChooseFragment"
+            app:destination="@id/countryChooseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/industryChooseFragment"
+        android:name="ru.practicum.android.diploma.ui.searchfilters.IndustryChooseFragment"
+        android:label="industry_choosing_fragment"
+        tools:layout="@layout/industry_choosing_fragment" />
+    <fragment
+        android:id="@+id/searchFiltersFragment"
+        android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersFragment"
+        android:label="filtration_settings"
+        tools:layout="@layout/fragment_search_filters">
+        <action
+            android:id="@+id/action_searchFiltersFragment_to_placeOfWorkFragment"
+            app:destination="@id/placeOfWorkFragment" />
+        <action
+            android:id="@+id/action_searchFiltersFragment_to_industryChooseFragment"
+            app:destination="@id/industryChooseFragment" />
     </fragment>
 </navigation>
