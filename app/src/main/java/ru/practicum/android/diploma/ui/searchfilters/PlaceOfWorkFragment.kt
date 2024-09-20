@@ -11,7 +11,8 @@ import ru.practicum.android.diploma.databinding.PlaceOfWorkFragmentBinding
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class PlaceOfWorkFragment : Fragment() {
-    private var binding: PlaceOfWorkFragmentBinding? = null
+    private var _binding: PlaceOfWorkFragmentBinding? = null
+    private val binding: PlaceOfWorkFragmentBinding get() = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
 
     override fun onCreateView(
@@ -19,18 +20,24 @@ class PlaceOfWorkFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = PlaceOfWorkFragmentBinding.inflate(inflater, container, false)
+        _binding = PlaceOfWorkFragmentBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.countryBtn?.setOnClickListener {
-            findNavController().navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToCountryChooseFragment())
+            findNavController()
+                .navigate(
+                    PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToCountryChooseFragment()
+                )
         }
 
         binding?.regionBtn?.setOnClickListener {
-            findNavController().navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersRegionFragment())
+            findNavController()
+                .navigate(
+                    PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersRegionFragment()
+                )
         }
 
         binding?.buttonBack?.setOnClickListener {
@@ -58,5 +65,6 @@ class PlaceOfWorkFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
     }
 }

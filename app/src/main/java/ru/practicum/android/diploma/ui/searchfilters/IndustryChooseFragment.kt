@@ -56,15 +56,13 @@ class IndustryChooseFragment : Fragment() {
         viewModel?.getIndustries()
 
         val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel?.searchIndustry(s.toString())
             }
 
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
         }
         binding?.buttonBack?.setOnClickListener {
             findNavController().popBackStack()
@@ -86,6 +84,4 @@ class IndustryChooseFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
-
 }

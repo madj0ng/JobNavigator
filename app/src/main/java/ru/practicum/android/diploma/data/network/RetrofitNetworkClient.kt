@@ -22,7 +22,11 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
 
     override suspend fun doRequest(dto: Any): NetworkResponse {
-        if (dto !is VacancySearchRequest && dto !is VacancyDetailsRequest && dto !is AreasRequest && dto !is IndustriasRequest) {
+        if (dto !is VacancySearchRequest
+            && dto !is VacancyDetailsRequest
+            && dto !is AreasRequest
+            && dto !is IndustriasRequest
+        ) {
             return errorResponse(ERROR_CODE_BAD_REQUEST, R.string.search_error_server)
 
         }

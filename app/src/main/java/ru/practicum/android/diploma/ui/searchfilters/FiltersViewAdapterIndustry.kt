@@ -1,10 +1,8 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.LittleViewIndustryRoundBinding
 import ru.practicum.android.diploma.domain.models.IndustryModel
 
@@ -36,9 +34,8 @@ class FiltersViewAdapterIndustry(
 
     inner class ViewHolder(
         private val binding: LittleViewIndustryRoundBinding,
-        private val clickListener: OnClickListener,
-
-        ) : RecyclerView.ViewHolder(binding.root) {
+        private val clickListener: OnClickListener
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(industryModel: IndustryModel) {
             binding.industry.text = industryModel.name
@@ -59,7 +56,6 @@ class FiltersViewAdapterIndustry(
     fun interface OnClickListener {
         fun onIndustryClick(industry: IndustryModel)
     }
-
 }
 
 

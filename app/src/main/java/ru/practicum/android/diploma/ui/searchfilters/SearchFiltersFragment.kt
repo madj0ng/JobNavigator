@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,11 +28,17 @@ class SearchFiltersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding?.industryBtn?.setOnClickListener {
-            findNavController().navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToIndustryChooseFragment())
+            findNavController()
+                .navigate(
+                    SearchFiltersFragmentDirections.actionSearchFiltersFragmentToIndustryChooseFragment()
+                )
         }
 
         binding?.placeOfWork?.setOnClickListener {
-            findNavController().navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment())
+            findNavController()
+                .navigate(
+                    SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
+                )
         }
         binding?.buttonBack?.setOnClickListener {
             findNavController().popBackStack()
