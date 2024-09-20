@@ -12,9 +12,11 @@ import ru.practicum.android.diploma.domain.models.SalaryModel
 import ru.practicum.android.diploma.domain.models.VacancyModel
 import ru.practicum.android.diploma.domain.models.VacancySearchParams
 import ru.practicum.android.diploma.domain.search.SearchVacancyInteractor
+import ru.practicum.android.diploma.presentation.models.QueryUiState
 import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.util.SingleLiveEvent
+import ru.practicum.android.diploma.util.debounce
 
 class JobSearchViewModel(
     val searchVacancyInteractor: SearchVacancyInteractor,
@@ -22,12 +24,31 @@ class JobSearchViewModel(
 ) : ViewModel() {
 
     private val toastLiveData = SingleLiveEvent<String>()
+    private val queryLiveData = MutableLiveData<QueryUiState>(QueryUiState.Search(query = ""))
+    fun observeSearch(): LiveData<QueryUiState> = queryLiveData
 
     private val _screenLiveData = MutableLiveData<SearchUiState>(SearchUiState.Default())
     val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
 
-    fun onSearchQueryChanged(query: String) {
+    private val debounceSearch = debounce<String>(
+        delayMillis = 2000L,
+        coroutineScope = viewModelScope,
+        useLastParam = true
+    ) { query ->
         searchRequest(query)
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        queryLiveData.value = if (query.isEmpty()) {
+            debounceSearch(query)
+            QueryUiState.Clear()
+        } else {
+            val oldQuery = queryLiveData.value?.query ?: ""
+            if (query != oldQuery) {
+                debounceSearch(query)
+            }
+            QueryUiState.Search(query = query)
+        }
     }
 
     private fun searchRequest(newSearchQuery: String) {

@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
+import ru.practicum.android.diploma.presentation.models.QueryUiState
 import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
-import ru.practicum.android.diploma.util.debounce
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
@@ -22,14 +21,6 @@ class JobSearchFragment : Fragment() {
 
     private val viewModel: JobSearchViewModel by viewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
-
-    private val debounceSearch = debounce<String>(
-        delayMillis = 2000L,
-        coroutineScope = lifecycleScope,
-        useLastParam = true
-    ) { query ->
-        viewModel.onSearchQueryChanged(query)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,21 +35,24 @@ class JobSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.etSearch.addTextChangedListener { query ->
-            debounceSearch(query.toString())
+            viewModel.onSearchQueryChanged(query.toString())
         }
-
         jobSearchViewAdapter = JobSearchViewAdapter {
             val action = JobSearchFragmentDirections.actionJobSearchFragmentToJobDetailsFragment(it)
             findNavController().navigate(action)
         }
-
         binding.rvJobList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = jobSearchViewAdapter
         }
-
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
+        viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
+    }
 
+    private fun updateSearchText(state: QueryUiState) {
+        if (state.src != null) {
+            binding.ivSearchClear.setImageResource(state.src!!)
+        }
     }
 
     private fun updateUiState(uiState: SearchUiState) {
