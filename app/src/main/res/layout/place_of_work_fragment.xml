@@ -29,18 +29,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/country_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_60dp">
 
         <TextView
+            android:id="@+id/country_textarea"
             style="@style/VacancyItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dim_20dp"
             android:layout_marginLeft="@dimen/dim_16dp"
             android:layout_weight="1"
-            android:text="@string/country"
-            android:textColor="@color/gray" />
+            android:hint="@string/country"
+            android:textColor="@color/day_black_night_white" />
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -53,18 +56,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/region_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_60dp">
 
         <TextView
+            android:id="@+id/region_textarea"
             style="@style/VacancyItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dim_20dp"
             android:layout_marginLeft="@dimen/dim_16dp"
             android:layout_weight="1"
-            android:text="@string/region"
-            android:textColor="@color/gray" />
+            android:hint="@string/region"
+            android:textColor="@color/day_black_night_white" />
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -75,4 +81,19 @@
             app:srcCompat="@drawable/icon_next" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnSelect"
+            style="@style/ButtonBlueRounded12"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/dim_24dp"
+            android:text="@string/choose"
+            android:visibility="visible" />
+
+    </FrameLayout>
+
 </LinearLayout>

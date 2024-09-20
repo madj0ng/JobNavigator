@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.LittleViewIndustryRoundBinding
 import ru.practicum.android.diploma.domain.models.IndustryModel
 
@@ -10,6 +12,7 @@ class FiltersViewAdapterIndustry(
     private val clickListener: OnClickListener,
 ) : RecyclerView.Adapter<FiltersViewAdapterIndustry.ViewHolder>() {
     private var industries = mutableListOf<IndustryModel>()
+    private var selectedPosition: Int = -1
 
     fun setList(list: List<IndustryModel>) {
         this.industries.clear()
@@ -31,21 +34,32 @@ class FiltersViewAdapterIndustry(
         holder.bind(industries[position])
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val binding: LittleViewIndustryRoundBinding,
         private val clickListener: OnClickListener,
-    ) : RecyclerView.ViewHolder(binding.root) {
+
+        ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(industryModel: IndustryModel) {
             binding.industry.text = industryModel.name
             // Событие нажатия кнопки
-            itemView.setOnClickListener { clickListener.onIndustryClick(industryModel.id) }
+            itemView.setOnClickListener {
+                selectedPosition = adapterPosition
+                clickListener.onIndustryClick(industryModel)
+                notifyDataSetChanged()
+            }
+            if (selectedPosition == adapterPosition) {
+                binding.industrySrc.isChecked = true
+            } else {
+                binding.industrySrc.isChecked = false
+            }
         }
     }
 
     fun interface OnClickListener {
-        fun onIndustryClick(industryId: String)
+        fun onIndustryClick(industry: IndustryModel)
     }
+
 }
 
 

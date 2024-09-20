@@ -58,7 +58,6 @@
 
         <ImageButton
             android:id="@+id/searchBtn"
-            android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center"
@@ -67,11 +66,11 @@
             android:contentDescription="@string/search"
             android:padding="8dp"
             android:src="@drawable/ic_search_lens"
+            android:visibility="visible"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
             android:id="@+id/clearText"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center"
@@ -80,16 +79,20 @@
             android:contentDescription="Clear"
             android:padding="8dp"
             android:src="@drawable/ic_close_cross"
+            android:visibility="gone"
             tools:ignore="TouchTargetSizeCheck" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/region_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dim_16dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/region_error"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -130,7 +133,6 @@
             android:layout_marginTop="@dimen/dim_16dp"
             android:text="@string/no_region"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf=""
             app:layout_constraintEnd_toStartOf="@+id/right_guideline"
             app:layout_constraintStart_toEndOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/ivInformImage" />

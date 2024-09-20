@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.LittleViewForFilterBinding
 import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.RegionModel
 
-class FiltersViewAdapterArea(
+class FilterViewAdapterRegion(
     private val clickListener: OnClickListener,
-) : RecyclerView.Adapter<FiltersViewAdapterArea.ViewHolder>() {
-    private var areas = mutableListOf<CountryModel>()
+) : RecyclerView.Adapter<FilterViewAdapterRegion.ViewHolder>() {
+    private var areas = mutableListOf<RegionModel>()
 
-    fun setList(list: List<CountryModel>) {
+    fun setList(list: List<RegionModel>) {
         this.areas.clear()
         this.areas.addAll(list)
         notifyDataSetChanged()
@@ -37,16 +38,16 @@ class FiltersViewAdapterArea(
         private val clickListener: OnClickListener,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(countryModel: CountryModel) {
-            Log.d("BIND", countryModel.toString())
-            binding.country.text = countryModel.name
+        fun bind(regionModel: RegionModel) {
+            Log.d("BIND", regionModel.toString())
+            binding.country.text = regionModel.name
             // Событие нажатия кнопки
-            itemView.setOnClickListener { clickListener.onAreaClick(countryModel) }
+            itemView.setOnClickListener { clickListener.onAreaClick(regionModel) }
         }
     }
 
     fun interface OnClickListener {
-        fun onAreaClick(countryModel: CountryModel)
+        fun onAreaClick(regionModel: RegionModel)
     }
 }
 

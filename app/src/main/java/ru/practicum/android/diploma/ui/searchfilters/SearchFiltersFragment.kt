@@ -1,20 +1,21 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import java.lang.StringBuilder
 
 class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
-    val viewModel: FilterViewModel by viewModel()
-
+    private val viewModel: FilterViewModel by activityViewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,6 +34,30 @@ class SearchFiltersFragment : Fragment() {
 
         binding?.placeOfWork?.setOnClickListener {
             findNavController().navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment())
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val tempI = viewModel?.getSavedIndustry()
+        val tempR = viewModel?.getRegionSaved()
+        val tempC = viewModel?.getCountrySaved()
+        val area = StringBuilder()
+        if (tempI != null) {
+            binding?.industryPlace?.text = tempI.name
+        }
+        if (tempC != null) {
+            area.append(tempC.name)
+        }
+        if (tempR != null) {
+            if (area.isNotEmpty()) {
+                area.append(", ")
+            }
+            area.append(tempR.name)
+        }
+        if(area.isNotEmpty()){
+            binding?.placeOfWorkCountryRegion?.text = area
         }
     }
 

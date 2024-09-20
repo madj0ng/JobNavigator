@@ -1,18 +1,23 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.IndustryChoosingFragmentBinding
+import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class IndustryChooseFragment : Fragment() {
 
     private var binding: IndustryChoosingFragmentBinding? = null
-    val viewModel: FilterViewModel by viewModel()
+    private val viewModel: FilterViewModel by activityViewModel()
+    private var filtersViewAdapterIndustry: FiltersViewAdapterIndustry? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,12 +29,63 @@ class IndustryChooseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel?.getIndustryLiveData()?.observe(viewLifecycleOwner) { industries ->
+            if (industries is Resource.Error) {
+                hideAll()
+                binding?.industriesErrorNoIndustry?.visibility = View.VISIBLE
+            } else {
+                hideAll()
+                binding?.industriesRecuclerView?.visibility = View.VISIBLE
+                filtersViewAdapterIndustry?.setList((industries as Resource.Success).data)
+            }
+        }
 
+        viewModel?.getSelectedIndustryLiveData()?.observe(viewLifecycleOwner) { selectedIndustry ->
+            if (selectedIndustry == null) {
+                binding?.btnSelect?.visibility = View.GONE
+            } else {
+                binding?.btnSelect?.visibility = View.VISIBLE
+            }
+        }
 
+        filtersViewAdapterIndustry = FiltersViewAdapterIndustry { industry ->
+            viewModel?.selectIndustry(industry)
+            filtersViewAdapterIndustry!!.notifyDataSetChanged()
+        }
+        binding?.industriesRecuclerView?.adapter = filtersViewAdapterIndustry
+        viewModel?.getIndustries()
+
+        val simpleTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel?.searchIndustry(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        }
+        binding?.buttonBack?.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding?.search?.addTextChangedListener(simpleTextWatcher)
+
+        binding?.btnSelect?.setOnClickListener {
+            viewModel?.saveIndustry()
+            findNavController().popBackStack()
+        }
+    }
+
+    fun hideAll() {
+        binding?.industriesErrorNoIndustry?.visibility = View.GONE
+        binding?.industriesRecuclerView?.visibility = View.GONE
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
+
+
 }
