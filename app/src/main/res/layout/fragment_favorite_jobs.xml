@@ -47,6 +47,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/dim_48dp"
         android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
@@ -54,11 +55,12 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvJobList"
-            android:layout_width="0dp"
+            android:layout_gravity="top"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dim_38dp"
             android:clipToPadding="false"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:listitem="@layout/vacancy_item" />
     </ScrollView>
 
@@ -86,7 +88,7 @@
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/ivInformImage"
-        tools:text="Не удалось получить список вакансий" />
+        android:text="Не удалось получить список вакансий" />
 
     <ImageView
         android:id="@+id/ivNoLikedVacancies"
@@ -112,7 +114,7 @@
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/ivNoLikedVacancies"
-        tools:text="@string/list_is_empty" />
+        android:text="@string/list_is_empty" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/groupNoListVacancies"

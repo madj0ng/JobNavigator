@@ -1,10 +1,12 @@
 package ru.practicum.android.diploma.presentation.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.domain.models.SalaryModel
 import ru.practicum.android.diploma.domain.models.VacancyModel
@@ -15,7 +17,8 @@ import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.util.SingleLiveEvent
 
 class JobSearchViewModel(
-    val searchVacancyInteractor: SearchVacancyInteractor
+    val searchVacancyInteractor: SearchVacancyInteractor,
+    val context: Context
 ) : ViewModel() {
 
     private val toastLiveData = SingleLiveEvent<String>()
@@ -23,20 +26,41 @@ class JobSearchViewModel(
     private val _screenLiveData = MutableLiveData<SearchUiState>(SearchUiState.Default())
     val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
 
+    private val _currentPage = MutableLiveData<Int?>(null)
+    val currentPage: LiveData<Int?> get() = _currentPage
+
+    private val _maxPages = MutableLiveData<Int?>(null)
+    val maxPages: LiveData<Int?> get() = _maxPages
+
+    private val _vacanciesList = MutableLiveData<List<VacancyInfo>>(emptyList())
+    val vacanciesLis: LiveData<List<VacancyInfo>> get() = _vacanciesList
+
+    private val _isNextPageLoading = MutableLiveData<Boolean>(false)
+    private val isNextPageLoading: LiveData<Boolean> get() = _isNextPageLoading
+
+    private var currentSearchQuery: String = ""
+
     fun onSearchQueryChanged(query: String) {
-        searchRequest(query)
+        currentSearchQuery = query
+        _currentPage.value = 0
+        searchRequest(query, 0)
     }
 
-    private fun searchRequest(newSearchQuery: String) {
+    private fun searchRequest(newSearchQuery: String, page: Int = 0) {
         if (newSearchQuery.isEmpty()) {
             return
         }
 
         val searchParams = VacancySearchParams(
-            vacancyName = newSearchQuery
+            vacancyName = newSearchQuery,
+            page = page
         )
 
-        _screenLiveData.value = SearchUiState.Loading()
+        if (page == 0) {
+            _screenLiveData.value = SearchUiState.Loading()
+        } else {
+            _screenLiveData.value = SearchUiState.LoadingPagination()
+        }
 
         viewModelScope.launch {
             searchVacancyInteractor.searchVacancy(searchParams).collect { result ->
@@ -48,17 +72,24 @@ class JobSearchViewModel(
     private fun renderState(result: Resource<List<VacancyModel>>) {
         when (result) {
             is Resource.Success -> {
+                _isNextPageLoading.value = false
                 if (result.data.isEmpty()) {
                     _screenLiveData.value = SearchUiState.ErrorData()
                 } else {
                     val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
-                    val found = result.found ?: 0
-                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = found)
+                    _vacanciesList.value = _vacanciesList.value.orEmpty() + vacancyInfoList
+                    _currentPage.value = result.page
+                    _maxPages.value = result.pages
+                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = result.found ?: 0)
                 }
             }
 
             is Resource.Error -> {
-                _screenLiveData.value = SearchUiState.ErrorServer()
+                if (result.resultCode == ERROR_INTERNET) {
+                    _screenLiveData.value = SearchUiState.ErrorConnect()
+                } else {
+                    _screenLiveData.value = SearchUiState.ErrorServer()
+                }
                 toastLiveData.value = result.message
             }
         }
@@ -78,7 +109,7 @@ class JobSearchViewModel(
 
     private fun getSalary(salary: SalaryModel?): String {
         if (salary == null) {
-            return "Зарплата не указана"
+            return context.getString(R.string.salary_not_specified)
         }
 
         val from = getSalaryFrom(salary.from)
@@ -86,7 +117,7 @@ class JobSearchViewModel(
         val currency = salary.currency?.let { " $it" } ?: ""
 
         return if (from.isEmpty() && to.isEmpty()) {
-            "Зарплата не указана"
+            context.getString(R.string.salary_not_specified)
         } else {
             "$from$to$currency"
         }
@@ -98,6 +129,21 @@ class JobSearchViewModel(
 
     private fun getSalaryTo(to: Int?): String {
         return to?.let { " до $it" } ?: ""
+    }
+
+    fun onLastItemReached() {
+        if (_isNextPageLoading.value == true || _currentPage.value ?: 0 >= _maxPages.value ?: 0) {
+            return
+        }
+        val nextPage = _currentPage.value ?: 0 + 1
+        _currentPage.value = nextPage
+
+        _isNextPageLoading.value = true
+        searchRequest(currentSearchQuery, nextPage)
+    }
+
+    companion object {
+        const val ERROR_INTERNET = -1
     }
 
 }

@@ -10,9 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
 import ru.practicum.android.diploma.presentation.models.SearchUiState
+import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
 import ru.practicum.android.diploma.util.debounce
 
@@ -21,6 +24,7 @@ class JobSearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: JobSearchViewModel by viewModel()
+    private val filtersViewModel: FilterViewModel by activityViewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
 
     private val debounceSearch = debounce<String>(
@@ -35,7 +39,7 @@ class JobSearchFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentJobSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -58,7 +62,22 @@ class JobSearchFragment : Fragment() {
         }
 
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
+        binding.ifbFilter.setOnClickListener {
+            findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
+        }
 
+        binding.rvJobList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val itemsCount = jobSearchViewAdapter!!.itemCount
+                    if (pos >= itemsCount - 1) {
+                        viewModel.onLastItemReached()
+                    }
+                }
+            }
+        })
     }
 
     private fun updateUiState(uiState: SearchUiState) {
@@ -72,14 +91,15 @@ class JobSearchFragment : Fragment() {
         binding.rvJobList.isVisible = uiState.isJobsList
         binding.tvJobSearchCount.isVisible = uiState.isJobsCount
         binding.pbJobList.isVisible = uiState.isJobsListBrogressBar
-        binding.pbPage.isVisible = uiState.isBrogressBar
+        binding.pbPage.isVisible = uiState.isProgressBar
+        binding.pbJobList.isVisible = uiState.isPaginationProgressBar
         binding.ivInformImage.isVisible = uiState.isInformImage
-        binding.tvInformBottomText.isVisible = uiState.isBottomText
+        binding.ivInformBottomText.isVisible = uiState.isBottomText
         if (uiState.topText != null) {
             binding.tvJobSearchCount.setText(uiState.topText!!)
         }
         if (uiState.bottomText != null) {
-            binding.tvInformBottomText.setText(uiState.bottomText!!)
+            binding.ivInformBottomText.setText(uiState.bottomText!!)
         }
         if (uiState.url != null) {
             binding.ivInformImage.setImageResource(uiState.url!!)
@@ -92,6 +112,11 @@ class JobSearchFragment : Fragment() {
             binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
         }
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     override fun onDestroyView() {
