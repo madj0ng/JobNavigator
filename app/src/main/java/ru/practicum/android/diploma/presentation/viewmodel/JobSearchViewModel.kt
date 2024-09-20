@@ -42,10 +42,10 @@ class JobSearchViewModel(
 
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         lastSearchQuery = vacancySearchParams.vacancyName
-        val skipSearchIf = (vacancySearchParams.vacancyName.isEmpty() &&
+        val skipSearchIf = vacancySearchParams.vacancyName.isEmpty() &&
             vacancySearchParams.professionalRole == null &&
             vacancySearchParams.area == null &&
-            vacancySearchParams.salary == null)
+            vacancySearchParams.salary == null
         if (skipSearchIf) {
             return
         }
