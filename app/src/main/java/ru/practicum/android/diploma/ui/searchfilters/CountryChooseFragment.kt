@@ -13,7 +13,8 @@ import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class CountryChooseFragment : Fragment() {
-    private var binding: CountryChooseFragmentBinding? = null
+    private var _binding: CountryChooseFragmentBinding? = null
+    private val binding: CountryChooseFragmentBinding get() = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private var filtersViewAdapterCountry: FiltersViewAdapterArea? = null
 
@@ -22,12 +23,11 @@ class CountryChooseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = CountryChooseFragmentBinding.inflate(inflater, container, false)
+        _binding = CountryChooseFragmentBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         viewModel.getAreaLiveData().observe(viewLifecycleOwner) { areas ->
             Log.d("AREAS", areas.toString())
             if (areas is AreasScreenState.Error) {
@@ -61,5 +61,6 @@ class CountryChooseFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
     }
 }

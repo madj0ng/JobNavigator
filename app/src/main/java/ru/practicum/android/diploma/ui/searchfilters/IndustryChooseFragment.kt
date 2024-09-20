@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -55,19 +56,12 @@ class IndustryChooseFragment : Fragment() {
         binding?.industriesRecuclerView?.adapter = filtersViewAdapterIndustry
         viewModel?.getIndustries()
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel?.searchIndustry(s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        }
         binding?.buttonBack?.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding?.search?.addTextChangedListener(simpleTextWatcher)
+        binding?.search?.addTextChangedListener { str ->
+            viewModel?.searchIndustry(str.toString())
+        }
 
         binding?.btnSelect?.setOnClickListener {
             viewModel?.saveIndustry()

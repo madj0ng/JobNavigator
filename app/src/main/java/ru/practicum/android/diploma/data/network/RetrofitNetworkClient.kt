@@ -21,12 +21,16 @@ class RetrofitNetworkClient(
     private val connected: Connected,
 ) : NetworkClient {
 
-    override suspend fun doRequest(dto: Any): NetworkResponse {
-        if (dto !is VacancySearchRequest
+    fun setCondition (dto: Any): Boolean {
+        return (dto !is VacancySearchRequest
             && dto !is VacancyDetailsRequest
             && dto !is AreasRequest
             && dto !is IndustriasRequest
-        ) {
+            )
+    }
+
+    override suspend fun doRequest(dto: Any): NetworkResponse {
+        if (setCondition(dto)) {
             return errorResponse(ERROR_CODE_BAD_REQUEST, R.string.search_error_server)
 
         }

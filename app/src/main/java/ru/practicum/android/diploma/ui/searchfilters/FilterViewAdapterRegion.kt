@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.databinding.LittleViewForFilterBinding
-import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 
 class FilterViewAdapterRegion(
@@ -50,5 +49,3 @@ class FilterViewAdapterRegion(
         fun onAreaClick(regionModel: RegionModel)
     }
 }
-
-

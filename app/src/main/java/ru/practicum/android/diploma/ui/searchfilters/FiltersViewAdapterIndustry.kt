@@ -57,5 +57,3 @@ class FiltersViewAdapterIndustry(
         fun onIndustryClick(industry: IndustryModel)
     }
 }
-
-

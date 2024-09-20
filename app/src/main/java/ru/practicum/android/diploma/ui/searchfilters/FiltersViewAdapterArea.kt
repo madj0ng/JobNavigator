@@ -49,5 +49,3 @@ class FiltersViewAdapterArea(
         fun onAreaClick(countryModel: CountryModel)
     }
 }
-
-
