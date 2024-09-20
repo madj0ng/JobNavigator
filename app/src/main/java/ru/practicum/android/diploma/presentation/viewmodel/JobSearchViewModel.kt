@@ -36,7 +36,7 @@ class JobSearchViewModel(
         }
 
         val searchParams = VacancySearchParams(
-            vacancyName = newSearchQuery
+            vacancyName = newSearchQuery,
         )
 
         _screenLiveData.value = SearchUiState.Loading()

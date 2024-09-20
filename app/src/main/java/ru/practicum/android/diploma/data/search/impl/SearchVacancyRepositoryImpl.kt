@@ -69,7 +69,7 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
         params.salary?.let { options["salary"] = it.toString() }
         params.onlyWithSalary.let { options["onlyWithSalary"] = it.toString() }
         params.professionalRole?.let { options["professionalRole"] = it }
-        options["per_page"] = "10"
+        options["per_page"] = "20"
         return options
     }
 
