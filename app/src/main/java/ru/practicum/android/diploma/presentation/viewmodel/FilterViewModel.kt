@@ -145,7 +145,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         regionsLiveData.value = result
     }
 
-    private fun setSelectedCountry () {
+    private fun setSelectedCountry() {
         regionsLiveData.value = selectedCountry!!.regions
         regionsList = selectedCountry!!.regions
     }
