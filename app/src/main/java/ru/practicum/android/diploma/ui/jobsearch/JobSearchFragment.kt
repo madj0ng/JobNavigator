@@ -61,7 +61,7 @@ class JobSearchFragment : Fragment() {
         }
 
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
-        binding.ifbFilter.setOnClickListener{
+        binding.ifbFilter.setOnClickListener {
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
         }
 
@@ -100,10 +100,11 @@ class JobSearchFragment : Fragment() {
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
     }
 
-    override fun onResume(){
+    override fun onResume() {
         super.onResume()
 
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -4,7 +4,7 @@ import ru.practicum.android.diploma.data.dto.NetworkResponse
 
 data class IndustryResponse(
     val industries: List<IndustryDto>,
-): NetworkResponse()
+) : NetworkResponse()
 
 data class IndustryDto(
     val id: String,

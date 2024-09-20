@@ -130,7 +130,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
                             regionsLiveData.value = result
                         }
                     } else {
-//TODO
+                        // недописанный участок
                     }
                 }
             }

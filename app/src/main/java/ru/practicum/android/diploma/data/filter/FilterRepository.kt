@@ -5,6 +5,6 @@ import ru.practicum.android.diploma.data.network.ListResponseWrapper
 
 interface FilterRepository {
 
-    fun getCountries():Flow<ListResponseWrapper<AreaResponse>>
+    fun getCountries(): Flow<ListResponseWrapper<AreaResponse>>
     fun getIndustries(): Flow<ListResponseWrapper<IndustryResponse>>
 }

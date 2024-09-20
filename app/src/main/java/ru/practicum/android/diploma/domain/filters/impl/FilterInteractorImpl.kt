@@ -12,7 +12,6 @@ import ru.practicum.android.diploma.domain.models.Resource
 
 class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor {
     override fun getAreas(): Flow<Resource<List<CountryModel>>> {
-
         return repository.getCountries().map { countryList ->
             if (countryList.resultCode == RetrofitNetworkClient.RESULT_CODE_SUCCESS) {
                 Resource.Success(countryList.list.map { country ->

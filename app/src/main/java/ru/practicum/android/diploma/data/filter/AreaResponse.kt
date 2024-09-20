@@ -8,7 +8,7 @@ data class AreaResponse(
     val id: String,
     @SerializedName("areas")
     val regions: List<Region>,
-): NetworkResponse()
+) : NetworkResponse()
 
 data class Region(
     val id: String,
