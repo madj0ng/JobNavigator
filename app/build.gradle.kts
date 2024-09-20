@@ -89,5 +89,6 @@ dependencies {
 
     // image
     implementation(libs.glide)
+    kapt(libs.glide.compiler)
     // end image
 }

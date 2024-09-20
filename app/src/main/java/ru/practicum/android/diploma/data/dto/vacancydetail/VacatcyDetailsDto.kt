@@ -17,6 +17,8 @@ data class VacancyDetailsDto(
     @SerializedName("description")
     val description: String,
     val employer: EmployerDto,
+    @SerializedName("alternate_url")
+    val alternativeUrl: String,
 )
 
 data class KeySkill(

@@ -32,14 +32,13 @@
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dim_4dp"
         android:layout_marginEnd="4dp"
         android:contentDescription="@string/back"
         app:layout_constraintBottom_toBottomOf="@+id/vacancy"
         app:layout_constraintEnd_toStartOf="@+id/vacancy"
-        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/vacancy"
-        app:srcCompat="@drawable/icon_back" />
+        app:srcCompat="@drawable/ic_back" />
 
     <TextView
         android:id="@+id/vacancy"
@@ -61,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/vacancy"
         app:layout_constraintEnd_toStartOf="@+id/likeButton"
         app:layout_constraintTop_toTopOf="@+id/vacancy"
-        app:srcCompat="@drawable/icon_share" />
+        app:srcCompat="@drawable/ic_share" />
 
     <ImageView
         android:id="@+id/likeButton"
@@ -72,8 +71,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/vacancy"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/vacancy"
-        app:srcCompat="@drawable/icon_liked" />
-
+        app:srcCompat="@drawable/ic_liked" />
 
     <ScrollView
         android:layout_width="0dp"

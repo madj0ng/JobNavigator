@@ -16,26 +16,32 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentJobDetailsBinding
 import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.presentation.models.VacancyDetailsScreenState
+import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.presentation.viewmodel.VacancyDetailsViewModel
 
 private const val ICON_RADIUS = 12
 
 class JobDetailsFragment : Fragment() {
-    private var binding: FragmentJobDetailsBinding? = null
+    private var _binding: FragmentJobDetailsBinding? = null
+    private val binding get(): FragmentJobDetailsBinding = _binding!!
     private val viewModel: VacancyDetailsViewModel by viewModel()
+    private var vacancyInfo: VacancyInfo? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentJobDetailsBinding.inflate(inflater, container, false)
-        return binding?.root
+    ): View {
+        _binding = FragmentJobDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var vacancyId: String = ""
+        var vacancyUrl: String = ""
+
+        var isFavorite: Boolean = false
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
         }
@@ -43,6 +49,16 @@ class JobDetailsFragment : Fragment() {
             when (state) {
                 is VacancyDetailsScreenState.Content -> {
                     showContent(state.data)
+                    vacancyUrl = state.data.alternativeUrl
+
+                    vacancyInfo = VacancyInfo(
+                        vacancyId,
+                        state.data.name,
+                        state.data.employerName,
+                        state.data.salary ?: "",
+                        state.data.employerIcon
+                    )
+                    isFavorite = state.data.isFavorite
                 }
 
                 is VacancyDetailsScreenState.Loading -> {
@@ -59,48 +75,67 @@ class JobDetailsFragment : Fragment() {
             }
         }
 
+        viewModel.likeLiveData.observe(viewLifecycleOwner) { state ->
+            setLikeButton(state)
+        }
+
         viewModel.getVacancy(vacancyId)
-        binding?.backButton?.setOnClickListener {
+
+        binding.backButton.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.shareButton.setOnClickListener {
+            viewModel.sharingVacancy(vacancyUrl)
+        }
+
+        binding.likeButton.setOnClickListener {
+            if (isFavorite) {
+                viewModel.deleteVcancyFromFavorite(vacancyInfo!!)
+                isFavorite = false
+            } else {
+                viewModel.addVacansyAtFavorite(vacancyInfo!!)
+                isFavorite = true
+            }
         }
     }
 
     private fun showLoading() {
         hideAll()
-        binding?.pbPage?.visibility = View.VISIBLE
+        binding.pbPage.visibility = View.VISIBLE
     }
 
     private fun serverError() {
         hideAll()
-        binding?.groupServerError?.visibility = View.VISIBLE
+        binding.groupServerError.visibility = View.VISIBLE
     }
 
     private fun vacancyNotFoundOrDeleted() {
         hideAll()
-        binding?.vacancyNotFound?.visibility = View.VISIBLE
+        binding.vacancyNotFound.visibility = View.VISIBLE
     }
 
     fun hideAll() {
-        binding?.vacancyDetails?.visibility = View.GONE
-        binding?.groupServerError?.visibility = View.GONE
-        binding?.vacancyNotFound?.visibility = View.GONE
-        binding?.pbPage?.visibility = View.GONE
+        binding.vacancyDetails.visibility = View.GONE
+        binding.groupServerError.visibility = View.GONE
+        binding.vacancyNotFound.visibility = View.GONE
+        binding.pbPage.visibility = View.GONE
     }
 
     private fun showContent(vacancy: VacancyDetailsModel) {
         hideAll()
-        binding?.vacancyDetails?.visibility = View.VISIBLE
-        binding?.vacancyName?.text = vacancy.name
-        binding?.vacancySalary?.text = vacancy.salary
-        binding?.experienceValues?.text = vacancy.experience
-        binding?.isFulltimeIsRemote?.text = vacancy.schedule
-        binding?.let { insertHtml(it.vacancyDescriptionValue, vacancy.description) }
+        binding.vacancyDetails.visibility = View.VISIBLE
+        binding.vacancyName.text = vacancy.name
+        binding.vacancySalary.text = vacancy.salary
+        binding.experienceValues.text = vacancy.experience
+        binding.isFulltimeIsRemote.text = vacancy.schedule
+        binding.let { insertHtml(it.vacancyDescriptionValue, vacancy.description) }
         if (vacancy.keySkills.isEmpty()) {
-            binding?.keySkills?.visibility = View.GONE
+            binding.keySkills.visibility = View.GONE
         } else {
-            binding?.let { insertHtml(it.vacancyKeySkillsValue, generateHtmlList(vacancy.keySkills)) }
+            binding.let { insertHtml(it.vacancyKeySkillsValue, generateHtmlList(vacancy.keySkills)) }
         }
-        binding?.let {
+        binding.let {
             Glide.with(requireContext())
                 .load(vacancy.employerIcon)
                 .placeholder(R.drawable.company_logo_placeholder)
@@ -110,6 +145,7 @@ class JobDetailsFragment : Fragment() {
         }
         binding?.city?.text = vacancy.address
         binding?.companyName?.text = vacancy.employerName
+        setLikeButton(vacancy.isFavorite)
     }
 
     fun generateHtmlList(inputList: List<String>): String {
@@ -131,8 +167,16 @@ class JobDetailsFragment : Fragment() {
         }
     }
 
+    fun setLikeButton(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.likeButton.setImageResource(R.drawable.ic_is_liked)
+        } else {
+            binding.likeButton.setImageResource(R.drawable.ic_liked)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }
