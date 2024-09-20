@@ -22,6 +22,12 @@ class JobSearchViewAdapter(
         notifyDataSetChanged()
     }
 
+    fun addItems(newVacancys: List<VacancyInfo>) {
+        val startPosition = vacancies.size
+        vacancies.addAll(newVacancys)
+        notifyItemRangeInserted(startPosition, newVacancys.size)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = VacancyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(

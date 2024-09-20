@@ -12,4 +12,6 @@ sealed interface JobSearchScreenState {
     data object Empty : JobSearchScreenState
 
     data object Default : JobSearchScreenState
+
+    data object ShowPaginationLoading : JobSearchScreenState
 }

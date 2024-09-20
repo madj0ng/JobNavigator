@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
@@ -72,16 +74,36 @@ class JobSearchFragment : Fragment() {
                     showEmptyState()
                 }
 
+                is JobSearchScreenState.ShowPaginationLoading -> {
+                    showPaginationLoading()
+                }
+
                 else -> {
                     showDefault()
                 }
             }
         }
 
+        binding.rvJobList.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val itemsCount = jobSearchViewAdapter!!.itemCount
+                    if (pos >= itemsCount - 1) {
+                        viewModel.onLastItemReached()
+                    }
+                }
+            }
+        })
     }
 
     private fun showLoading() {
         hideAll()
+        binding.pbPage.visibility = View.VISIBLE
+    }
+
+    private fun showPaginationLoading() {
         binding.pbJobList.visibility = View.VISIBLE
     }
 
@@ -97,7 +119,11 @@ class JobSearchFragment : Fragment() {
 
     private fun showContent(data: List<VacancyInfo>, found: Int) {
         hideAll()
-        jobSearchViewAdapter?.setList(data)
+        if (viewModel.currentPage.value == 0) {
+            jobSearchViewAdapter?.setList(data)
+        } else {
+            jobSearchViewAdapter?.addItems(data)
+        }
         binding.rvJobList.visibility = View.VISIBLE
         binding.tvJobSearchCount.visibility = View.VISIBLE
         binding.tvJobSearchCount.text = getString(R.string.search_job_list_count, found)
@@ -114,6 +140,7 @@ class JobSearchFragment : Fragment() {
         binding.ivInformImage.visibility = View.GONE
         binding.tvJobSearchCount.visibility = View.GONE
         binding.ivInformBottomText.visibility = View.GONE
+        binding.pbPage.visibility = View.GONE
     }
 
     override fun onDestroyView() {

@@ -23,20 +23,41 @@ class JobSearchViewModel(
     private val _screenLiveData = MutableLiveData<JobSearchScreenState>(JobSearchScreenState.Default)
     val screenLiveData: LiveData<JobSearchScreenState> get() = _screenLiveData
 
+    private val _currentPage = MutableLiveData<Int?>(null)
+    val currentPage: LiveData<Int?> get() = _currentPage
+
+    private val _maxPages = MutableLiveData<Int?>(null)
+    val maxPages: LiveData<Int?> get() = _maxPages
+
+    private val _vacanciesList = MutableLiveData<List<VacancyInfo>>(emptyList())
+    val vacanciesLis: LiveData<List<VacancyInfo>> get() = _vacanciesList
+
+    private val _isNextPageLoading = MutableLiveData<Boolean>(false)
+    private val isNextPageLoading: LiveData<Boolean> get() = _isNextPageLoading
+
+    private var currentSearchQuery: String = ""
+
     fun onSearchQueryChanged(query: String) {
-        searchRequest(query)
+        currentSearchQuery = query
+        _currentPage.value = 0
+        searchRequest(query, 0)
     }
 
-    private fun searchRequest(newSearchQuery: String) {
+    private fun searchRequest(newSearchQuery: String, page: Int = 0) {
         if (newSearchQuery.isEmpty()) {
             return
         }
 
         val searchParams = VacancySearchParams(
-            vacancyName = newSearchQuery
+            vacancyName = newSearchQuery,
+            page = page
         )
 
-        _screenLiveData.value = JobSearchScreenState.Loading
+        if (page == 0) {
+            _screenLiveData.value = JobSearchScreenState.Loading
+        } else {
+            _screenLiveData.value = JobSearchScreenState.ShowPaginationLoading
+        }
 
         viewModelScope.launch {
             searchVacancyInteractor.searchVacancy(searchParams).collect { result ->
@@ -48,12 +69,15 @@ class JobSearchViewModel(
     private fun renderState(result: Resource<List<VacancyModel>>) {
         when (result) {
             is Resource.Success -> {
+                _isNextPageLoading.value = false
                 if (result.data.isEmpty()) {
                     _screenLiveData.value = JobSearchScreenState.Empty
                 } else {
                     val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
-                    val found = result.found ?: 0
-                    _screenLiveData.value = JobSearchScreenState.Content(vacancyInfoList, found)
+                    _vacanciesList.value = _vacanciesList.value.orEmpty() + vacancyInfoList
+                    _currentPage.value = result.page
+                    _maxPages.value = result.pages
+                    _screenLiveData.value = JobSearchScreenState.Content(vacancyInfoList, result.found ?: 0)
                 }
             }
 
@@ -98,6 +122,17 @@ class JobSearchViewModel(
 
     private fun getSalaryTo(to: Int?): String {
         return to?.let { " до $it" } ?: ""
+    }
+
+    fun onLastItemReached() {
+        if (_isNextPageLoading.value == true || _currentPage.value ?: 0 >= _maxPages.value ?: 0) {
+            return
+        }
+        val nextPage = _currentPage.value ?: 0 + 1
+        _currentPage.value = nextPage
+
+        _isNextPageLoading.value = true
+        searchRequest(currentSearchQuery, nextPage)
     }
 
 }
