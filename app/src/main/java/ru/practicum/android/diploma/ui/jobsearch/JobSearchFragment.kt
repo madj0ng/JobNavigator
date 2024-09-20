@@ -19,7 +19,6 @@ import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
 import ru.practicum.android.diploma.util.debounce
 
-
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
     private val binding get() = _binding!!
