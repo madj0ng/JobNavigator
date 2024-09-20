@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
-import java.lang.StringBuilder
 
 class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
@@ -43,11 +42,16 @@ class SearchFiltersFragment : Fragment() {
         binding?.buttonBack?.setOnClickListener {
             findNavController().popBackStack()
             viewModel.setDontShowWithoutSalary(binding!!.ischeced.isChecked)
+            viewModel.setSalary(binding.earn.text.toString())
         }
+        init()
     }
 
-    override fun onResume() {
-        super.onResume()
+    fun init() {
+        if (viewModel.getSalary() != null) {
+            binding.earn.setText(viewModel.getSalary().toString())
+        }
+        binding.ischeced.isChecked = viewModel.getDontShowWithoutSalary()
         val tempI = viewModel?.getSavedIndustry()
         val tempR = viewModel?.getRegionSaved()
         val tempC = viewModel?.getCountrySaved()
@@ -67,6 +71,11 @@ class SearchFiltersFragment : Fragment() {
         if (area.isNotEmpty()) {
             binding?.placeOfWorkCountryRegion?.text = area
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        init()
     }
 
     override fun onDestroyView() {
