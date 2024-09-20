@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
 import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
@@ -81,11 +80,13 @@ class JobSearchFragment : Fragment() {
             else -> showScreen(uiState)
         }
     }
+
     private fun showScreen(uiState: SearchUiState) {
         binding.rvJobList.isVisible = uiState.isJobsList
         binding.tvJobSearchCount.isVisible = uiState.isJobsCount
         binding.pbJobList.isVisible = uiState.isJobsListBrogressBar
-        binding.pbPage.isVisible = uiState.isBrogressBar
+        binding.pbPage.isVisible = uiState.isProgressBar
+        binding.pbJobList.isVisible = uiState.isPaginationProgressBar
         binding.ivInformImage.isVisible = uiState.isInformImage
         binding.ivInformBottomText.isVisible = uiState.isBottomText
         if (uiState.topText != null) {
@@ -106,6 +107,7 @@ class JobSearchFragment : Fragment() {
         }
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

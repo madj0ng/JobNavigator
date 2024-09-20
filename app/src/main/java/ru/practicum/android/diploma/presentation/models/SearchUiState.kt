@@ -6,7 +6,8 @@ sealed interface SearchUiState {
     val isJobsCount: Boolean
     val isJobsList: Boolean
     val isJobsListBrogressBar: Boolean
-    val isBrogressBar: Boolean
+    val isProgressBar: Boolean
+    val isPaginationProgressBar: Boolean
     val isInformImage: Boolean
     val isBottomText: Boolean
     val url: Int?
@@ -17,7 +18,8 @@ sealed interface SearchUiState {
         override val isJobsCount: Boolean = false,
         override val isJobsList: Boolean = false,
         override val isJobsListBrogressBar: Boolean = false,
-        override val isBrogressBar: Boolean = false,
+        override val isProgressBar: Boolean = false,
+        override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
         override val url: Int = R.drawable.error_no_connect,
@@ -29,7 +31,8 @@ sealed interface SearchUiState {
         override val isJobsCount: Boolean = false,
         override val isJobsList: Boolean = false,
         override val isJobsListBrogressBar: Boolean = false,
-        override val isBrogressBar: Boolean = false,
+        override val isProgressBar: Boolean = false,
+        override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
         override val url: Int = R.drawable.error_server,
@@ -41,7 +44,8 @@ sealed interface SearchUiState {
         override val isJobsCount: Boolean = true,
         override val isJobsList: Boolean = false,
         override val isJobsListBrogressBar: Boolean = false,
-        override val isBrogressBar: Boolean = false,
+        override val isProgressBar: Boolean = false,
+        override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
         override val url: Int = R.drawable.error_no_data,
@@ -53,7 +57,8 @@ sealed interface SearchUiState {
         override val isJobsCount: Boolean = false,
         override val isJobsList: Boolean = false,
         override val isJobsListBrogressBar: Boolean = false,
-        override val isBrogressBar: Boolean = false,
+        override val isProgressBar: Boolean = false,
+        override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = true,
         override val isBottomText: Boolean = true,
         override val url: Int = R.drawable.search_empty,
@@ -65,7 +70,8 @@ sealed interface SearchUiState {
         override val isJobsCount: Boolean = false,
         override val isJobsList: Boolean = false,
         override val isJobsListBrogressBar: Boolean = false,
-        override val isBrogressBar: Boolean = true,
+        override val isProgressBar: Boolean = true,
+        override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = false,
         override val isBottomText: Boolean = false,
         override val url: Int? = null,
@@ -73,11 +79,25 @@ sealed interface SearchUiState {
         override val bottomText: Int? = null,
     ) : SearchUiState
 
+    data class LoadingPagination(
+        override val isJobsCount: Boolean = true,
+        override val isJobsList: Boolean = true,
+        override val isJobsListBrogressBar: Boolean = false,
+        override val isProgressBar: Boolean = false,
+        override val isPaginationProgressBar: Boolean = true,
+        override val isInformImage: Boolean = false,
+        override val isBottomText: Boolean = false,
+        override val url: Int? = null,
+        override val topText: Int? = R.string.search_job_list_count,
+        override val bottomText: Int? = null,
+    ) : SearchUiState
+
     data class Content(
         override val isJobsCount: Boolean = true,
         override val isJobsList: Boolean = true,
         override val isJobsListBrogressBar: Boolean = false,
-        override val isBrogressBar: Boolean = false,
+        override val isProgressBar: Boolean = false,
+        override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = false,
         override val isBottomText: Boolean = false,
         override val url: Int? = null,

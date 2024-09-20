@@ -12,7 +12,7 @@ import ru.practicum.android.diploma.domain.models.SalaryModel
 import ru.practicum.android.diploma.domain.models.VacancyModel
 import ru.practicum.android.diploma.domain.models.VacancySearchParams
 import ru.practicum.android.diploma.domain.search.SearchVacancyInteractor
-import ru.practicum.android.diploma.presentation.models.JobSearchScreenState
+import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.models.VacancyInfo
 import ru.practicum.android.diploma.util.SingleLiveEvent
 
@@ -23,8 +23,8 @@ class JobSearchViewModel(
 
     private val toastLiveData = SingleLiveEvent<String>()
 
-    private val _screenLiveData = MutableLiveData<JobSearchScreenState>(JobSearchScreenState.Default)
-    val screenLiveData: LiveData<JobSearchScreenState> get() = _screenLiveData
+    private val _screenLiveData = MutableLiveData<SearchUiState>(SearchUiState.Default())
+    val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
 
     private val _currentPage = MutableLiveData<Int?>(null)
     val currentPage: LiveData<Int?> get() = _currentPage
@@ -59,7 +59,7 @@ class JobSearchViewModel(
         if (page == 0) {
             _screenLiveData.value = SearchUiState.Loading()
         } else {
-            _screenLiveData.value = SearchUiState.ShowPaginationLoading
+            _screenLiveData.value = SearchUiState.LoadingPagination()
         }
 
         viewModelScope.launch {
