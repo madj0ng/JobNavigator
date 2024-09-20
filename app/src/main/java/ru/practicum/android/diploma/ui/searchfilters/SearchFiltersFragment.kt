@@ -35,7 +35,11 @@ class SearchFiltersFragment : Fragment() {
         binding?.placeOfWork?.setOnClickListener {
             findNavController().navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment())
         }
-
+        binding?.buttonBack?.setOnClickListener {
+            findNavController().popBackStack()
+            viewModel.setDontShowWithoutSalary(binding!!.ischeced.isChecked)
+            viewModel.setSalary(binding!!.earn.text.toString())
+        }
     }
 
     override fun onResume() {
@@ -56,7 +60,7 @@ class SearchFiltersFragment : Fragment() {
             }
             area.append(tempR.name)
         }
-        if(area.isNotEmpty()){
+        if (area.isNotEmpty()) {
             binding?.placeOfWorkCountryRegion?.text = area
         }
     }

@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
 import ru.practicum.android.diploma.presentation.models.SearchUiState
+import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
 import ru.practicum.android.diploma.util.debounce
 
@@ -21,6 +23,7 @@ class JobSearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: JobSearchViewModel by viewModel()
+    private val filtersViewModel: FilterViewModel by activityViewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
 
     private val debounceSearch = debounce<String>(
@@ -97,6 +100,10 @@ class JobSearchFragment : Fragment() {
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
     }
 
+    override fun onResume(){
+        super.onResume()
+
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

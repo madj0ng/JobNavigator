@@ -112,17 +112,18 @@
             style="@style/VacancyItemSmallReverseColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dim_16dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dim_16dp"
             android:text="@string/show_without_salary"
             android:layout_weight="0.5"/>
 
         <CheckBox
+            android:id="@+id/ischeced"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/checkbox_custom_click"
-            android:checked="true"
-            android:layout_marginTop="@dimen/dim_18dp"
+            android:checked="false"
+            android:paddingVertical="@dimen/dim_18dp"
             android:theme="@style/CheckBoxTheme"
             android:layout_weight="0.1"/>
 

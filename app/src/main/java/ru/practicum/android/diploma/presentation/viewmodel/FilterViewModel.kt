@@ -27,6 +27,24 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     private var savedIndustry: IndustryModel? = null
     private var savedRegion: RegionModel? = null
     private var savedCountry: CountryModel? = null
+    private var salarybase: Int? = null
+    private var dontShowWithoutSalary: Boolean = false
+
+    fun setDontShowWithoutSalary(show: Boolean) {
+        dontShowWithoutSalary = show
+    }
+
+    fun getDontShowWithoutSalary(): Boolean {
+        return dontShowWithoutSalary
+    }
+
+    fun setSalary(salary: String) {
+        salarybase = salary.toInt()
+    }
+
+    fun getSalary(): Int? {
+        return salarybase
+    }
 
     fun getAreas() {
         viewModelScope.launch {
