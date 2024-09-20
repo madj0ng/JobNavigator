@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
@@ -17,6 +18,7 @@ import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
 import ru.practicum.android.diploma.util.debounce
+
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
