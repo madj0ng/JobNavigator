@@ -68,4 +68,3 @@ class SearchFiltersRegionFragment : Fragment() {
         _binding = null
     }
 }
-

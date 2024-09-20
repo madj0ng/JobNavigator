@@ -14,8 +14,7 @@ class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor 
     override fun getAreas(): Flow<Resource<List<CountryModel>>> {
         return repository.getCountries().map { countryList ->
             if (countryList.resultCode == RetrofitNetworkClient.RESULT_CODE_SUCCESS) {
-                Resource.Success(data =
-                countryList.list.map { country ->
+                Resource.Success(data = countryList.list.map { country ->
                     CountryModel(
                         country.name,
                         country.id,
@@ -37,9 +36,7 @@ class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor 
                         industryResultList.add(IndustryModel(subIndustry.id, subIndustry.name))
                     }
                 }
-                Resource.Success(
-                    data = industryResultList
-                )
+                Resource.Success(data = industryResultList)
             } else {
                 Resource.Error(-1, "")
             }

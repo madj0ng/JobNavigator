@@ -26,6 +26,9 @@ class JobDetailsFragment : Fragment() {
     private val binding get(): FragmentJobDetailsBinding = _binding!!
     private val viewModel: VacancyDetailsViewModel by viewModel()
     private var vacancyInfo: VacancyInfo? = null
+    private var vacancyId: String = ""
+    private var vacancyUrl: String = ""
+    private var isFavorite: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,10 +41,6 @@ class JobDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var vacancyId: String = ""
-        var vacancyUrl: String = ""
-
-        var isFavorite: Boolean = false
         arguments?.let {
             vacancyId = JobDetailsFragmentArgs.fromBundle(it).vacancyId
         }
@@ -49,29 +48,14 @@ class JobDetailsFragment : Fragment() {
             when (state) {
                 is VacancyDetailsScreenState.Content -> {
                     showContent(state.data)
-                    vacancyUrl = state.data.alternativeUrl
-
-                    vacancyInfo = VacancyInfo(
-                        vacancyId,
-                        state.data.name,
-                        state.data.employerName,
-                        state.data.salary ?: "",
-                        state.data.employerIcon
-                    )
-                    isFavorite = state.data.isFavorite
+                    setParam(state)
                 }
 
-                is VacancyDetailsScreenState.Loading -> {
-                    showLoading()
-                }
+                is VacancyDetailsScreenState.Loading -> showLoading()
 
-                is VacancyDetailsScreenState.NotFound -> {
-                    vacancyNotFoundOrDeleted()
-                }
+                is VacancyDetailsScreenState.NotFound -> vacancyNotFoundOrDeleted()
 
-                else -> {
-                    serverError()
-                }
+                else -> serverError()
             }
         }
 
@@ -98,6 +82,14 @@ class JobDetailsFragment : Fragment() {
                 isFavorite = true
             }
         }
+    }
+
+    private fun setParam(state: VacancyDetailsScreenState.Content) {
+        vacancyUrl = state.data.alternativeUrl
+        vacancyInfo = VacancyInfo(vacancyId, state.data.name, state.data.employerName, state.data.salary
+            ?: "", state.data.employerIcon
+        )
+        isFavorite = state.data.isFavorite
     }
 
     private fun showLoading() {
