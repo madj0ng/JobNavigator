@@ -41,7 +41,8 @@ class SearchFiltersFragment : Fragment() {
                 )
         }
         binding.buttonBack.setOnClickListener {
-            findNavController().navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
+            findNavController()
+                .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
             viewModel.setSalary(binding.earn.text.toString())
         }
