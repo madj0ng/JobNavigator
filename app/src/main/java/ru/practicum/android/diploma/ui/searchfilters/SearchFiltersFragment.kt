@@ -73,7 +73,7 @@ class SearchFiltersFragment : Fragment() {
             }
         }
 
-        binding.earn.addTextChangedListener {str ->
+        binding.earn.addTextChangedListener { str ->
             if (str.toString().isNotEmpty()) {
                 binding.groupButtons.visibility = View.VISIBLE
             } else {
@@ -129,8 +129,11 @@ class SearchFiltersFragment : Fragment() {
 
     private fun checkSellary(str: String): String {
         try {
-            (str.toInt() > 0)
-            return str
+            if (str.toInt() > 0) {
+                return str
+            } else {
+                return ""
+            }
         } catch (e: NumberFormatException) {
             return ""
         }
