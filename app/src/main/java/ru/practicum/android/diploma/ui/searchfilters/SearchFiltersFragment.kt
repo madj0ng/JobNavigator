@@ -28,6 +28,8 @@ class SearchFiltersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.groupButtons.visibility = View.GONE
+
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -59,7 +61,24 @@ class SearchFiltersFragment : Fragment() {
             viewModel.unSelectCountry()
             viewModel.unSelectIndustry()
             canselFilter()
+            binding.groupButtons.visibility = View.GONE
             init()
+        }
+
+        binding.ischeced.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.groupButtons.visibility = View.VISIBLE
+            } else {
+                binding.groupButtons.visibility = View.GONE
+            }
+        }
+
+        binding.earn.addTextChangedListener {str ->
+            if (str.toString().isNotEmpty()) {
+                binding.groupButtons.visibility = View.VISIBLE
+            } else {
+                binding.groupButtons.visibility = View.GONE
+            }
         }
 
         init()
@@ -77,6 +96,7 @@ class SearchFiltersFragment : Fragment() {
         if (tempI != null) {
             binding.industryPlace.text = tempI.name
             binding.hintIndustryPlace.text = context?.getString(R.string.Industry)
+            binding.groupButtons.visibility = View.VISIBLE
         }
         if (tempC != null) {
             area.append(tempC.name)
@@ -90,7 +110,9 @@ class SearchFiltersFragment : Fragment() {
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area
             binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.place_of_work)
+            binding.groupButtons.visibility = View.VISIBLE
         }
+
     }
 
     private fun canselFilter() {
