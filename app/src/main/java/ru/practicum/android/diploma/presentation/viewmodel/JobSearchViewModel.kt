@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.presentation.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,9 +20,8 @@ import ru.practicum.android.diploma.util.SingleLiveEvent
 import ru.practicum.android.diploma.util.debounce
 
 class JobSearchViewModel(
-    val searchVacancyInteractor: SearchVacancyInteractor,
-    val formatConverter: FormatConverter,
-    val context: Context
+    private val searchVacancyInteractor: SearchVacancyInteractor,
+    private val formatConverter: FormatConverter,
 ) : ViewModel() {
 
     private val toastLiveData = SingleLiveEvent<String>()
@@ -57,6 +55,7 @@ class JobSearchViewModel(
                 onlyWithSalary = query.onlyWithSalary
             )
             if (query.vacancyName != oldQuery || newFilter != oldFilter) {
+                _screenLiveData.value = SearchUiState.Loading()
                 debounceSearch(query)
                 filterLiveData.value = newFilter
             }
@@ -79,12 +78,6 @@ class JobSearchViewModel(
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         if (vacancySearchParams.vacancyName.isEmpty()) {
             return
-        }
-
-        if (vacancySearchParams.page == 0) {
-            _screenLiveData.value = SearchUiState.Loading()
-        } else {
-            _screenLiveData.value = SearchUiState.LoadingPagination()
         }
 
         viewModelScope.launch {
@@ -141,7 +134,8 @@ class JobSearchViewModel(
         if (nextPage <= MAX_PAGE) {
             _currentPage.value = nextPage
             _isNextPageLoading.value = true
-            searchRequest(vacancySearchParams.copy(page = nextPage))
+            _screenLiveData.value = SearchUiState.LoadingPagination()
+            debounceSearch(vacancySearchParams.copy(page = nextPage))
         }
     }
 

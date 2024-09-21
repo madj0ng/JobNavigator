@@ -68,7 +68,6 @@ class JobSearchFragment : Fragment() {
                     val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                     val itemsCount = jobSearchViewAdapter!!.itemCount
                     if (pos >= itemsCount - 1) {
-                        val reqs = viewModel.observeSearch().value?.query ?: ""
                         viewModel.onLastItemReached(
                             setQueryParam(viewModel.observeSearch().value?.query ?: "", filtersViewModel)
                         )
