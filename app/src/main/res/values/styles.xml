@@ -4,6 +4,7 @@
     <style name="CustomBottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
+        <item name="android:background">@color/day_white_night_black</item>
     </style>
 
     <style name="TextDisplayMedium500">

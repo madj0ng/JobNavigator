@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.TypedValue
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.Salary
+import ru.practicum.android.diploma.domain.models.SalaryModel
 
 class FormatConverter(private val context: Context) {
     fun dpToPx(dp: Float): Int {
@@ -28,4 +29,13 @@ class FormatConverter(private val context: Context) {
             "$from$to $currency"
         }
     }
+
+    fun toSalaryString(salary: SalaryModel?): String {
+        if (salary == null) {
+            return context.getString(R.string.salary_not_specified)
+        }
+
+        return toSalaryString(Salary(salary.currency ?: "", salary.from, salary.to))
+    }
+
 }
