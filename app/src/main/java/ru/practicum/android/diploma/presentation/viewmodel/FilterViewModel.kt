@@ -111,6 +111,9 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun unSelectCountry() {
         selectedCountry = null
+        savedCountry = null
+        selectCity = null
+        savedCity = null
     }
 
     fun searchRegion(strRegion: String) {
@@ -194,6 +197,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun unSelectIndustry() {
         selectIndustry = null
+        savedIndustry = null
         selectIndustryLiveData.value = null
     }
 

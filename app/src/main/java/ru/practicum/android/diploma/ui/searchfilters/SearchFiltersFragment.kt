@@ -40,12 +40,28 @@ class SearchFiltersFragment : Fragment() {
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
                 )
         }
+
         binding.buttonBack.setOnClickListener {
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
             viewModel.setSalary(binding.earn.text.toString())
         }
+
+        binding.buttonApply.setOnClickListener {
+            findNavController()
+                .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
+            viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
+            viewModel.setSalary(binding.earn.text.toString())
+        }
+
+        binding.buttonCancel.setOnClickListener {
+            viewModel.unSelectCountry()
+            viewModel.unSelectIndustry()
+            canselFilter()
+            init()
+        }
+
         init()
     }
 
@@ -74,6 +90,17 @@ class SearchFiltersFragment : Fragment() {
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area
             binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.place_of_work)
+        }
+    }
+
+    private fun canselFilter() {
+        with(binding) {
+            industryPlace.text = ""
+            placeOfWorkCountryRegion.text = ""
+            earn.setText("")
+            viewModel.setSalary("")
+            ischeced.isChecked = false
+            viewModel.setDontShowWithoutSalary(false)
         }
     }
 
