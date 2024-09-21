@@ -66,10 +66,11 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
         }
         params.area?.let { options["area"] = it }
         params.salary?.let { options["salary"] = it.toString() }
-        params.onlyWithSalary.let { options["onlyWithSalary"] = it.toString() }
-        params.professionalRole?.let { options["professionalRole"] = it }
         params.page.let { options["page"] = it.toString() }
         params.perPage.let { options["per_page"] = it.toString() }
+        params.onlyWithSalary.let { options["only_with_salary"] = it.toString() }
+        params.professionalRole?.let { options["industry"] = it }
+
         return options
     }
 

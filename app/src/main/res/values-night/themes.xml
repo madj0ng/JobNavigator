@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.PracticumAndroidDiploma" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
@@ -11,7 +11,6 @@
         <!-- Цвета текста -->
         <item name="android:textColorPrimary">@color/white_universal</item>
         <item name="android:textColorSecondary">@color/white_universal</item>
-        <item name="android:background">@color/black_universal</item>
         <item name="android:windowLightStatusBar">false</item>
         <!-- Цвет фона окна -->
         <item name="android:windowBackground">@color/black_universal</item>

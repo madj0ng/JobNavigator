@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.filter.FilterRepository
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
+import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
@@ -18,7 +19,15 @@ class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor 
                     CountryModel(
                         country.name,
                         country.id,
-                        country.regions.map { region -> RegionModel(region.id, region.name) }
+                        country.regions.map { region ->
+                            RegionModel(
+                                region.id,
+                                region.name,
+                                region.city.map { city ->
+                                    CityModel(city.id, city.name)
+                                }
+                            )
+                        }
                     )
                 })
             } else {
