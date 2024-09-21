@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -44,15 +45,14 @@ class SearchFiltersFragment : Fragment() {
         binding.buttonBack.setOnClickListener {
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
-            viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(binding.earn.text.toString())
         }
 
         binding.buttonApply.setOnClickListener {
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(binding.earn.text.toString())
+            val str = checkSellary(binding.earn.text.toString())
+            viewModel.setSalary(str)
         }
 
         binding.buttonCancel.setOnClickListener {
@@ -101,7 +101,22 @@ class SearchFiltersFragment : Fragment() {
             viewModel.setSalary("")
             ischeced.isChecked = false
             viewModel.setDontShowWithoutSalary(false)
+            hideHint()
         }
+    }
+
+    private fun checkSellary(str: String): String {
+        try {
+            (str.toInt() > 0)
+            return str
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+    }
+
+    private fun hideHint() {
+        binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
+        binding.hintIndustryPlace.text = context?.getString(R.string.empty)
     }
 
     override fun onResume() {
