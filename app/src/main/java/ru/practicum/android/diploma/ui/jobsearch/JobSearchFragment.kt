@@ -36,8 +36,8 @@ class JobSearchFragment : Fragment() {
         viewModel.onSearchQueryChanged(
             VacancySearchParams(
                 query,
-                if (filtersViewModel.getRegionSaved() != null) {
-                    filtersViewModel.getRegionSaved()!!.id
+                if (filtersViewModel.getCitySaved() != null) {
+                    filtersViewModel.getCitySaved()!!.id
                 } else {
                     filtersViewModel.getCountrySaved()?.id
                 },
@@ -89,8 +89,8 @@ class JobSearchFragment : Fragment() {
                         viewModel.onLastItemReached(
                             VacancySearchParams(
                                 viewModel.getLastSearchQuery(),
-                                if (filtersViewModel.getRegionSaved() != null) {
-                                    filtersViewModel.getRegionSaved()!!.id
+                                if (filtersViewModel.getCitySaved() != null) {
+                                    filtersViewModel.getCitySaved()!!.id
                                 } else {
                                     filtersViewModel.getCountrySaved()?.id
                                 },
@@ -144,8 +144,8 @@ class JobSearchFragment : Fragment() {
         viewModel.onSearchQueryChanged(
             VacancySearchParams(
                 viewModel.getLastSearchQuery(),
-                if (filtersViewModel.getRegionSaved() != null) {
-                    filtersViewModel.getRegionSaved()!!.id
+                if (filtersViewModel.getCitySaved() != null) {
+                    filtersViewModel.getCitySaved()!!.id
                 } else {
                     filtersViewModel.getCountrySaved()?.id
                 },

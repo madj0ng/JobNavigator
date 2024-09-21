@@ -33,17 +33,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_60dp">
 
-        <TextView
-            android:id="@+id/country_textarea"
-            style="@style/VacancyItemSmall"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dim_20dp"
-            android:layout_marginLeft="@dimen/dim_16dp"
-            android:layout_weight="1"
-            android:hint="@string/country"
-            android:textColor="@color/day_black_night_white" />
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/hint_country_textarea"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dim_16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/dim_14sp" />
+
+            <TextView
+                android:id="@+id/country_textarea"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dim_16dp"
+                android:layout_weight="2"
+                android:hint="@string/country"
+                android:textColor="@color/day_black_night_white" />
+
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -60,17 +76,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_60dp">
 
-        <TextView
-            android:id="@+id/region_textarea"
-            style="@style/VacancyItemSmall"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dim_20dp"
-            android:layout_marginLeft="@dimen/dim_16dp"
-            android:layout_weight="1"
-            android:hint="@string/region"
-            android:textColor="@color/day_black_night_white" />
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/hint_region_textarea"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dim_16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/dim_14sp" />
+
+            <TextView
+                android:id="@+id/region_textarea"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dim_16dp"
+                android:layout_weight="2"
+                android:hint="@string/region"
+                android:textColor="@color/day_black_night_white" />
+
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"

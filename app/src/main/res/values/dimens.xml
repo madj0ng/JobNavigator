@@ -16,6 +16,7 @@
     <dimen name="dim_60dp">60dp</dimen>
     <dimen name="dim_64dp">64dp</dimen>
 
+    <dimen name="dim_14sp">14sp</dimen>
     <dimen name="dim_16sp">16sp</dimen>
     <dimen name="dim_22sp">22sp</dimen>
     <dimen name="dim_32sp">32sp</dimen>

@@ -29,20 +29,38 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id = "@+id/place_of_work"
+        android:id="@+id/place_of_work"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_60dp">
 
-        <TextView
-            android:id="@+id/place_of_work_country_region"
-            style="@style/VacancyItemSmall"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dim_20dp"
-            android:layout_marginLeft="@dimen/dim_16dp"
-            android:layout_weight="1"
-            android:hint="@string/place_of_work"
-            android:textColor="@color/day_black_night_white" />
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hint_place_of_work_country_region"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dim_16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/dim_14sp" />
+
+            <TextView
+                android:id="@+id/place_of_work_country_region"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dim_16dp"
+                android:layout_weight="2"
+                android:hint="@string/place_of_work"
+                android:textColor="@color/day_black_night_white" />
+
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -59,16 +77,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_60dp">
 
-        <TextView
-            android:id="@+id/industry_place"
-            style="@style/VacancyItemSmall"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/dim_20dp"
-            android:layout_marginLeft="@dimen/dim_16dp"
-            android:layout_weight="1"
-            android:hint="@string/Industry"
-            android:textColor="@color/day_black_night_white" />
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hint_industry_place"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dim_16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/dim_14sp" />
+
+            <TextView
+                android:id="@+id/industry_place"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dim_16dp"
+                android:layout_weight="2"
+                android:hint="@string/Industry"
+                android:textColor="@color/day_black_night_white" />
+
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -115,8 +150,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dim_16dp"
-            android:text="@string/show_without_salary"
-            android:layout_weight="0.5"/>
+            android:layout_weight="0.5"
+            android:text="@string/show_without_salary" />
 
         <CheckBox
             android:id="@+id/ischeced"
@@ -129,7 +164,6 @@
             android:clickable="true"
             android:paddingVertical="@dimen/dim_18dp"
             android:theme="@style/CheckBoxTheme" />
-
 
 
     </LinearLayout>

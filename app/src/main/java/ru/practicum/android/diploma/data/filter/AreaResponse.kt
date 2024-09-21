@@ -13,4 +13,11 @@ data class AreaResponse(
 data class Region(
     val id: String,
     val name: String,
+    @SerializedName("areas")
+    val city: List<City>
+)
+
+data class City(
+    val id: String,
+    val name: String
 )
