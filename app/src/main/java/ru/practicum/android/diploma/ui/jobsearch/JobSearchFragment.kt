@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,6 @@ import ru.practicum.android.diploma.presentation.models.QueryUiState
 import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
-import ru.practicum.android.diploma.util.debounce
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
@@ -28,26 +26,6 @@ class JobSearchFragment : Fragment() {
     private val viewModel: JobSearchViewModel by viewModel()
     private val filtersViewModel: FilterViewModel by activityViewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
-
-    private val debounceSearch = debounce<String>(
-        delayMillis = 2000L,
-        coroutineScope = lifecycleScope,
-        useLastParam = true
-    ) { query ->
-        viewModel.onSearchQueryChanged(
-            VacancySearchParams(
-                query,
-                if (filtersViewModel.getRegionSaved() != null) {
-                    filtersViewModel.getRegionSaved()!!.id
-                } else {
-                    filtersViewModel.getCountrySaved()?.id
-                },
-                filtersViewModel.getSalary(),
-                filtersViewModel.getDontShowWithoutSalary(),
-                filtersViewModel.getSavedIndustry()?.id
-            )
-        )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -151,8 +129,8 @@ class JobSearchFragment : Fragment() {
     private fun setQueryParam(query: String, filtersViewModel: FilterViewModel): VacancySearchParams {
         return VacancySearchParams(
             query,
-            if (filtersViewModel.getRegionSaved() != null) {
-                filtersViewModel.getRegionSaved()!!.id
+            if (filtersViewModel.getCitySaved() != null) {
+                filtersViewModel.getCitySaved()!!.id
             } else {
                 filtersViewModel.getCountrySaved()?.id
             },
