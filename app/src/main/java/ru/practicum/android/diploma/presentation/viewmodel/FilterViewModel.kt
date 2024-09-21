@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
+import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
@@ -18,9 +19,12 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     private var areaList = listOf<CountryModel>()
     private val regionsLiveData = MutableLiveData<List<RegionModel>>()
     private var regionsList = listOf<RegionModel>()
+    private val cityLiveData = MutableLiveData<List<CityModel>>()
+    private var cityList = listOf<CityModel>()
     private var selectedCountry: CountryModel? = null
     private var selectIndustry: IndustryModel? = null
     private var selectRegion: RegionModel? = null
+    private var selectCity: CityModel? = null
     private var selectIndustryLiveData = MutableLiveData<IndustryModel?>()
     private val industryLiveData = MutableLiveData<Resource<List<IndustryModel>>>()
     private var industryList = listOf<IndustryModel>()
@@ -101,6 +105,10 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         selectRegion = regionModel
     }
 
+    fun selectCity(cityModel: CityModel) {
+        selectCity = cityModel
+    }
+
     fun unSelectCountry() {
         selectedCountry = null
     }
@@ -110,6 +118,13 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
             area.name.lowercase().contains(strRegion.lowercase())
         }
         regionsLiveData.value = listRes
+    }
+
+    fun searchCity (strCity: String) {
+        val listRes = cityList.filter { city ->
+            city.name.lowercase().contains(strCity.lowercase())
+        }
+        cityLiveData.value = listRes
     }
 
     fun getRegions() {
@@ -134,6 +149,19 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         } else {
             setCountry()
         }
+    }
+
+    fun getCity() {
+        regionsList.forEach {
+            if (it.name == selectRegion?.name) {
+                cityList = it.city
+                cityLiveData.value = it.city
+            }
+        }
+    }
+
+    fun getCityLiveData(): LiveData<List<CityModel>> {
+        return cityLiveData
     }
 
     private fun setCountry() {

@@ -55,7 +55,11 @@
         android:id="@+id/searchFiltersRegionFragment"
         android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersRegionFragment"
         android:label="fragment_region_choosing"
-        tools:layout="@layout/search_filters_region_fragment" />
+        tools:layout="@layout/search_filters_region_fragment" >
+        <action
+            android:id="@+id/action_searchFiltersRegionFragment_to_searchFiltersCityFragment"
+            app:destination="@id/searchFiltersCityFragment" />
+    </fragment>
     <fragment
         android:id="@+id/placeOfWorkFragment"
         android:name="ru.practicum.android.diploma.ui.searchfilters.PlaceOfWorkFragment"
@@ -84,5 +88,13 @@
         <action
             android:id="@+id/action_searchFiltersFragment_to_industryChooseFragment"
             app:destination="@id/industryChooseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFiltersCityFragment"
+        android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersCityFragment"
+        android:label="SearchFiltersCityFragment" >
+        <action
+            android:id="@+id/action_searchFiltersCityFragment_to_placeOfWorkFragment"
+            app:destination="@id/placeOfWorkFragment" />
     </fragment>
 </navigation>
