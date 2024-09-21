@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +18,6 @@ import ru.practicum.android.diploma.presentation.models.QueryUiState
 import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
-import ru.practicum.android.diploma.util.debounce
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
@@ -28,26 +26,6 @@ class JobSearchFragment : Fragment() {
     private val viewModel: JobSearchViewModel by viewModel()
     private val filtersViewModel: FilterViewModel by activityViewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
-
-    private val debounceSearch = debounce<String>(
-        delayMillis = 2000L,
-        coroutineScope = lifecycleScope,
-        useLastParam = true
-    ) { query ->
-        viewModel.onSearchQueryChanged(
-            VacancySearchParams(
-                query,
-                if (filtersViewModel.getRegionSaved() != null) {
-                    filtersViewModel.getRegionSaved()!!.id
-                } else {
-                    filtersViewModel.getCountrySaved()?.id
-                },
-                filtersViewModel.getSalary(),
-                filtersViewModel.getDontShowWithoutSalary(),
-                filtersViewModel.getSavedIndustry()?.id
-            )
-        )
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,7 +40,9 @@ class JobSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.etSearch.addTextChangedListener { query ->
-            debounceSearch(query.toString())
+            viewModel.onSearchQueryChanged(
+                setQueryParam(query.toString(), filtersViewModel)
+            )
         }
 
         jobSearchViewAdapter = JobSearchViewAdapter {
@@ -88,18 +68,9 @@ class JobSearchFragment : Fragment() {
                     val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                     val itemsCount = jobSearchViewAdapter!!.itemCount
                     if (pos >= itemsCount - 1) {
+                        val reqs = viewModel.observeSearch().value?.query ?: ""
                         viewModel.onLastItemReached(
-                            VacancySearchParams(
-                                viewModel.getLastSearchQuery(),
-                                if (filtersViewModel.getRegionSaved() != null) {
-                                    filtersViewModel.getRegionSaved()!!.id
-                                } else {
-                                    filtersViewModel.getCountrySaved()?.id
-                                },
-                                filtersViewModel.getSalary(),
-                                filtersViewModel.getDontShowWithoutSalary(),
-                                filtersViewModel.getSavedIndustry()?.id
-                            )
+                            setQueryParam(viewModel.observeSearch().value?.query ?: "", filtersViewModel)
                         )
                     }
                 }
@@ -116,6 +87,10 @@ class JobSearchFragment : Fragment() {
     private fun updateUiState(uiState: SearchUiState) {
         when (uiState) {
             is SearchUiState.Content -> showContent(uiState)
+            is SearchUiState.LoadingPagination -> {
+                showScreen(uiState)
+            }
+
             else -> showScreen(uiState)
         }
     }
@@ -132,7 +107,7 @@ class JobSearchFragment : Fragment() {
             binding.tvJobSearchCount.setText(uiState.topText!!)
         }
         if (uiState.bottomText != null) {
-            binding.tvInformBottomText.setText(uiState.bottomText!!)
+            binding.ivInformBottomText.setText(uiState.bottomText!!)
         }
         if (uiState.url != null) {
             binding.ivInformImage.setImageResource(uiState.url!!)
@@ -147,20 +122,17 @@ class JobSearchFragment : Fragment() {
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.onSearchQueryChanged(
-            VacancySearchParams(
-                viewModel.getLastSearchQuery(),
-                if (filtersViewModel.getRegionSaved() != null) {
-                    filtersViewModel.getRegionSaved()!!.id
-                } else {
-                    filtersViewModel.getCountrySaved()?.id
-                },
-                filtersViewModel.getSalary(),
-                filtersViewModel.getDontShowWithoutSalary(),
-                filtersViewModel.getSavedIndustry()?.id
-            )
+    private fun setQueryParam(query: String, filtersViewModel: FilterViewModel): VacancySearchParams {
+        return VacancySearchParams(
+            query,
+            if (filtersViewModel.getRegionSaved() != null) {
+                filtersViewModel.getRegionSaved()!!.id
+            } else {
+                filtersViewModel.getCountrySaved()?.id
+            },
+            filtersViewModel.getSalary(),
+            filtersViewModel.getDontShowWithoutSalary(),
+            filtersViewModel.getSavedIndustry()?.id
         )
     }
 
