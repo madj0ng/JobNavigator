@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.PlaceOfWorkFragmentBinding
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
@@ -19,33 +20,34 @@ class PlaceOfWorkFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = PlaceOfWorkFragmentBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.countryBtn?.setOnClickListener {
+        binding.countryBtn.setOnClickListener {
             findNavController()
                 .navigate(
                     PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToCountryChooseFragment()
                 )
         }
 
-        binding?.regionBtn?.setOnClickListener {
+        binding.regionBtn.setOnClickListener {
             findNavController()
                 .navigate(
                     PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersRegionFragment()
                 )
         }
 
-        binding?.buttonBack?.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        binding?.btnSelect?.setOnClickListener {
-            findNavController().popBackStack()
+        binding.btnSelect.setOnClickListener {
+            findNavController()
+                .navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
             viewModel.saveArea()
         }
 
@@ -53,13 +55,15 @@ class PlaceOfWorkFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val tempC = viewModel?.getSelectedCountry()
-        val tempR = viewModel?.getSelectedRegion()
+        val tempC = viewModel.getSelectedCountry()
+        val tempR = viewModel.getSelectedCity()
         if (tempC != null) {
-            binding?.countryTextarea?.text = tempC.name
+            binding.countryTextarea.text = tempC.name
+            binding.hintCountryTextarea.text = context?.getString(R.string.country)
         }
         if (tempR != null) {
-            binding?.regionTextarea?.text = tempR.name
+            binding.regionTextarea.text = tempR.name
+            binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
     }
 

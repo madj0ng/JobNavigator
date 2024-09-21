@@ -9,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.SearchFiltersRegionFragmentBinding
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
@@ -44,7 +45,8 @@ class SearchFiltersRegionFragment : Fragment() {
 
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel?.selectRegion(area)
-            findNavController().popBackStack()
+            // findNavController().popBackStack()
+            findNavController().navigate(R.id.action_searchFiltersRegionFragment_to_searchFiltersCityFragment)
         }
         binding?.regionRecyclerview?.adapter = filtersViewAdapterRegion
         viewModel?.getRegions()
