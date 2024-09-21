@@ -1,9 +1,12 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.marginBottom
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -35,7 +38,7 @@ class IndustryChooseFragment : Fragment() {
                 binding.industriesErrorNoIndustry.visibility = View.VISIBLE
             } else {
                 hideAll()
-                binding.industriesRecuclerView.visibility = View.VISIBLE
+                binding.industriesRecyclerView.visibility = View.VISIBLE
                 filtersViewAdapterIndustry?.setList((industries as Resource.Success).data)
             }
         }
@@ -45,17 +48,19 @@ class IndustryChooseFragment : Fragment() {
                 binding.btnSelect.visibility = View.GONE
             } else {
                 binding.btnSelect.visibility = View.VISIBLE
+                moveRvList()
+                filtersViewAdapterIndustry!!.notifyDataSetChanged()
             }
         }
 
         filtersViewAdapterIndustry = FiltersViewAdapterIndustry { industry ->
             viewModel.selectIndustry(industry)
-            filtersViewAdapterIndustry!!.notifyDataSetChanged()
         }
-        binding.industriesRecuclerView.adapter = filtersViewAdapterIndustry
+        binding.industriesRecyclerView.adapter = filtersViewAdapterIndustry
         viewModel.getIndustries()
 
         binding.buttonBack.setOnClickListener {
+            viewModel.unSelectIndustry()
             findNavController().popBackStack()
         }
         binding.search.addTextChangedListener { str ->
@@ -75,7 +80,7 @@ class IndustryChooseFragment : Fragment() {
 
     fun hideAll() {
         binding.industriesErrorNoIndustry.visibility = View.GONE
-        binding.industriesRecuclerView.visibility = View.GONE
+        binding.industriesRecyclerView.visibility = View.GONE
     }
 
     fun changeIcon(str: String) {
@@ -85,6 +90,14 @@ class IndustryChooseFragment : Fragment() {
         } else {
             binding.searchBtn.visibility = View.VISIBLE
             binding.clearText.visibility = View.GONE
+        }
+    }
+
+    fun moveRvList() {
+        binding.root.doOnNextLayout {
+            val pad = binding.frameLayout.bottom - binding.btnSelect.bottom
+            Log.d("PADDING", "$pad")
+            binding.industriesRecyclerView.setPadding(0, 0, 0, pad / 2)
         }
     }
 
