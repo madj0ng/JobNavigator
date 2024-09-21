@@ -8,5 +8,5 @@ sealed interface Resource<T> {
         val pages: Int? = null
     ) : Resource<T>
 
-    data class Error<T>(val resultCode: Int, val message: String) : Resource<T>
+    data class Error<T>(var resultCode: Int = 0, val message: String = "error") : Resource<T>
 }

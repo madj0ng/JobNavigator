@@ -14,66 +14,82 @@ import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class IndustryChooseFragment : Fragment() {
 
-    private var binding: IndustryChoosingFragmentBinding? = null
+    private var _binding: IndustryChoosingFragmentBinding? = null
+    private val binding: IndustryChoosingFragmentBinding get() = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private var filtersViewAdapterIndustry: FiltersViewAdapterIndustry? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = IndustryChoosingFragmentBinding.inflate(inflater, container, false)
-        return binding?.root
+    ): View {
+        _binding = IndustryChoosingFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel?.getIndustryLiveData()?.observe(viewLifecycleOwner) { industries ->
+        viewModel.getIndustryLiveData().observe(viewLifecycleOwner) { industries ->
             if (industries is Resource.Error) {
                 hideAll()
-                binding?.industriesErrorNoIndustry?.visibility = View.VISIBLE
+                binding.industriesErrorNoIndustry.visibility = View.VISIBLE
             } else {
                 hideAll()
-                binding?.industriesRecuclerView?.visibility = View.VISIBLE
+                binding.industriesRecuclerView.visibility = View.VISIBLE
                 filtersViewAdapterIndustry?.setList((industries as Resource.Success).data)
             }
         }
 
-        viewModel?.getSelectedIndustryLiveData()?.observe(viewLifecycleOwner) { selectedIndustry ->
+        viewModel.getSelectedIndustryLiveData().observe(viewLifecycleOwner) { selectedIndustry ->
             if (selectedIndustry == null) {
-                binding?.btnSelect?.visibility = View.GONE
+                binding.btnSelect.visibility = View.GONE
             } else {
-                binding?.btnSelect?.visibility = View.VISIBLE
+                binding.btnSelect.visibility = View.VISIBLE
             }
         }
 
         filtersViewAdapterIndustry = FiltersViewAdapterIndustry { industry ->
-            viewModel?.selectIndustry(industry)
+            viewModel.selectIndustry(industry)
             filtersViewAdapterIndustry!!.notifyDataSetChanged()
         }
-        binding?.industriesRecuclerView?.adapter = filtersViewAdapterIndustry
-        viewModel?.getIndustries()
+        binding.industriesRecuclerView.adapter = filtersViewAdapterIndustry
+        viewModel.getIndustries()
 
-        binding?.buttonBack?.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding?.search?.addTextChangedListener { str ->
-            viewModel?.searchIndustry(str.toString())
+        binding.search.addTextChangedListener { str ->
+            changeIcon(str.toString())
+            viewModel.searchIndustry(str.toString())
         }
 
-        binding?.btnSelect?.setOnClickListener {
-            viewModel?.saveIndustry()
+        binding.btnSelect.setOnClickListener {
+            viewModel.saveIndustry()
             findNavController().popBackStack()
+        }
+
+        binding.clearText.setOnClickListener {
+            binding.search.setText("")
         }
     }
 
     fun hideAll() {
-        binding?.industriesErrorNoIndustry?.visibility = View.GONE
-        binding?.industriesRecuclerView?.visibility = View.GONE
+        binding.industriesErrorNoIndustry.visibility = View.GONE
+        binding.industriesRecuclerView.visibility = View.GONE
+    }
+
+    fun changeIcon(str: String) {
+        if (str.isNotEmpty()) {
+            binding.searchBtn.visibility = View.GONE
+            binding.clearText.visibility = View.VISIBLE
+        } else {
+            binding.searchBtn.visibility = View.VISIBLE
+            binding.clearText.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }

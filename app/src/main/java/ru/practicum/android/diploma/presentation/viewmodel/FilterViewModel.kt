@@ -212,7 +212,11 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
             Log.d("listRes", listRes.toString())
 
-            industryLiveData.value = Resource.Success(listRes)
+            if (listRes.isEmpty()) {
+                industryLiveData.value = Resource.Error()
+            } else {
+                industryLiveData.value = Resource.Success(listRes)
+            }
         } else {
             industryLiveData.value = Resource.Success(industryList)
         }
@@ -233,5 +237,9 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun getIndustryLiveData(): LiveData<Resource<List<IndustryModel>>> {
         return industryLiveData
+    }
+
+    companion object {
+        const val ERROR = 404
     }
 }
