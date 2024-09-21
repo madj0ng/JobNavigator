@@ -120,7 +120,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         regionsLiveData.value = listRes
     }
 
-    fun searchCity (strCity: String) {
+    fun searchCity(strCity: String) {
         val listRes = cityList.filter { city ->
             city.name.lowercase().contains(strCity.lowercase())
         }

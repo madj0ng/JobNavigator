@@ -24,7 +24,6 @@ class SearchFiltersCityFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         viewModel.getCityLiveData().observe(viewLifecycleOwner) { city ->
             if (city.isEmpty()) {
                 hideAll()
