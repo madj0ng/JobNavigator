@@ -60,7 +60,10 @@ class JobSearchFragment : Fragment() {
         binding.ifbFilter.setOnClickListener {
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
         }
-
+        binding.ivSearchClear.setOnClickListener {
+            viewModel.onClickSearchClear()
+            binding.etSearch.text = null
+        }
         binding.rvJobList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -81,15 +84,15 @@ class JobSearchFragment : Fragment() {
         if (state.src != null) {
             binding.ivSearchClear.setImageResource(state.src!!)
         }
+//        if (state is QueryUiState.Search && state.query.isEmpty()) {
+//            binding.etSearch.text = null
+//        }
     }
 
     private fun updateUiState(uiState: SearchUiState) {
         when (uiState) {
             is SearchUiState.Content -> showContent(uiState)
-            is SearchUiState.LoadingPagination -> {
-                showScreen(uiState)
-            }
-
+            is SearchUiState.Default -> showDefault(uiState)
             else -> showScreen(uiState)
         }
     }
@@ -119,6 +122,11 @@ class JobSearchFragment : Fragment() {
             binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
         }
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
+    }
+
+    private fun showDefault(uiState: SearchUiState.Default) {
+        showScreen(uiState)
+        jobSearchViewAdapter?.setList(listOf())
     }
 
     private fun setQueryParam(query: String, filtersViewModel: FilterViewModel): VacancySearchParams {

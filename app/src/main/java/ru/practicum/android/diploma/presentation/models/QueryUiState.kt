@@ -8,12 +8,12 @@ sealed interface QueryUiState {
     val query: String
 
     data class Search(
-        @DrawableRes override val src: Int = R.drawable.ic_close_cross,
+        @DrawableRes override val src: Int = R.drawable.ic_search_lens,
         override val query: String = ""
     ) : QueryUiState
 
     data class Clear(
-        @DrawableRes override val src: Int = R.drawable.ic_search_lens,
+        @DrawableRes override val src: Int = R.drawable.ic_close_cross,
         override val query: String = ""
     ) : QueryUiState
 }

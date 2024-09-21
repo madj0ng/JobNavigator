@@ -33,7 +33,7 @@ class JobSearchViewModel(
     val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
 
     private val debounceSearch = debounce<VacancySearchParams>(
-        delayMillis = 2000L,
+        delayMillis = SEARCH_DEBOUNCE_DELAY,
         coroutineScope = viewModelScope,
         useLastParam = true
     ) { query ->
@@ -44,7 +44,7 @@ class JobSearchViewModel(
         queryLiveData.value = if (query.vacancyName.isEmpty()) {
             // пустой запрос для отмены предыдущей задачи
             debounceSearch(query)
-            QueryUiState.Clear()
+            QueryUiState.Search()
         } else {
             val oldQuery = queryLiveData.value?.query ?: ""
             val oldFilter = filterLiveData.value as FilterDto
@@ -55,11 +55,10 @@ class JobSearchViewModel(
                 onlyWithSalary = query.onlyWithSalary
             )
             if (query.vacancyName != oldQuery || newFilter != oldFilter) {
-                _screenLiveData.value = SearchUiState.Loading()
                 debounceSearch(query)
                 filterLiveData.value = newFilter
             }
-            QueryUiState.Search(query = query.vacancyName)
+            QueryUiState.Clear(query = query.vacancyName)
         }
     }
 
@@ -79,12 +78,21 @@ class JobSearchViewModel(
         if (vacancySearchParams.vacancyName.isEmpty()) {
             return
         }
-
+        if (vacancySearchParams.page == 0) {
+            _screenLiveData.value = SearchUiState.Loading()
+        } else {
+            _screenLiveData.value = SearchUiState.LoadingPagination()
+        }
         viewModelScope.launch {
             searchVacancyInteractor.searchVacancy(vacancySearchParams).collect { result ->
                 renderState(result)
             }
         }
+    }
+
+    private fun clearQuery(query: String) {
+        _screenLiveData.postValue(SearchUiState.Default())
+        queryLiveData.postValue(QueryUiState.Search())
     }
 
     private fun renderState(result: Resource<List<VacancyModel>>) {
@@ -139,7 +147,14 @@ class JobSearchViewModel(
         }
     }
 
+    fun onClickSearchClear() {
+        if (queryLiveData.value is QueryUiState.Clear) {
+            clearQuery("")
+        }
+    }
+
     companion object {
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
         const val ERROR_INTERNET = -1
         const val MAX_PAGE = 99
     }
