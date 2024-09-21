@@ -1,12 +1,10 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnNextLayout
-import androidx.core.view.marginBottom
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -96,7 +94,6 @@ class IndustryChooseFragment : Fragment() {
     fun moveRvList() {
         binding.root.doOnNextLayout {
             val pad = binding.frameLayout.bottom - binding.btnSelect.bottom
-            Log.d("PADDING", "$pad")
             binding.industriesRecyclerView.setPadding(0, 0, 0, pad / 2)
         }
     }
