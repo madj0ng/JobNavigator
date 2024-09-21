@@ -71,6 +71,9 @@
         <action
             android:id="@+id/action_placeOfWorkFragment_to_countryChooseFragment"
             app:destination="@id/countryChooseFragment" />
+        <action
+            android:id="@+id/action_placeOfWorkFragment_to_searchFiltersFragment"
+            app:destination="@id/searchFiltersFragment" />
     </fragment>
     <fragment
         android:id="@+id/industryChooseFragment"
@@ -88,6 +91,9 @@
         <action
             android:id="@+id/action_searchFiltersFragment_to_industryChooseFragment"
             app:destination="@id/industryChooseFragment" />
+        <action
+            android:id="@+id/action_searchFiltersFragment_to_jobSearchFragment"
+            app:destination="@id/jobSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFiltersCityFragment"

@@ -46,7 +46,7 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.btnSelect.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
             viewModel.saveArea()
         }
 
@@ -55,7 +55,7 @@ class PlaceOfWorkFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val tempC = viewModel.getSelectedCountry()
-        val tempR = viewModel.getSelectedRegion()
+        val tempR = viewModel.getSelectedCity()
         if (tempC != null) {
             binding.countryTextarea.text = tempC.name
             binding.hintCountryTextarea.text = context?.getString(R.string.country)

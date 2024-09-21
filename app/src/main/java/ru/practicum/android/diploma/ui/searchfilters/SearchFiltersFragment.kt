@@ -41,7 +41,7 @@ class SearchFiltersFragment : Fragment() {
                 )
         }
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
             viewModel.setSalary(binding.earn.text.toString())
         }
@@ -54,7 +54,7 @@ class SearchFiltersFragment : Fragment() {
         }
         binding.ischeced.isChecked = viewModel.getDontShowWithoutSalary()
         val tempI = viewModel.getSavedIndustry()
-        val tempR = viewModel.getRegionSaved()
+        val tempR = viewModel.getCitySaved()
         val tempC = viewModel.getCountrySaved()
         val area = StringBuilder()
         if (tempI != null) {
