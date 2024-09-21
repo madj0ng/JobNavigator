@@ -129,10 +129,10 @@ class SearchFiltersFragment : Fragment() {
 
     private fun checkSellary(str: String): String {
         try {
-            if (str.toInt() > 0) {
-                return str
+            return if (str.toInt() > 0) {
+                str
             } else {
-                return ""
+                ""
             }
         } catch (e: NumberFormatException) {
             return ""
