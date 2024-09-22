@@ -133,7 +133,6 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         }
     }
 
-
     fun searchCity(strCity: String) {
         val listRes = cityList.filter { city ->
             city.name.lowercase().contains(strCity.lowercase())
