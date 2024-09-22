@@ -63,16 +63,9 @@ class JobSearchViewModel(
     }
 
     private val _currentPage = MutableLiveData<Int?>(null)
-    val currentPage: LiveData<Int?> get() = _currentPage
-
     private val _maxPages = MutableLiveData<Int?>(null)
-    val maxPages: LiveData<Int?> get() = _maxPages
-
     private val _vacanciesList = MutableLiveData<List<VacancyInfo>>(emptyList())
-    val vacanciesLis: LiveData<List<VacancyInfo>> get() = _vacanciesList
-
     private val _isNextPageLoading = MutableLiveData<Boolean>(false)
-    private val isNextPageLoading: LiveData<Boolean> get() = _isNextPageLoading
 
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         if (vacancySearchParams.vacancyName.isEmpty()) {
@@ -93,6 +86,14 @@ class JobSearchViewModel(
     private fun clearQuery(query: String) {
         _screenLiveData.postValue(SearchUiState.Default())
         queryLiveData.postValue(QueryUiState.Search())
+        setListDeafault()
+    }
+
+    private fun setListDeafault() {
+        _currentPage.value = null
+        _maxPages.value = null
+        _vacanciesList.value = emptyList()
+        _isNextPageLoading.value = false
     }
 
     private fun renderState(result: Resource<List<VacancyModel>>) {
@@ -106,7 +107,8 @@ class JobSearchViewModel(
                     _vacanciesList.value = _vacanciesList.value.orEmpty() + vacancyInfoList
                     _currentPage.value = result.page
                     _maxPages.value = result.pages
-                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = result.found ?: 0)
+                    _screenLiveData.value =
+                        SearchUiState.Content(data = _vacanciesList.value.orEmpty(), found = result.found ?: 0)
                 }
             }
 
@@ -134,7 +136,7 @@ class JobSearchViewModel(
     }
 
     fun onLastItemReached(vacancySearchParams: VacancySearchParams) {
-        if (_isNextPageLoading.value == true || _currentPage.value ?: 0 >= _maxPages.value ?: 0) {
+        if (_isNextPageLoading.value == true || (_currentPage.value ?: 0) >= (_maxPages.value ?: 0)) {
             return
         }
         var nextPage = _currentPage.value ?: 0
