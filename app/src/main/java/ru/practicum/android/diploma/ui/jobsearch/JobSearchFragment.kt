@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -40,7 +39,7 @@ class JobSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.searchFilterLiveData.observe(viewLifecycleOwner){ filterModel ->
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filterModel ->
             if (filterModel != null) {
                 this.filterModel = filterModel
                 binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue)
