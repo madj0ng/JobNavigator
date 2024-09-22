@@ -202,7 +202,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun searchIndustry(strIndustry: String) {
-        if (!strIndustry.isEmpty()) {
+        if (strIndustry.isNotEmpty()) {
             Log.d("AAAAAA", strIndustry.toString())
             val listRes = industryList.filter { industry ->
 

@@ -45,7 +45,6 @@ class SearchFiltersRegionFragment : Fragment() {
 
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel?.selectRegion(area)
-            // findNavController().popBackStack()
             findNavController().navigate(R.id.action_searchFiltersRegionFragment_to_searchFiltersCityFragment)
         }
         binding?.regionRecyclerview?.adapter = filtersViewAdapterRegion
