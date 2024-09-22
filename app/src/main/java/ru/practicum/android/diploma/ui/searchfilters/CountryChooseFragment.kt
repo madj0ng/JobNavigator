@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.CountryChooseFragmentBinding
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
