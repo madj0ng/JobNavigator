@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
+import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 
 class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
     private val areaLiveData = MutableLiveData<AreasScreenState>()
@@ -26,7 +27,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     private var selectRegion: RegionModel? = null
     private var selectCity: CityModel? = null
     private var selectIndustryLiveData = MutableLiveData<IndustryModel?>()
-    private val industryLiveData = MutableLiveData<Resource<List<IndustryModel>>>()
+    private val industryLiveData = MutableLiveData<IndustryScreenState>()
     private var industryList = listOf<IndustryModel>()
     private var savedIndustry: IndustryModel? = null
     private var savedCity: CityModel? = null
@@ -184,8 +185,13 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     fun getIndustries() {
         viewModelScope.launch {
             filterInteractor.getIndustrias().collect() { res ->
-                industryLiveData.value = res
-                industryList = (res as Resource.Success).data
+                when (res) {
+                    is Resource.Error -> industryLiveData.value = IndustryScreenState.ErrorInternet
+                    is Resource.Success -> {
+                        industryList = res.data
+                        industryLiveData.value = IndustryScreenState.Content(industryList)
+                    }
+                }
             }
         }
     }
@@ -203,28 +209,23 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun searchIndustry(strIndustry: String) {
         if (strIndustry.isNotEmpty()) {
-            Log.d("AAAAAA", strIndustry.toString())
             val listRes = industryList.filter { industry ->
 
                 industry.name.lowercase().contains(strIndustry.lowercase())
             }
-            Log.d("listRes", industryList.toString())
-
-            Log.d("listRes", listRes.toString())
 
             if (listRes.isEmpty()) {
-                industryLiveData.value = Resource.Error(ERROR_EMPTY, MESSAGE_EMPTY)
+                industryLiveData.value = IndustryScreenState.ErrorContent
             } else {
-                industryLiveData.value = Resource.Success(listRes)
+                industryLiveData.value = IndustryScreenState.Content(listRes)
             }
         } else {
-            industryLiveData.value = Resource.Success(industryList)
+            industryLiveData.value = IndustryScreenState.Content(industryList)
         }
     }
 
     fun saveIndustry() {
         savedIndustry = selectIndustry
-        Log.d("savedIndustry", savedIndustry.toString())
     }
 
     fun getSavedIndustry(): IndustryModel? {
@@ -235,7 +236,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         return selectIndustryLiveData
     }
 
-    fun getIndustryLiveData(): LiveData<Resource<List<IndustryModel>>> {
+    fun getIndustryLiveData(): LiveData<IndustryScreenState> {
         return industryLiveData
     }
 

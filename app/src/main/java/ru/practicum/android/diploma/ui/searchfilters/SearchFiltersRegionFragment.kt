@@ -23,9 +23,9 @@ class SearchFiltersRegionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = SearchFiltersRegionFragmentBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,35 +33,35 @@ class SearchFiltersRegionFragment : Fragment() {
             Log.d("AREAS", areas.toString())
             if (areas.isEmpty()) {
                 hideAll()
-                binding?.regionError?.visibility = View.VISIBLE
+                binding.regionError.visibility = View.VISIBLE
             } else {
                 Log.d("else", areas.toString())
 
                 hideAll()
-                binding?.regionRecyclerview?.visibility = View.VISIBLE
+                binding.regionRecyclerview.visibility = View.VISIBLE
                 filtersViewAdapterRegion?.setList(areas)
             }
         }
 
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
-            viewModel?.selectRegion(area)
+            viewModel.selectRegion(area)
             findNavController().navigate(R.id.action_searchFiltersRegionFragment_to_searchFiltersCityFragment)
         }
-        binding?.regionRecyclerview?.adapter = filtersViewAdapterRegion
-        viewModel?.getRegions()
+        binding.regionRecyclerview.adapter = filtersViewAdapterRegion
+        viewModel.getRegions()
 
-        binding?.buttonBack?.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        binding?.Search?.addTextChangedListener { str ->
-            viewModel?.searchRegion(str.toString())
+        binding.Search.addTextChangedListener { str ->
+            viewModel.searchRegion(str.toString())
         }
     }
 
     fun hideAll() {
-        binding?.regionRecyclerview?.visibility = View.GONE
-        binding?.regionError?.visibility = View.GONE
+        binding.regionRecyclerview.visibility = View.GONE
+        binding.regionError.visibility = View.GONE
     }
 
     override fun onDestroyView() {
