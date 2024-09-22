@@ -2,6 +2,7 @@ package ru.practicum.android.diploma.data.filter.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.data.dto.model.FilterDto
 import ru.practicum.android.diploma.data.filter.AreaResponse
 import ru.practicum.android.diploma.data.filter.AreasRequest
 import ru.practicum.android.diploma.data.filter.FilterRepository
@@ -9,8 +10,12 @@ import ru.practicum.android.diploma.data.filter.IndustriasRequest
 import ru.practicum.android.diploma.data.filter.IndustryResponse
 import ru.practicum.android.diploma.data.network.ListResponseWrapper
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
+import ru.practicum.android.diploma.data.shared.FilterLocalStorage
 
-class FilterRepositoryImpl(private val retrofitNetworkClient: RetrofitNetworkClient) : FilterRepository {
+class FilterRepositoryImpl(
+    private val retrofitNetworkClient: RetrofitNetworkClient,
+    private val filterLocalStorage: FilterLocalStorage
+) : FilterRepository {
     override fun getCountries(): Flow<ListResponseWrapper<AreaResponse>> = flow {
         val response = retrofitNetworkClient.doRequest(AreasRequest())
         val result: ListResponseWrapper<AreaResponse>
@@ -35,5 +40,13 @@ class FilterRepositoryImpl(private val retrofitNetworkClient: RetrofitNetworkCli
         emit(
             result
         )
+    }
+
+    override suspend fun saveFilter(filterDto: FilterDto?) {
+        filterLocalStorage.saveStorage(filterDto)
+    }
+
+    override suspend fun getFilter(): FilterDto? {
+        return filterLocalStorage.getFromStorage()
     }
 }

@@ -7,11 +7,16 @@ import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
 import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
+import ru.practicum.android.diploma.util.FilterConverter
 
-class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor {
+class FilterInteractorImpl(
+    private val repository: FilterRepository,
+    private val converter: FilterConverter
+) : FilterInteractor {
     override fun getAreas(): Flow<Resource<List<CountryModel>>> {
         return repository.getCountries().map { countryList ->
             if (countryList.resultCode == RetrofitNetworkClient.RESULT_CODE_SUCCESS) {
@@ -51,5 +56,22 @@ class FilterInteractorImpl(val repository: FilterRepository) : FilterInteractor 
             }
         }
 
+    }
+
+    override suspend fun saveFilter(filterModel: FilterModel?) {
+        if (filterModel != null) {
+            repository.saveFilter(converter.map(filterModel))
+        } else {
+            repository.saveFilter(null)
+        }
+    }
+
+    override suspend fun getFilter(): FilterModel? {
+        val filter = repository.getFilter()
+        return if (filter != null) {
+            converter.map(filter)
+        } else {
+            null
+        }
     }
 }

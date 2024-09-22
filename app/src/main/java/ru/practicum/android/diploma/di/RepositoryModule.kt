@@ -34,6 +34,6 @@ val repositoryModule = module {
         SharingRepositoryImpl(androidContext())
     }
     single<FilterRepository> {
-        FilterRepositoryImpl(get())
+        FilterRepositoryImpl(get(), get())
     }
 }

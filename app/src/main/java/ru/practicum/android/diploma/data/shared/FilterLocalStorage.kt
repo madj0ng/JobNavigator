@@ -13,43 +13,18 @@ class FilterLocalStorage(
     private val pref: SharedPreferences,
     private val gson: Gson,
 ) {
-    private companion object {
+    companion object {
         const val FILTER_KEY = "filter_key"
     }
 
-    suspend fun addToStorage(country: CountriesDto) {
-        val filter = getFromStorage()
-        saveStorage(filter.copy(country = country))
-    }
-
-    suspend fun addToStorage(area: AreasDto) {
-        val filter = getFromStorage()
-        saveStorage(filter.copy(area = area))
-    }
-
-    suspend fun addToStorage(industries: IndustriesDto) {
-        val filter = getFromStorage()
-        saveStorage(filter.copy(industries = industries))
-    }
-
-    suspend fun addToStorage(salary: Int) {
-        val filter = getFromStorage()
-        saveStorage(filter.copy(salary = salary))
-    }
-
-    suspend fun addToStorage(isOnlyWithSalary: Boolean) {
-        val filter = getFromStorage()
-        saveStorage(filter.copy(onlyWithSalary = isOnlyWithSalary))
-    }
-
-    private suspend fun getFromStorage(): FilterDto {
+    suspend fun getFromStorage(): FilterDto? {
         return withContext(Dispatchers.IO) {
             val filterString = pref.getString(FILTER_KEY, null)
-            if (filterString != null) gson.fromJson(filterString, FilterDto::class.java) else FilterDto()
+            if (filterString != null) gson.fromJson(filterString, FilterDto::class.java) else null
         }
     }
 
-    private suspend fun saveStorage(filter: FilterDto) {
+    suspend fun saveStorage(filter: FilterDto?) {
         withContext(Dispatchers.IO) {
             val filterString = gson.toJson(filter)
             pref.edit().putString(FILTER_KEY, filterString).apply()
