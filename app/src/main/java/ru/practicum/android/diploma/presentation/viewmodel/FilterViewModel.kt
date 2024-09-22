@@ -34,11 +34,11 @@ class FilterViewModel(
     private var areaList = listOf<CountryModel>()
     private var regionsList = listOf<RegionModel>()
     private var cityList = listOf<CityModel>()
+    private var industryList = listOf<IndustryModel>()
     var selectedCountry: CountryModel? = null
     private var selectIndustry: IndustryModel? = null
     var selectRegion: RegionModel? = null
     var selectCity: CityModel? = null
-    private var industryList = listOf<IndustryModel>()
     var savedIndustry: IndustryModel? = null
     var saveRegion: RegionModel? = null
     var savedCity: CityModel? = null
@@ -157,7 +157,7 @@ class FilterViewModel(
         }
     }
 
-    fun selectIndustry(industryModel: IndustryModel) {
+    fun selectIndustry(industryModel: IndustryModel?) {
         selectIndustry = industryModel
         _selectIndustryLiveData.value = industryModel
     }

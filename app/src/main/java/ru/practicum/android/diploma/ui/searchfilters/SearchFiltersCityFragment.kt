@@ -29,6 +29,7 @@ class SearchFiltersCityFragment : Fragment() {
                 hideAll()
                 binding.cityError.visibility = View.VISIBLE
             } else {
+                viewModel.selectRegion = null
                 hideAll()
                 binding.cityRecyclerview.visibility = View.VISIBLE
                 filtersViewAdapterCity?.setList(city)
@@ -37,14 +38,18 @@ class SearchFiltersCityFragment : Fragment() {
 
         filtersViewAdapterCity = FiltersViewAdapterCity() { city ->
             viewModel.selectCity(city)
-            findNavController().navigate(R.id.action_searchFiltersCityFragment_to_placeOfWorkFragment)
+            findNavController()
+                .navigate(SearchFiltersCityFragmentDirections.actionSearchFiltersCityFragmentToPlaceOfWorkFragment())
         }
 
         binding.cityRecyclerview.adapter = filtersViewAdapterCity
         viewModel.getCity()
 
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController()
+                .navigate(
+                    SearchFiltersCityFragmentDirections.actionSearchFiltersCityFragmentToSearchFiltersRegionFragment()
+                )
         }
 
         binding.Search.addTextChangedListener { str ->

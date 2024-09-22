@@ -42,7 +42,8 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController()
+                .navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
         }
 
         binding.btnSelect.setOnClickListener {

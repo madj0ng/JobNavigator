@@ -31,6 +31,10 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.selectRegion = null
+        viewModel.selectCity = null
+        viewModel.selectedCountry = null
+        viewModel.selectIndustry(null)
 
         binding.groupButtons.visibility = View.GONE
 
@@ -224,7 +228,6 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getFilter()
         init()
     }
 
