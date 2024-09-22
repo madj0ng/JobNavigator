@@ -107,7 +107,7 @@ class SearchFiltersFragment : Fragment() {
                 area.append(", ")
             }
             area.append(tempR.name)
-        } else if (tempCity != null){
+        } else if (tempCity != null) {
             if (area.isNotEmpty()) {
                 area.append(", ")
             }
