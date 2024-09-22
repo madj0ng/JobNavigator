@@ -14,11 +14,12 @@ import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.models.IndustryScreenState
+import ru.practicum.android.diploma.presentation.models.RegionScreenState
 
 class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
     private val areaLiveData = MutableLiveData<AreasScreenState>()
     private var areaList = listOf<CountryModel>()
-    private val regionsLiveData = MutableLiveData<List<RegionModel>>()
+    private val regionsLiveData = MutableLiveData<RegionScreenState>()
     private var regionsList = listOf<RegionModel>()
     private val cityLiveData = MutableLiveData<List<CityModel>>()
     private var cityList = listOf<CityModel>()
@@ -81,7 +82,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         return savedCountry
     }
 
-    fun getRegionLiveData(): LiveData<List<RegionModel>> {
+    fun getRegionLiveData(): LiveData<RegionScreenState> {
         return regionsLiveData
     }
 
@@ -118,11 +119,20 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun searchRegion(strRegion: String) {
-        val listRes = regionsList.filter { area ->
-            area.name.lowercase().contains(strRegion.lowercase())
+        if (strRegion.isNotEmpty()) {
+            val listRes = regionsList.filter { area ->
+                area.name.lowercase().contains(strRegion.lowercase())
+            }
+            if (listRes.isEmpty()) {
+                regionsLiveData.value = RegionScreenState.ErrorNoRegion
+            } else {
+                regionsLiveData.value = RegionScreenState.Content(listRes)
+            }
+        } else {
+            regionsLiveData.value = RegionScreenState.Content(regionsList)
         }
-        regionsLiveData.value = listRes
     }
+
 
     fun searchCity(strCity: String) {
         val listRes = cityList.filter { city ->
@@ -132,26 +142,11 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     }
 
     fun getRegions() {
-        if (areaList.isEmpty()) {
-            viewModelScope.launch {
-                filterInteractor.getAreas().collect { res ->
-                    if (res !is Resource.Error) {
-                        areaList = (res as Resource.Success).data
-                        if (selectedCountry != null) {
-                            setSelectedCountry()
-                        } else {
-                            setCountry()
-                        }
-                    } else {
-                        // недописанный участок
-                    }
-                }
-            }
-        }
-        if (selectedCountry != null) {
-            setSelectedCountry()
+        if (selectedCountry == null) {
+            regionsLiveData.value = RegionScreenState.ErrorNoList
         } else {
-            setCountry()
+            regionsList = selectedCountry!!.regions
+            regionsLiveData.value = RegionScreenState.Content(regionsList)
         }
     }
 
@@ -166,20 +161,6 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun getCityLiveData(): LiveData<List<CityModel>> {
         return cityLiveData
-    }
-
-    private fun setCountry() {
-        val result = mutableListOf<RegionModel>()
-        for (country in areaList) {
-            result.addAll(country.regions)
-        }
-        regionsList = result
-        regionsLiveData.value = result
-    }
-
-    private fun setSelectedCountry() {
-        regionsLiveData.value = selectedCountry!!.regions
-        regionsList = selectedCountry!!.regions
     }
 
     fun getIndustries() {
