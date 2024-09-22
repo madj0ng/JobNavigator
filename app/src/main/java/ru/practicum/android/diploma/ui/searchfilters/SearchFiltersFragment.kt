@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -27,6 +28,8 @@ class SearchFiltersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.groupButtons.visibility = View.GONE
+
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -44,22 +47,38 @@ class SearchFiltersFragment : Fragment() {
         binding.buttonBack.setOnClickListener {
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
-            viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(binding.earn.text.toString())
         }
 
         binding.buttonApply.setOnClickListener {
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(binding.earn.text.toString())
+            val str = checkSellary(binding.earn.text.toString())
+            viewModel.setSalary(str)
         }
 
         binding.buttonCancel.setOnClickListener {
             viewModel.unSelectCountry()
             viewModel.unSelectIndustry()
             canselFilter()
+            binding.groupButtons.visibility = View.GONE
             init()
+        }
+
+        binding.ischeced.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.groupButtons.visibility = View.VISIBLE
+            } else {
+                binding.groupButtons.visibility = View.GONE
+            }
+        }
+
+        binding.earn.addTextChangedListener { str ->
+            if (str.toString().isNotEmpty()) {
+                binding.groupButtons.visibility = View.VISIBLE
+            } else {
+                binding.groupButtons.visibility = View.GONE
+            }
         }
 
         init()
@@ -77,6 +96,7 @@ class SearchFiltersFragment : Fragment() {
         if (tempI != null) {
             binding.industryPlace.text = tempI.name
             binding.hintIndustryPlace.text = context?.getString(R.string.Industry)
+            binding.groupButtons.visibility = View.VISIBLE
         }
         if (tempC != null) {
             area.append(tempC.name)
@@ -90,7 +110,9 @@ class SearchFiltersFragment : Fragment() {
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area
             binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.place_of_work)
+            binding.groupButtons.visibility = View.VISIBLE
         }
+
     }
 
     private fun canselFilter() {
@@ -101,7 +123,25 @@ class SearchFiltersFragment : Fragment() {
             viewModel.setSalary("")
             ischeced.isChecked = false
             viewModel.setDontShowWithoutSalary(false)
+            hideHint()
         }
+    }
+
+    private fun checkSellary(str: String): String {
+        try {
+            return if (str.toInt() > 0) {
+                str
+            } else {
+                ""
+            }
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+    }
+
+    private fun hideHint() {
+        binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
+        binding.hintIndustryPlace.text = context?.getString(R.string.empty)
     }
 
     override fun onResume() {
