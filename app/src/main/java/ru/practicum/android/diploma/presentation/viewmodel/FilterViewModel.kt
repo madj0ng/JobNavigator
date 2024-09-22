@@ -1,14 +1,15 @@
 package ru.practicum.android.diploma.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
 import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
@@ -16,7 +17,10 @@ import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 import ru.practicum.android.diploma.presentation.models.RegionScreenState
 
-class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
+class FilterViewModel(
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
+
     private val areaLiveData = MutableLiveData<AreasScreenState>()
     private var areaList = listOf<CountryModel>()
     private val regionsLiveData = MutableLiveData<RegionScreenState>()
@@ -36,6 +40,10 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     private var savedCountry: CountryModel? = null
     private var salarybase: Int? = null
     private var dontShowWithoutSalary: Boolean = false
+
+    init {
+        getFilter()
+    }
 
     fun setDontShowWithoutSalary(show: Boolean) {
         dontShowWithoutSalary = show
@@ -124,6 +132,8 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     fun unSelectCountry() {
         selectedCountry = null
         savedCountry = null
+        selectRegion = null
+        saveRegion = null
         selectCity = null
         savedCity = null
     }
@@ -230,8 +240,28 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         return industryLiveData
     }
 
-    companion object {
-        const val ERROR_EMPTY = -1
-        const val MESSAGE_EMPTY = ""
+    fun saveFilter(filterModel: FilterModel?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            filterInteractor.saveFilter(filterModel)
+        }
+    }
+
+    fun getFilter() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val filterModel = filterInteractor.getFilter()
+            if (filterModel != null) {
+                if (filterModel.country!!.id.isNotEmpty()){
+                    savedCountry = CountryModel(filterModel.country.name, filterModel.country.id, emptyList())
+                }
+                if (filterModel.area!!.id.isNotEmpty()) {
+                    savedCity = CityModel(filterModel.area.id, filterModel.area.name)
+                }
+                if (filterModel.industries!!.id.isNotEmpty()) {
+                    savedIndustry = IndustryModel(filterModel.industries.id, filterModel.industries.name)
+                }
+                salarybase = filterModel.salary
+                dontShowWithoutSalary = filterModel.onlyWithSalary ?: false
+            }
+        }
     }
 }

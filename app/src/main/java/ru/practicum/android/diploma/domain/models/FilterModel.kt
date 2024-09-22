@@ -1,8 +1,6 @@
 package ru.practicum.android.diploma.domain.models
 
-
-
-data class FilterModel (
+data class FilterModel(
     val country: CountryFilterModel? = null,
     val area: AreaFilterModel? = null,
     val industries: IndustriesFilterModel? = null,
