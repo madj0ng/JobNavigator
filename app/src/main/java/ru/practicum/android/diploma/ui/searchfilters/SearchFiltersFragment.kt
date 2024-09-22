@@ -38,6 +38,9 @@ class SearchFiltersFragment : Fragment() {
 
         binding.groupButtons.visibility = View.GONE
 
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) {init()}
+        viewModel.getFilter()
+
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -95,6 +98,8 @@ class SearchFiltersFragment : Fragment() {
                 }
             }
         }
+
+        init()
     }
 
     private fun init() {

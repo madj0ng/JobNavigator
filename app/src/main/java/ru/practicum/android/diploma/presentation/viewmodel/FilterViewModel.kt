@@ -30,6 +30,8 @@ class FilterViewModel(
     val selectIndustryLiveData: LiveData<IndustryModel?> get() = _selectIndustryLiveData
     private var _industryLiveData = MutableLiveData<IndustryScreenState>()
     val industryLiveData: LiveData<IndustryScreenState> get() = _industryLiveData
+    private var _searchFilterLiveData = MutableLiveData<Boolean>()
+    val searchFilterLiveData: LiveData<Boolean> get() = _searchFilterLiveData
 
     private var areaList = listOf<CountryModel>()
     private var regionsList = listOf<RegionModel>()
@@ -45,10 +47,6 @@ class FilterViewModel(
     var savedCountry: CountryModel? = null
     var salaryBase: Int? = null
     var doNotShowWithoutSalary: Boolean = false
-
-    init {
-        getFilter()
-    }
 
     fun setDontShowWithoutSalary(show: Boolean) {
         doNotShowWithoutSalary = show
@@ -210,6 +208,13 @@ class FilterViewModel(
                 }
                 salaryBase = filterModel.salary
                 doNotShowWithoutSalary = filterModel.onlyWithSalary ?: false
+                viewModelScope.launch(Dispatchers.Main) {
+                    _searchFilterLiveData.value = true
+                }
+            } else {
+                viewModelScope.launch(Dispatchers.Main) {
+                    _searchFilterLiveData.value = false
+                }
             }
         }
     }
