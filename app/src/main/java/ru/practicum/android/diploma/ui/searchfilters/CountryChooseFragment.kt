@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,41 +21,38 @@ class CountryChooseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = CountryChooseFragmentBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getAreaLiveData().observe(viewLifecycleOwner) { areas ->
-            Log.d("AREAS", areas.toString())
+        viewModel.areaLiveData.observe(viewLifecycleOwner) { areas ->
             if (areas is AreasScreenState.Error) {
                 hideAll()
-                binding?.countryError?.visibility = View.VISIBLE
+                binding.countryError.visibility = View.VISIBLE
             } else {
-                Log.d("else", areas.toString())
-
                 hideAll()
-                binding?.countryRecyclerview?.visibility = View.VISIBLE
+                binding.countryRecyclerview.visibility = View.VISIBLE
                 filtersViewAdapterCountry?.setList((areas as AreasScreenState.Content).data)
             }
         }
 
         filtersViewAdapterCountry = FiltersViewAdapterArea() { area ->
-            viewModel?.selectCountry(area)
+            viewModel.selectCountry(area)
             findNavController().popBackStack()
         }
-        binding?.countryRecyclerview?.adapter = filtersViewAdapterCountry
-        viewModel?.getAreas()
+        binding.countryRecyclerview.adapter = filtersViewAdapterCountry
+        viewModel.getAreas()
 
-        binding?.buttonBack?.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
     fun hideAll() {
-        binding?.countryRecyclerview?.visibility = View.GONE
-        binding?.countryError?.visibility = View.GONE
+        binding.countryRecyclerview.visibility = View.GONE
+        binding.countryError.visibility = View.GONE
     }
 
     override fun onDestroyView() {

@@ -31,7 +31,7 @@ class SearchFiltersRegionFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getRegionLiveData().observe(viewLifecycleOwner) { state ->
+        viewModel.regionsLiveData.observe(viewLifecycleOwner) { state ->
             when (state) {
                 RegionScreenState.ErrorNoList -> seeErrorNoList()
                 RegionScreenState.ErrorNoRegion -> seeErrorNoRegion()

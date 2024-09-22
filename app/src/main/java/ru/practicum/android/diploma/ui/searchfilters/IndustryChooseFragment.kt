@@ -34,11 +34,11 @@ class IndustryChooseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getIndustryLiveData().observe(viewLifecycleOwner) { state ->
+        viewModel.industryLiveData.observe(viewLifecycleOwner) { state ->
             render(state)
         }
 
-        viewModel.getSelectedIndustryLiveData().observe(viewLifecycleOwner) { selectedIndustry ->
+        viewModel.selectIndustryLiveData.observe(viewLifecycleOwner) { selectedIndustry ->
             if (selectedIndustry == null) {
                 binding.btnSelect.visibility = View.GONE
             } else {

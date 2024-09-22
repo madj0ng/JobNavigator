@@ -24,7 +24,7 @@ class SearchFiltersCityFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getCityLiveData().observe(viewLifecycleOwner) { city ->
+        viewModel.cityLiveData.observe(viewLifecycleOwner) { city ->
             if (city.isEmpty()) {
                 hideAll()
                 binding.cityError.visibility = View.VISIBLE
@@ -52,7 +52,7 @@ class SearchFiltersCityFragment : Fragment() {
         }
     }
 
-    fun hideAll() {
+    private fun hideAll() {
         with(binding) {
             cityRecyclerview.visibility = View.GONE
             cityError.visibility = View.GONE
