@@ -34,40 +34,32 @@ class FilterViewModel(
     private var areaList = listOf<CountryModel>()
     private var regionsList = listOf<RegionModel>()
     private var cityList = listOf<CityModel>()
-    private var selectedCountry: CountryModel? = null
+    var selectedCountry: CountryModel? = null
     private var selectIndustry: IndustryModel? = null
-    private var selectRegion: RegionModel? = null
-    private var selectCity: CityModel? = null
+    var selectRegion: RegionModel? = null
+    var selectCity: CityModel? = null
     private var industryList = listOf<IndustryModel>()
-    private var savedIndustry: IndustryModel? = null
-    private var saveRegion: RegionModel? = null
-    private var savedCity: CityModel? = null
-    private var savedCountry: CountryModel? = null
-    private var salarybase: Int? = null
-    private var dontShowWithoutSalary: Boolean = false
+    var savedIndustry: IndustryModel? = null
+    var saveRegion: RegionModel? = null
+    var savedCity: CityModel? = null
+    var savedCountry: CountryModel? = null
+    var salaryBase: Int? = null
+    var doNotShowWithoutSalary: Boolean = false
 
     init {
         getFilter()
     }
 
     fun setDontShowWithoutSalary(show: Boolean) {
-        dontShowWithoutSalary = show
-    }
-
-    fun getDontShowWithoutSalary(): Boolean {
-        return dontShowWithoutSalary
+        doNotShowWithoutSalary = show
     }
 
     fun setSalary(salary: String) {
         if (salary.isEmpty()) {
-            salarybase = null
+            salaryBase = null
         } else {
-            salarybase = salary.toInt()
+            salaryBase = salary.toInt()
         }
-    }
-
-    fun getSalary(): Int? {
-        return salarybase
     }
 
     fun getAreas() {
@@ -89,33 +81,9 @@ class FilterViewModel(
         savedCity = selectCity
     }
 
-    fun getCitySaved(): CityModel? {
-        return savedCity
-    }
-
-    fun getRegionSaved(): RegionModel? {
-        return saveRegion
-    }
-
-    fun getCountrySaved(): CountryModel? {
-        return savedCountry
-    }
-
     fun selectCountry(country: CountryModel) {
         selectedCountry = country
         selectRegion = null
-    }
-
-    fun getSelectedCountry(): CountryModel? {
-        return selectedCountry
-    }
-
-    fun getSelectedCity(): CityModel? {
-        return selectCity
-    }
-
-    fun getSelectedRegion(): RegionModel? {
-        return selectRegion
     }
 
     fun selectRegion(regionModel: RegionModel) {
@@ -221,10 +189,6 @@ class FilterViewModel(
         savedIndustry = selectIndustry
     }
 
-    fun getSavedIndustry(): IndustryModel? {
-        return savedIndustry
-    }
-
     fun saveFilter(filterModel: FilterModel?) {
         viewModelScope.launch(Dispatchers.IO) {
             filterInteractor.saveFilter(filterModel)
@@ -235,7 +199,7 @@ class FilterViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val filterModel = filterInteractor.getFilter()
             if (filterModel != null) {
-                if (filterModel.country!!.id.isNotEmpty()){
+                if (filterModel.country!!.id.isNotEmpty()) {
                     savedCountry = CountryModel(filterModel.country.name, filterModel.country.id, emptyList())
                 }
                 if (filterModel.area!!.id.isNotEmpty()) {
@@ -244,8 +208,8 @@ class FilterViewModel(
                 if (filterModel.industries!!.id.isNotEmpty()) {
                     savedIndustry = IndustryModel(filterModel.industries.id, filterModel.industries.name)
                 }
-                salarybase = filterModel.salary
-                dontShowWithoutSalary = filterModel.onlyWithSalary ?: false
+                salaryBase = filterModel.salary
+                doNotShowWithoutSalary = filterModel.onlyWithSalary ?: false
             }
         }
     }

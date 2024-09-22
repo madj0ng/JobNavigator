@@ -55,9 +55,9 @@ class PlaceOfWorkFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val tempC = viewModel.getSelectedCountry()
-        val tempR = viewModel.getSelectedRegion()
-        val tempCity = viewModel.getSelectedCity()
+        val tempC = viewModel.selectedCountry
+        val tempR = viewModel.selectRegion
+        val tempCity = viewModel.selectCity
         if (tempC != null) {
             binding.countryTextarea.text = tempC.name
             binding.hintCountryTextarea.text = context?.getString(R.string.country)

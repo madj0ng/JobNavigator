@@ -129,14 +129,14 @@ class JobSearchFragment : Fragment() {
     private fun setQueryParam(query: String, filtersViewModel: FilterViewModel): VacancySearchParams {
         return VacancySearchParams(
             query,
-            if (filtersViewModel.getCitySaved() != null) {
-                filtersViewModel.getCitySaved()!!.id
+            if (filtersViewModel.savedCity != null) {
+                filtersViewModel.savedCity!!.id
             } else {
-                filtersViewModel.getCountrySaved()?.id
+                filtersViewModel.savedCountry?.id
             },
-            filtersViewModel.getSalary(),
-            filtersViewModel.getDontShowWithoutSalary(),
-            filtersViewModel.getSavedIndustry()?.id
+            filtersViewModel.salaryBase,
+            filtersViewModel.doNotShowWithoutSalary,
+            filtersViewModel.savedIndustry?.id
         )
     }
 

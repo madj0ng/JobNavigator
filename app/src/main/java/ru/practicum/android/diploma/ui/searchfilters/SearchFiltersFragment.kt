@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnNextLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -95,14 +94,14 @@ class SearchFiltersFragment : Fragment() {
     }
 
     private fun init() {
-        if (viewModel.getSalary() != null) {
-            binding.earn.setText(viewModel.getSalary().toString())
+        if (viewModel.salaryBase != null) {
+            binding.earn.setText(viewModel.salaryBase.toString())
         }
-        binding.ischeced.isChecked = viewModel.getDontShowWithoutSalary()
-        val tempI = viewModel.getSavedIndustry()
-        val tempCity = viewModel.getCitySaved()
-        val tempR = viewModel.getRegionSaved()
-        val tempC = viewModel.getCountrySaved()
+        binding.ischeced.isChecked = viewModel.doNotShowWithoutSalary
+        val tempI = viewModel.savedIndustry
+        val tempCity = viewModel.savedCity
+        val tempR = viewModel.saveRegion
+        val tempC = viewModel.savedCountry
         val area = StringBuilder()
         if (tempI != null) {
             binding.industryPlace.text = tempI.name
@@ -169,7 +168,7 @@ class SearchFiltersFragment : Fragment() {
 
         if (getCondition()) {
             if (binding.placeOfWorkCountryRegion.text.isNotEmpty()) {
-                val saveCountry = viewModel.getCountrySaved()
+                val saveCountry = viewModel.savedCountry
                 countryModel = CountryFilterModel(saveCountry!!.id, saveCountry.name)
                 areaModel = setRegion()
             } else {
@@ -178,14 +177,14 @@ class SearchFiltersFragment : Fragment() {
             }
 
             if (binding.industryPlace.text.isNotEmpty()) {
-                val saveIndustry = viewModel.getSavedIndustry()
+                val saveIndustry = viewModel.savedIndustry
                 industryModel = IndustriesFilterModel(saveIndustry!!.id, saveIndustry.name)
             } else {
                 industryModel = null
             }
 
             if (checkSellary(binding.earn.text.toString()).isNotEmpty()) {
-                salary = viewModel.getSalary()
+                salary = viewModel.salaryBase
             } else {
                 salary = null
             }
@@ -202,16 +201,16 @@ class SearchFiltersFragment : Fragment() {
 
     private fun setRegion(): AreaFilterModel? {
         val areaModel: AreaFilterModel?
-        val city = viewModel.getCitySaved()
-        val region = viewModel.getRegionSaved()
+        val city = viewModel.savedCity
+        val region = viewModel.saveRegion
         if (city == null) {
             if (region == null) {
                 areaModel = null
             } else {
-                areaModel = AreaFilterModel(region!!.id, region.name)
+                areaModel = AreaFilterModel(region.id, region.name)
             }
         } else {
-            areaModel = AreaFilterModel(city!!.id, city.name)
+            areaModel = AreaFilterModel(city.id, city.name)
         }
         return areaModel
     }
