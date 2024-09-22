@@ -38,7 +38,7 @@ class SearchFiltersFragment : Fragment() {
 
         binding.groupButtons.visibility = View.GONE
 
-        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) {init()}
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { init() }
         viewModel.getFilter()
 
         binding.industryBtn.setOnClickListener {

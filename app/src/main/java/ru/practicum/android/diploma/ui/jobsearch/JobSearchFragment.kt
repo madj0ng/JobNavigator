@@ -4,19 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.VacancySearchParams
 import ru.practicum.android.diploma.presentation.models.QueryUiState
 import ru.practicum.android.diploma.presentation.models.SearchUiState
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
 
 class JobSearchFragment : Fragment() {
@@ -24,8 +25,8 @@ class JobSearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: JobSearchViewModel by viewModel()
-    private val filtersViewModel: FilterViewModel by activityViewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
+    private var filterModel: FilterModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,9 +40,20 @@ class JobSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner){ filterModel ->
+            if (filterModel != null) {
+                this.filterModel = filterModel
+                binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue)
+            } else {
+                binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_transparent)
+            }
+        }
+
+        viewModel.getFilter()
+
         binding.etSearch.addTextChangedListener { query ->
             viewModel.onSearchQueryChanged(
-                setQueryParam(query.toString(), filtersViewModel)
+                setQueryParam(query.toString(), filterModel)
             )
         }
 
@@ -72,7 +84,7 @@ class JobSearchFragment : Fragment() {
                     val itemsCount = jobSearchViewAdapter!!.itemCount
                     if (pos >= itemsCount - 1) {
                         viewModel.onLastItemReached(
-                            setQueryParam(viewModel.observeSearch().value?.query ?: "", filtersViewModel)
+                            setQueryParam(viewModel.observeSearch().value?.query ?: "", filterModel)
                         )
                     }
                 }
@@ -126,18 +138,22 @@ class JobSearchFragment : Fragment() {
         jobSearchViewAdapter?.setList(listOf())
     }
 
-    private fun setQueryParam(query: String, filtersViewModel: FilterViewModel): VacancySearchParams {
-        return VacancySearchParams(
-            query,
-            if (filtersViewModel.savedCity != null) {
-                filtersViewModel.savedCity!!.id
-            } else {
-                filtersViewModel.savedCountry?.id
-            },
-            filtersViewModel.salaryBase,
-            filtersViewModel.doNotShowWithoutSalary,
-            filtersViewModel.savedIndustry?.id
-        )
+    private fun setQueryParam(query: String, filterModel: FilterModel?): VacancySearchParams {
+        return if (filterModel != null) {
+            VacancySearchParams(
+                query,
+                if (filterModel.area != null) {
+                    filterModel.area.id
+                } else {
+                    filterModel.country?.id ?: ""
+                },
+                filterModel.salary ?: 0,
+                filterModel.onlyWithSalary ?: false,
+                filterModel.industries?.id ?: ""
+            )
+        } else {
+            VacancySearchParams(query)
+        }
     }
 
     override fun onDestroyView() {
