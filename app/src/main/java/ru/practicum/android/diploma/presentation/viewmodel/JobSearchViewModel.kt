@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.data.dto.model.AreasDto
 import ru.practicum.android.diploma.data.dto.model.FilterDto
 import ru.practicum.android.diploma.data.dto.model.IndustriesDto
