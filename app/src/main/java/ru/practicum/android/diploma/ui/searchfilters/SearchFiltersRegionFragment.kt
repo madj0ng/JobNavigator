@@ -42,7 +42,12 @@ class SearchFiltersRegionFragment : Fragment() {
 
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel.selectRegion(area)
-            findNavController().navigate(R.id.action_searchFiltersRegionFragment_to_searchFiltersCityFragment)
+            if (area.city.isEmpty()) {
+                viewModel.saveArea()
+                findNavController().navigateUp()
+            } else {
+                findNavController().navigate(R.id.action_searchFiltersRegionFragment_to_searchFiltersCityFragment)
+            }
         }
         binding.regionRecyclerview.adapter = filtersViewAdapterRegion
         viewModel.getRegions()

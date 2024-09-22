@@ -90,7 +90,8 @@ class SearchFiltersFragment : Fragment() {
         }
         binding.ischeced.isChecked = viewModel.getDontShowWithoutSalary()
         val tempI = viewModel.getSavedIndustry()
-        val tempR = viewModel.getCitySaved()
+        val tempCity = viewModel.getCitySaved()
+        val tempR = viewModel.getRegionSaved()
         val tempC = viewModel.getCountrySaved()
         val area = StringBuilder()
         if (tempI != null) {
@@ -106,6 +107,11 @@ class SearchFiltersFragment : Fragment() {
                 area.append(", ")
             }
             area.append(tempR.name)
+        } else if (tempCity != null){
+            if (area.isNotEmpty()) {
+                area.append(", ")
+            }
+            area.append(tempCity.name)
         }
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area

@@ -31,6 +31,7 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     private val industryLiveData = MutableLiveData<IndustryScreenState>()
     private var industryList = listOf<IndustryModel>()
     private var savedIndustry: IndustryModel? = null
+    private var saveRegion: RegionModel? = null
     private var savedCity: CityModel? = null
     private var savedCountry: CountryModel? = null
     private var salarybase: Int? = null
@@ -71,11 +72,16 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun saveArea() {
         savedCountry = selectedCountry
+        saveRegion = selectRegion
         savedCity = selectCity
     }
 
     fun getCitySaved(): CityModel? {
         return savedCity
+    }
+
+    fun getRegionSaved(): RegionModel? {
+        return saveRegion
     }
 
     fun getCountrySaved(): CountryModel? {
@@ -101,6 +107,10 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
 
     fun getSelectedCity(): CityModel? {
         return selectCity
+    }
+
+    fun getSelectedRegion(): RegionModel? {
+        return selectRegion
     }
 
     fun selectRegion(regionModel: RegionModel) {
