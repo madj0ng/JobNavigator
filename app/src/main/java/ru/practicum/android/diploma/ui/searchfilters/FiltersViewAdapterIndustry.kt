@@ -10,12 +10,17 @@ class FiltersViewAdapterIndustry(
     private val clickListener: OnClickListener,
 ) : RecyclerView.Adapter<FiltersViewAdapterIndustry.ViewHolder>() {
     private var industries = mutableListOf<IndustryModel>()
+    private var id: String = ""
     private var selectedPosition: Int = -1
 
     fun setList(list: List<IndustryModel>) {
         this.industries.clear()
         this.industries.addAll(list)
         notifyDataSetChanged()
+    }
+
+    fun setSelectId(id: String) {
+        this.id = id
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,10 +35,13 @@ class FiltersViewAdapterIndustry(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(industries[position])
+        if (id == industries[position].id) {
+            holder.binding.industrySrc.isChecked = true
+        }
     }
 
     inner class ViewHolder(
-        private val binding: LittleViewIndustryRoundBinding,
+        val binding: LittleViewIndustryRoundBinding,
         private val clickListener: OnClickListener
     ) : RecyclerView.ViewHolder(binding.root) {
 

@@ -2,7 +2,10 @@ package ru.practicum.android.diploma.data.filter.impl
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import ru.practicum.android.diploma.data.dto.model.AreasDto
+import ru.practicum.android.diploma.data.dto.model.CountriesDto
 import ru.practicum.android.diploma.data.dto.model.FilterDto
+import ru.practicum.android.diploma.data.dto.model.IndustriesDto
 import ru.practicum.android.diploma.data.filter.AreaResponse
 import ru.practicum.android.diploma.data.filter.AreasRequest
 import ru.practicum.android.diploma.data.filter.FilterRepository
@@ -46,7 +49,31 @@ class FilterRepositoryImpl(
         filterLocalStorage.saveStorage(filterDto)
     }
 
-    override suspend fun getFilter(): FilterDto? {
-        return filterLocalStorage.getFromStorage()
+    override suspend fun getFilter(): Flow<FilterDto?> = flow {
+        emit(filterLocalStorage.getFromStorage())
+    }
+
+    override suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
+        filterLocalStorage.savePlaceOfWork(countriesDto, areasDto)
+    }
+
+    override suspend fun saveIndustries(industriesDto: IndustriesDto) {
+        filterLocalStorage.saveIndustries(industriesDto)
+    }
+
+    override suspend fun saveSalary(salaryDto: Int) {
+        filterLocalStorage.saveSalary(salaryDto)
+    }
+
+    override suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
+        filterLocalStorage.saveOnlyWithSalary(onlyWithSalary)
+    }
+
+    override suspend fun deletePlaceOfWork() {
+        filterLocalStorage.deletePlaceOfWork()
+    }
+
+    override suspend fun deleteIndustries() {
+        filterLocalStorage.deleteIndustries()
     }
 }

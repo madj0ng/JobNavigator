@@ -183,8 +183,9 @@ class JobSearchViewModel(
 
     fun getFilter() {
         viewModelScope.launch(Dispatchers.IO) {
-            val filterModel = filterInteractor.getFilter()
-            viewModelScope.launch(Dispatchers.Main) { _searchFilterLiveData.value = filterModel }
+            filterInteractor.getFilter().collect { filter ->
+                _searchFilterLiveData.postValue(filter)
+            }
         }
     }
 

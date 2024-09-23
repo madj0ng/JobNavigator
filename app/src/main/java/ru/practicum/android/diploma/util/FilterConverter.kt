@@ -29,4 +29,16 @@ class FilterConverter {
             filterDto.onlyWithSalary
         )
     }
+
+    fun mapCountry(countryFilterModel: CountryFilterModel): CountriesDto {
+        return CountriesDto(countryFilterModel.id, countryFilterModel.name)
+    }
+
+    fun mapArea(areaFilterModel: AreaFilterModel): AreasDto {
+        return AreasDto(areaFilterModel.id, areaFilterModel.name)
+    }
+
+    fun mapIndustries(industriesFilterModel: IndustriesFilterModel): IndustriesDto {
+        return IndustriesDto(industriesFilterModel.id, industriesFilterModel.name)
+    }
 }

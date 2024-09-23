@@ -33,7 +33,6 @@ class IndustryChooseFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         viewModel.industryLiveData.observe(viewLifecycleOwner) { state ->
             render(state)
         }
@@ -43,19 +42,20 @@ class IndustryChooseFragment : Fragment() {
                 binding.btnSelect.visibility = View.GONE
             } else {
                 binding.btnSelect.visibility = View.VISIBLE
+                filtersViewAdapterIndustry?.setSelectId(selectedIndustry.id)
                 moveRvList()
                 filtersViewAdapterIndustry!!.notifyDataSetChanged()
             }
         }
 
+        viewModel.checkSelectedIndustries()
+
         filtersViewAdapterIndustry = FiltersViewAdapterIndustry { industry ->
             viewModel.selectIndustry(industry)
         }
         binding.industriesRecyclerView.adapter = filtersViewAdapterIndustry
-        viewModel.getIndustries()
 
         binding.buttonBack.setOnClickListener {
-            viewModel.unSelectIndustry()
             findNavController()
                 .navigate(IndustryChooseFragmentDirections.actionIndustryChooseFragmentToSearchFiltersFragment())
         }
@@ -79,7 +79,8 @@ class IndustryChooseFragment : Fragment() {
         when (state) {
             IndustryScreenState.ErrorContent -> seeErrorContent()
             IndustryScreenState.ErrorInternet -> seeErrorInternet()
-            IndustryScreenState.Content((state as IndustryScreenState.Content).data) -> seeContent(state.data)
+            IndustryScreenState
+                .Content((state as IndustryScreenState.Content).data) -> seeContent(state.data)
             else -> seeErrorContent()
         }
     }
@@ -129,10 +130,6 @@ class IndustryChooseFragment : Fragment() {
             val pad = binding.frameLayout.bottom - binding.btnSelect.bottom
             binding.industriesRecyclerView.setPadding(0, 0, 0, pad / 2)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onDestroyView() {

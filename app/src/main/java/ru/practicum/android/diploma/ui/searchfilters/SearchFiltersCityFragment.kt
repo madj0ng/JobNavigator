@@ -8,7 +8,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.SearchFiltersCityFragmentBinding
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
