@@ -25,6 +25,12 @@ import ru.practicum.android.diploma.presentation.models.RegionScreenState
 class FilterViewModel(
     private val filterInteractor: FilterInteractor
 ) : ViewModel() {
+    init {
+        getAreas()
+        getIndustries()
+        getFilter()
+    }
+
     private var _areaLiveData = MutableLiveData<AreasScreenState>()
     val areaLiveData: LiveData<AreasScreenState> get() = _areaLiveData
     private var _regionsLiveData = MutableLiveData<RegionScreenState>()
@@ -75,7 +81,7 @@ class FilterViewModel(
         }
     }
 
-    fun getAreas() {
+    private fun getAreas() {
         viewModelScope.launch {
             filterInteractor.getAreas().collect { res ->
                 if (res !is Resource.Error) {
@@ -181,7 +187,7 @@ class FilterViewModel(
         }
     }
 
-    fun getIndustries() {
+    private fun getIndustries() {
         viewModelScope.launch {
             filterInteractor.getIndustrias().collect() { res ->
                 when (res) {
@@ -233,9 +239,9 @@ class FilterViewModel(
         _placeOfWorkLiveData.value = PlaceOfWorkModel(selectedCountry, selectRegion, selectCity)
     }
 
-    fun saveSelectedFromFilter(filterModel: FilterModel) {
+    fun saveSelectedFromFilter(filterModel: FilterModel?) {
         areaList.forEach {
-            if (it.id == filterModel.country?.id) {
+            if (it.id == filterModel?.country?.id) {
                 savedCountry = it
                 selectedCountry = savedCountry
             }
@@ -243,25 +249,25 @@ class FilterViewModel(
         selectedCountry?.regions?.forEach {
             if (it.city.isNotEmpty()) {
                 it.city.forEach {
-                    if (it.id == filterModel.area?.id) {
+                    if (it.id == filterModel?.area?.id) {
                         savedCity = it
                         selectCity = savedCity
                     }
                 }
             }
-            if (it.id == filterModel.area?.id) {
+            if (it.id == filterModel?.area?.id) {
                 saveRegion = it
                 selectRegion = saveRegion
             }
         }
         industryList.forEach {
-            if (it.id == filterModel.industries!!.id) {
+            if (it.id == filterModel?.industries?.id) {
                 savedIndustry = it
                 selectIndustry = savedIndustry
             }
         }
-        salaryBase = filterModel.salary
-        doNotShowWithoutSalary = filterModel.onlyWithSalary ?: false
+        salaryBase = filterModel?.salary
+        doNotShowWithoutSalary = filterModel?.onlyWithSalary ?: false
     }
 
     fun saveFilter(filterModel: FilterModel?) {
@@ -271,19 +277,9 @@ class FilterViewModel(
     }
 
     fun getFilter() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val filterModel = filterInteractor.getFilter()
-            if (filterModel != null) {
-                getAreas()
-                getIndustries()
-                viewModelScope.launch(Dispatchers.Main) {
-                    _searchFilterLiveData.value = filterModel
-                }
-            } else {
-                viewModelScope.launch(Dispatchers.Main) {
-                    _searchFilterLiveData.value = null
-                }
-            }
+            _searchFilterLiveData.value = filterModel
         }
     }
 }

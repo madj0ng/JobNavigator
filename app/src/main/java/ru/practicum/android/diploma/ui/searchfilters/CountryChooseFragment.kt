@@ -44,7 +44,6 @@ class CountryChooseFragment : Fragment() {
                 .navigate(CountryChooseFragmentDirections.actionCountryChooseFragmentToPlaceOfWorkFragment())
         }
         binding.countryRecyclerview.adapter = filtersViewAdapterCountry
-        viewModel.getAreas()
 
         binding.buttonBack.setOnClickListener {
             findNavController()

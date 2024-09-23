@@ -36,12 +36,10 @@ class SearchFiltersFragment : Fragment() {
 
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
             this.filter = filter
-            viewModel.saveSelectedFromFilter(filter!!)
             Log.d("FFFFFFF", "${viewModel.selectedCountry}")
             init()
         }
         viewModel.getFilter()
-
 
         binding.industryBtn.setOnClickListener {
             findNavController()
@@ -51,7 +49,7 @@ class SearchFiltersFragment : Fragment() {
         }
 
         binding.placeOfWork.setOnClickListener {
-            Log.d("FFFFFFF", "${viewModel.selectedCountry}")
+            viewModel.saveSelectedFromFilter(filter)
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()

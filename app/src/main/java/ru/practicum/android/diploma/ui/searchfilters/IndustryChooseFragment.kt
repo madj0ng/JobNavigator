@@ -52,10 +52,8 @@ class IndustryChooseFragment : Fragment() {
             viewModel.selectIndustry(industry)
         }
         binding.industriesRecyclerView.adapter = filtersViewAdapterIndustry
-        viewModel.getIndustries()
 
         binding.buttonBack.setOnClickListener {
-            viewModel.unSelectIndustry()
             findNavController()
                 .navigate(IndustryChooseFragmentDirections.actionIndustryChooseFragmentToSearchFiltersFragment())
         }
