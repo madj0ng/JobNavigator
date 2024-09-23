@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/industryChooseFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -133,11 +134,12 @@
 
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/industries_recuclerView"
+            android:id="@+id/industries_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/dim_16dp"
@@ -146,7 +148,7 @@
 
         <Button
             android:id="@+id/btnSelect"
-            android:visibility="gone"
+            android:visibility="visible"
             style="@style/ButtonBlueRounded12"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/dim_24dp"

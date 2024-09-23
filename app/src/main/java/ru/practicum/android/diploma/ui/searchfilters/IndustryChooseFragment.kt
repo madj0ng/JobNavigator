@@ -4,76 +4,133 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.doOnNextLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.IndustryChoosingFragmentBinding
+import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.Resource
+import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class IndustryChooseFragment : Fragment() {
 
-    private var binding: IndustryChoosingFragmentBinding? = null
+    private var _binding: IndustryChoosingFragmentBinding? = null
+    private val binding: IndustryChoosingFragmentBinding get() = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private var filtersViewAdapterIndustry: FiltersViewAdapterIndustry? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = IndustryChoosingFragmentBinding.inflate(inflater, container, false)
-        return binding?.root
+    ): View {
+        _binding = IndustryChoosingFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel?.getIndustryLiveData()?.observe(viewLifecycleOwner) { industries ->
-            if (industries is Resource.Error) {
-                hideAll()
-                binding?.industriesErrorNoIndustry?.visibility = View.VISIBLE
-            } else {
-                hideAll()
-                binding?.industriesRecuclerView?.visibility = View.VISIBLE
-                filtersViewAdapterIndustry?.setList((industries as Resource.Success).data)
-            }
+        viewModel.getIndustryLiveData().observe(viewLifecycleOwner) { state ->
+            render(state)
         }
 
-        viewModel?.getSelectedIndustryLiveData()?.observe(viewLifecycleOwner) { selectedIndustry ->
+        viewModel.getSelectedIndustryLiveData().observe(viewLifecycleOwner) { selectedIndustry ->
             if (selectedIndustry == null) {
-                binding?.btnSelect?.visibility = View.GONE
+                binding.btnSelect.visibility = View.GONE
             } else {
-                binding?.btnSelect?.visibility = View.VISIBLE
+                binding.btnSelect.visibility = View.VISIBLE
+                moveRvList()
+                filtersViewAdapterIndustry!!.notifyDataSetChanged()
             }
         }
 
         filtersViewAdapterIndustry = FiltersViewAdapterIndustry { industry ->
-            viewModel?.selectIndustry(industry)
-            filtersViewAdapterIndustry!!.notifyDataSetChanged()
+            viewModel.selectIndustry(industry)
         }
-        binding?.industriesRecuclerView?.adapter = filtersViewAdapterIndustry
-        viewModel?.getIndustries()
+        binding.industriesRecyclerView.adapter = filtersViewAdapterIndustry
+        viewModel.getIndustries()
 
-        binding?.buttonBack?.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
+            viewModel.unSelectIndustry()
             findNavController().popBackStack()
         }
-        binding?.search?.addTextChangedListener { str ->
-            viewModel?.searchIndustry(str.toString())
+        binding.search.addTextChangedListener { str ->
+            changeIcon(str.toString())
+            viewModel.searchIndustry(str.toString())
         }
 
-        binding?.btnSelect?.setOnClickListener {
-            viewModel?.saveIndustry()
+        binding.btnSelect.setOnClickListener {
+            viewModel.saveIndustry()
             findNavController().popBackStack()
+        }
+
+        binding.clearText.setOnClickListener {
+            binding.search.setText("")
         }
     }
 
-    fun hideAll() {
-        binding?.industriesErrorNoIndustry?.visibility = View.GONE
-        binding?.industriesRecuclerView?.visibility = View.GONE
+    private fun render(state: IndustryScreenState) {
+        when (state) {
+            IndustryScreenState.ErrorContent -> seeErrorContent()
+            IndustryScreenState.ErrorInternet -> seeErrorInternet()
+            IndustryScreenState.Content((state as IndustryScreenState.Content).data) -> seeContent(state.data)
+            else -> seeErrorContent()
+        }
+    }
+
+    private fun seeErrorContent() {
+        hideAll()
+        with(binding) {
+            industriesErrorNoIndustry.visibility = View.VISIBLE
+            ivInformImage.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.error_no_data))
+            ivInformBottomText.text = view?.resources?.getString(R.string.no_industry)
+        }
+    }
+
+    private fun seeErrorInternet() {
+        hideAll()
+        with(binding) {
+            industriesErrorNoIndustry.visibility = View.VISIBLE
+            ivInformImage
+                .setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.cant_fetch_region))
+            ivInformBottomText.text = view?.resources?.getString(R.string.search_error_no_list)
+        }
+    }
+
+    private fun seeContent(list: List<IndustryModel>) {
+        hideAll()
+        binding.industriesRecyclerView.visibility = View.VISIBLE
+        filtersViewAdapterIndustry?.setList(list)
+    }
+
+    private fun hideAll() {
+        binding.industriesErrorNoIndustry.visibility = View.GONE
+        binding.industriesRecyclerView.visibility = View.GONE
+    }
+
+    private fun changeIcon(str: String) {
+        if (str.isNotEmpty()) {
+            binding.searchBtn.visibility = View.GONE
+            binding.clearText.visibility = View.VISIBLE
+        } else {
+            binding.searchBtn.visibility = View.VISIBLE
+            binding.clearText.visibility = View.GONE
+        }
+    }
+
+    private fun moveRvList() {
+        binding.root.doOnNextLayout {
+            val pad = binding.frameLayout.bottom - binding.btnSelect.bottom
+            binding.industriesRecyclerView.setPadding(0, 0, 0, pad / 2)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 }

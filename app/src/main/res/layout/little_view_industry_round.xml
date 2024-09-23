@@ -15,8 +15,6 @@
         android:layout_marginRight="@dimen/dim_16dp"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:maxLength="85"
-        android:maxLines="2"
         android:text="@string/choosing_place_of_work" />
 
     <RadioButton
