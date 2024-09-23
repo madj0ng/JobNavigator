@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
 import ru.practicum.android.diploma.domain.models.FilterModel
@@ -19,7 +17,6 @@ class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
-    private var filter: FilterModel? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,11 +32,10 @@ class SearchFiltersFragment : Fragment() {
         binding.groupButtons.visibility = View.GONE
 
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
-            this.filter = filter
-            Log.d("FFFFFFF", "${viewModel.selectedCountry}")
-            init()
+            viewModel.saveSelectedFromFilter(filter)
+            init(filter)
         }
-        viewModel.getFilter()
+
 
         binding.industryBtn.setOnClickListener {
             findNavController()
@@ -49,12 +45,13 @@ class SearchFiltersFragment : Fragment() {
         }
 
         binding.placeOfWork.setOnClickListener {
-            viewModel.saveSelectedFromFilter(filter)
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
                 )
         }
+
+        viewModel.getFilter()
 
         binding.buttonBack.setOnClickListener {
             findNavController()
@@ -77,8 +74,7 @@ class SearchFiltersFragment : Fragment() {
             viewModel.unSelectIndustry()
             viewModel.saveFilter(null)
             canselFilter()
-            filter = null
-            init()
+            viewModel.getFilter()
             binding.groupButtons.visibility = View.GONE
 
         }
@@ -105,7 +101,7 @@ class SearchFiltersFragment : Fragment() {
         }
     }
 
-    private fun init() {
+    private fun init(filter: FilterModel?) {
         if (filter?.salary != null) {
             binding.earn.setText(filter?.salary.toString())
         }
