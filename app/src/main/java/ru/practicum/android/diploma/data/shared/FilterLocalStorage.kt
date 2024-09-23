@@ -79,14 +79,35 @@ class FilterLocalStorage(
 
     suspend fun deletePlaceOfWork() {
         val filter = getFromStorage()
-        filter?.area = null
-        filter?.country = null
-        saveStorage(filter)
+        if (getConditionToPow(filter)) {
+            saveStorage(null)
+        } else {
+            filter?.area = null
+            filter?.country = null
+            saveStorage(filter)
+        }
     }
 
     suspend fun deleteIndustries() {
         val filter = getFromStorage()
-        filter?.industries = null
-        saveStorage(filter)
+        if (getConditionToInd(filter)) {
+            saveStorage(null)
+        } else {
+            filter?.industries = null
+            saveStorage(filter)
+        }
+    }
+
+    private fun getConditionToPow(filter: FilterDto?): Boolean {
+        return filter?.onlyWithSalary == null &&
+            filter?.industries == null &&
+            filter?.salary == null
+    }
+
+    private fun getConditionToInd(filter: FilterDto?): Boolean {
+        return filter?.onlyWithSalary == null &&
+            filter?.country == null &&
+            filter?.area == null &&
+            filter?.salary == null
     }
 }

@@ -27,8 +27,6 @@ class SearchFiltersFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         binding.groupButtons.visibility = View.GONE
 
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
@@ -104,12 +102,14 @@ class SearchFiltersFragment : Fragment() {
             restartPlaceOfWork()
             viewModel.unSelectCountry()
             viewModel.deletePlaceOfWork()
+            viewModel.getFilter()
         }
 
         binding.buttonClearToInd.setOnClickListener {
             restartIndusytries()
             viewModel.unSelectIndustry()
             viewModel.deleteIndustries()
+            viewModel.getFilter()
         }
     }
 
@@ -184,6 +184,9 @@ class SearchFiltersFragment : Fragment() {
             buttonClearToPow.setImageResource(R.drawable.icon_next)
             buttonClearToPow.isClickable = false
         }
+        if (!getCondition()) {
+            binding.groupButtons.visibility = View.GONE
+        }
     }
 
     private fun restartIndusytries() {
@@ -192,6 +195,9 @@ class SearchFiltersFragment : Fragment() {
             hintIndustryPlace.text = context?.getString(R.string.empty)
             buttonClearToInd.setImageResource(R.drawable.icon_next)
             buttonClearToInd.isClickable = false
+        }
+        if (!getCondition()) {
+            binding.groupButtons.visibility = View.GONE
         }
     }
 

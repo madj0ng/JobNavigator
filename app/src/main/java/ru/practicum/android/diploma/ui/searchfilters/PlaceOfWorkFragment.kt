@@ -27,8 +27,6 @@ class PlaceOfWorkFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         viewModel.placeOfWorkLiveData.observe(viewLifecycleOwner) { area ->
             init(area)
         }
@@ -84,8 +82,8 @@ class PlaceOfWorkFragment : Fragment() {
         viewModel.checkSelectedPlaceOfWork()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onPause() {
+        super.onPause()
         viewModel.checkSelectedPlaceOfWork()
     }
 
