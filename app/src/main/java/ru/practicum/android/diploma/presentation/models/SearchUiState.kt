@@ -64,7 +64,7 @@ sealed interface SearchUiState {
         override val isProgressBar: Boolean = false,
         override val isPaginationProgressBar: Boolean = false,
         override val isInformImage: Boolean = true,
-        override val isBottomText: Boolean = true,
+        override val isBottomText: Boolean = false,
         override val url: Int = R.drawable.search_empty,
         override val bottomText: Int? = null,
         override val topText: Int? = null,
