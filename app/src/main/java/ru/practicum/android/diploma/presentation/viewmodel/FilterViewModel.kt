@@ -265,6 +265,10 @@ class FilterViewModel(
                 selectedCountry = savedCountry
             }
         }
+        selectedRegionFromFilter(filterModel)
+    }
+
+    private fun selectedRegionFromFilter(filterModel: FilterModel?) {
         selectedCountry?.regions?.forEach {
             if (it.city.isNotEmpty()) {
                 it.city.forEach {
