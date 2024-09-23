@@ -21,38 +21,59 @@ class FilterLocalStorage(
         return withContext(Dispatchers.IO) {
             val filterString = pref.getString(FILTER_KEY, null)
             if (filterString != null) gson.fromJson(filterString, FilterDto::class.java) else null
+
         }
     }
 
     suspend fun saveStorage(filter: FilterDto?) {
         withContext(Dispatchers.IO) {
-            val filterString = gson.toJson(filter)
-            pref.edit().putString(FILTER_KEY, filterString).apply()
+            if (filter != null) {
+                val filterString = gson.toJson(filter)
+                pref.edit().putString(FILTER_KEY, filterString).apply()
+            } else {
+                pref.edit().remove(FILTER_KEY).apply()
+            }
         }
     }
 
     suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
-        val filter = getFromStorage()
-        filter?.country = countriesDto
-        filter?.area = areasDto
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.country = countriesDto
+            filter.area = areasDto
+        } else {
+            filter = FilterDto(country = countriesDto, area = areasDto)
+        }
         saveStorage(filter)
     }
 
     suspend fun saveIndustries(industriesDto: IndustriesDto) {
-        val filter = getFromStorage()
-        filter?.industries = industriesDto
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.industries = industriesDto
+        } else {
+            filter = FilterDto(industries = industriesDto)
+        }
         saveStorage(filter)
     }
 
     suspend fun saveSalary(salaryDto: Int) {
-        val filter = getFromStorage()
-        filter?.salary = salaryDto
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.salary = salaryDto
+        } else {
+            filter = FilterDto(salary = salaryDto)
+        }
         saveStorage(filter)
     }
 
     suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
-        val filter = getFromStorage()
-        filter?.onlyWithSalary = onlyWithSalary
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.onlyWithSalary = onlyWithSalary
+        } else {
+            filter = FilterDto(onlyWithSalary = onlyWithSalary)
+        }
         saveStorage(filter)
     }
 }

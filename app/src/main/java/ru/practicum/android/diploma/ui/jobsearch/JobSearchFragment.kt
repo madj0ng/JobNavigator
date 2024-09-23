@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.jobsearch
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -144,7 +145,7 @@ class JobSearchFragment : Fragment() {
             VacancySearchParams(
                 query,
                 if (filterModel.area != null) {
-                    filterModel.area.id
+                    filterModel.area?.id
                 } else {
                     filterModel.country?.id
                 },
