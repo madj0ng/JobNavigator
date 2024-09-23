@@ -71,7 +71,7 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
             options["salary"] = params.salary.toString()
         }
         if (params.professionalRole != null && params.professionalRole.isNotBlank()) {
-            options["industry"] = params.salary.toString()
+            options["industry"] = params.professionalRole.toString()
         }
         options["only_with_salary"] = params.onlyWithSalary.toString()
         options["page"] = params.page.toString()
