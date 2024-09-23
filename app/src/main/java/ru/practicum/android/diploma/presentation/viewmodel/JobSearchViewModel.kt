@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.dto.model.AreasDto
 import ru.practicum.android.diploma.data.dto.model.FilterDto
@@ -160,9 +161,9 @@ class JobSearchViewModel(
     }
 
     fun getFilter() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val filterModel = filterInteractor.getFilter()
-            _searchFilterLiveData.value = filterModel
+            viewModelScope.launch(Dispatchers.Main) { _searchFilterLiveData.value = filterModel }
         }
     }
 
