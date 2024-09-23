@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
 import ru.practicum.android.diploma.domain.models.AreaFilterModel
@@ -19,7 +21,8 @@ import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: FilterViewModel by viewModel()
+    private var filter: FilterModel? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,14 +34,13 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.selectRegion = null
-        viewModel.selectCity = null
-        viewModel.selectedCountry = null
-        viewModel.selectIndustry(null)
 
         binding.groupButtons.visibility = View.GONE
 
-        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { init() }
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
+            this.filter = filter
+            init()
+        }
         viewModel.getFilter()
 
         binding.industryBtn.setOnClickListener {
@@ -76,7 +78,6 @@ class SearchFiltersFragment : Fragment() {
             canselFilter()
             binding.groupButtons.visibility = View.GONE
             viewModel.saveFilter(null)
-            init()
         }
 
         binding.ischeced.setOnCheckedChangeListener { _, isChecked ->
@@ -98,19 +99,16 @@ class SearchFiltersFragment : Fragment() {
                 }
             }
         }
-
-        init()
     }
 
     private fun init() {
-        if (viewModel.salaryBase != null) {
-            binding.earn.setText(viewModel.salaryBase.toString())
+        if (filter?.salary != null) {
+            binding.earn.setText(filter?.salary.toString())
         }
-        binding.ischeced.isChecked = viewModel.doNotShowWithoutSalary
-        val tempI = viewModel.savedIndustry
-        val tempCity = viewModel.savedCity
-        val tempR = viewModel.saveRegion
-        val tempC = viewModel.savedCountry
+        binding.ischeced.isChecked = filter?.onlyWithSalary ?: false
+        val tempI = filter?.industries
+        val tempR = filter?.area
+        val tempC = filter?.country
         val area = StringBuilder()
         if (tempI != null) {
             binding.industryPlace.text = tempI.name
@@ -125,11 +123,6 @@ class SearchFiltersFragment : Fragment() {
                 area.append(", ")
             }
             area.append(tempR.name)
-        } else if (tempCity != null) {
-            if (area.isNotEmpty()) {
-                area.append(", ")
-            }
-            area.append(tempCity.name)
         }
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area
@@ -229,11 +222,6 @@ class SearchFiltersFragment : Fragment() {
             binding.industryPlace.text.isNotEmpty() ||
             checkSellary(binding.earn.text.toString()).isNotEmpty() ||
             binding.ischeced.isChecked
-    }
-
-    override fun onStart() {
-        super.onStart()
-        init()
     }
 
     override fun onResume() {

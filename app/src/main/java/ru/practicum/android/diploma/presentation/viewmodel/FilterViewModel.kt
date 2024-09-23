@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.di.viewModelModule
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
 import ru.practicum.android.diploma.domain.models.AreaFilterModel
 import ru.practicum.android.diploma.domain.models.CityModel
@@ -33,8 +34,8 @@ class FilterViewModel(
     val selectIndustryLiveData: LiveData<IndustryModel?> get() = _selectIndustryLiveData
     private var _industryLiveData = MutableLiveData<IndustryScreenState>()
     val industryLiveData: LiveData<IndustryScreenState> get() = _industryLiveData
-    private var _searchFilterLiveData = MutableLiveData<Boolean>()
-    val searchFilterLiveData: LiveData<Boolean> get() = _searchFilterLiveData
+    private var _searchFilterLiveData = MutableLiveData<FilterModel?>()
+    val searchFilterLiveData: LiveData<FilterModel?> get() = _searchFilterLiveData
 
     private var areaList = listOf<CountryModel>()
     private var regionsList = listOf<RegionModel>()
@@ -53,6 +54,9 @@ class FilterViewModel(
 
     fun setDontShowWithoutSalary(show: Boolean) {
         doNotShowWithoutSalary = show
+        viewModelScope.launch {
+            filterInteractor.saveOnlyWithSalary(show)
+        }
     }
 
     fun setSalary(salary: String) {
@@ -60,6 +64,9 @@ class FilterViewModel(
             salaryBase = null
         } else {
             salaryBase = salary.toInt()
+            viewModelScope.launch {
+                filterInteractor.saveSalary(salaryBase!!)
+            }
         }
     }
 
@@ -257,14 +264,14 @@ class FilterViewModel(
                 salaryBase = filterModel.salary
                 doNotShowWithoutSalary = filterModel.onlyWithSalary ?: false
                 viewModelScope.launch(Dispatchers.Main) {
-                    _searchFilterLiveData.value = true
+                    _searchFilterLiveData.value = filterModel
                 }
                 selectRegion = saveRegion
                 selectCity = savedCity
                 selectIndustry = savedIndustry
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
-                    _searchFilterLiveData.value = false
+                    _searchFilterLiveData.value = null
                 }
             }
         }
