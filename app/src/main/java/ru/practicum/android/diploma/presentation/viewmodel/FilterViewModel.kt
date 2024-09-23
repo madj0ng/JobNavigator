@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.di.viewModelModule
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
 import ru.practicum.android.diploma.domain.models.AreaFilterModel
 import ru.practicum.android.diploma.domain.models.CityModel
@@ -50,7 +49,7 @@ class FilterViewModel(
     var savedCity: CityModel? = null
     var savedCountry: CountryModel? = null
     var salaryBase: Int? = null
-    var doNotShowWithoutSalary: Boolean = false
+    private var doNotShowWithoutSalary: Boolean = false
 
     fun setDontShowWithoutSalary(show: Boolean) {
         doNotShowWithoutSalary = show
