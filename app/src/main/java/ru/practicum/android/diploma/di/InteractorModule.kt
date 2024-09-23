@@ -39,6 +39,6 @@ val interactorModule = module {
         SharingInteractorImpl(get())
     }
     single<FilterInteractor> {
-        FilterInteractorImpl(get())
+        FilterInteractorImpl(get(), get())
     }
 }

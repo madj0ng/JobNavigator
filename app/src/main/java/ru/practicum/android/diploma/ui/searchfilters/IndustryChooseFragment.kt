@@ -34,11 +34,11 @@ class IndustryChooseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getIndustryLiveData().observe(viewLifecycleOwner) { state ->
+        viewModel.industryLiveData.observe(viewLifecycleOwner) { state ->
             render(state)
         }
 
-        viewModel.getSelectedIndustryLiveData().observe(viewLifecycleOwner) { selectedIndustry ->
+        viewModel.selectIndustryLiveData.observe(viewLifecycleOwner) { selectedIndustry ->
             if (selectedIndustry == null) {
                 binding.btnSelect.visibility = View.GONE
             } else {
@@ -56,7 +56,8 @@ class IndustryChooseFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             viewModel.unSelectIndustry()
-            findNavController().popBackStack()
+            findNavController()
+                .navigate(IndustryChooseFragmentDirections.actionIndustryChooseFragmentToSearchFiltersFragment())
         }
         binding.search.addTextChangedListener { str ->
             changeIcon(str.toString())
@@ -65,7 +66,8 @@ class IndustryChooseFragment : Fragment() {
 
         binding.btnSelect.setOnClickListener {
             viewModel.saveIndustry()
-            findNavController().popBackStack()
+            findNavController()
+                .navigate(IndustryChooseFragmentDirections.actionIndustryChooseFragmentToSearchFiltersFragment())
         }
 
         binding.clearText.setOnClickListener {
@@ -127,6 +129,10 @@ class IndustryChooseFragment : Fragment() {
             val pad = binding.frameLayout.bottom - binding.btnSelect.bottom
             binding.industriesRecyclerView.setPadding(0, 0, 0, pad / 2)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     override fun onDestroyView() {

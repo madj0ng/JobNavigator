@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.dto.model.AreasDto
 import ru.practicum.android.diploma.data.dto.model.FilterDto
 import ru.practicum.android.diploma.data.dto.model.IndustriesDto
+import ru.practicum.android.diploma.domain.filters.FilterInteractor
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.domain.models.VacancyModel
 import ru.practicum.android.diploma.domain.models.VacancySearchParams
@@ -22,6 +25,7 @@ import ru.practicum.android.diploma.util.debounce
 class JobSearchViewModel(
     private val searchVacancyInteractor: SearchVacancyInteractor,
     private val formatConverter: FormatConverter,
+    private val filterInteractor: FilterInteractor
 ) : ViewModel() {
 
     private val toastLiveData = SingleLiveEvent<String>()
@@ -31,6 +35,9 @@ class JobSearchViewModel(
 
     private val _screenLiveData = MutableLiveData<SearchUiState>(SearchUiState.Default())
     val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
+
+    private val _searchFilterLiveData = MutableLiveData<FilterModel?>()
+    val searchFilterLiveData: LiveData<FilterModel?> get() = _searchFilterLiveData
 
     private val debounceSearch = debounce<VacancySearchParams>(
         delayMillis = SEARCH_DEBOUNCE_DELAY,
@@ -150,6 +157,13 @@ class JobSearchViewModel(
     fun onClickSearchClear() {
         if (queryLiveData.value is QueryUiState.Clear) {
             clearQuery("")
+        }
+    }
+
+    fun getFilter() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val filterModel = filterInteractor.getFilter()
+            viewModelScope.launch(Dispatchers.Main) { _searchFilterLiveData.value = filterModel }
         }
     }
 
