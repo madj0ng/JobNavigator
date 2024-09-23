@@ -76,4 +76,17 @@ class FilterLocalStorage(
         }
         saveStorage(filter)
     }
+
+    suspend fun deletePlaceOfWork() {
+        val filter = getFromStorage()
+        filter?.area = null
+        filter?.country = null
+        saveStorage(filter)
+    }
+
+    suspend fun deleteIndustries() {
+        val filter = getFromStorage()
+        filter?.industries = null
+        saveStorage(filter)
+    }
 }

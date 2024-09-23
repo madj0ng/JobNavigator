@@ -320,4 +320,16 @@ class FilterViewModel(
             _searchFilterLiveData.value = filterModel
         }
     }
+
+    fun deletePlaceOfWork() {
+        viewModelScope.launch {
+            filterInteractor.deletePlaceOfWork()
+        }
+    }
+
+    fun deleteIndustries() {
+        viewModelScope.launch {
+            filterInteractor.deleteIndustries()
+        }
+    }
 }

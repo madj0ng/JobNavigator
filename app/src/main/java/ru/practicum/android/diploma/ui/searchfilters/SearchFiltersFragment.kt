@@ -99,6 +99,16 @@ class SearchFiltersFragment : Fragment() {
             }
             viewModel.setSalary(checkSellary(str.toString()))
         }
+
+        binding.buttonClearToPow.setOnClickListener {
+            restartPlaceOfWork()
+            viewModel.deletePlaceOfWork()
+        }
+
+        binding.buttonClearToInd.setOnClickListener {
+            restartIndusytries()
+            viewModel.deleteIndustries()
+        }
     }
 
     private fun init(filter: FilterModel?) {
@@ -114,6 +124,8 @@ class SearchFiltersFragment : Fragment() {
             binding.industryPlace.text = tempI?.name
             binding.hintIndustryPlace.text = context?.getString(R.string.Industry)
             binding.groupButtons.visibility = View.VISIBLE
+            binding.buttonClearToInd.setImageResource(R.drawable.ic_close_to_filter)
+            binding.buttonClearToInd.isClickable = true
         }
         if (!tempC?.name.isNullOrBlank()) {
             area.append(tempC?.name)
@@ -128,19 +140,20 @@ class SearchFiltersFragment : Fragment() {
             binding.placeOfWorkCountryRegion.text = area
             binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.place_of_work)
             binding.groupButtons.visibility = View.VISIBLE
+            binding.buttonClearToPow.setImageResource(R.drawable.ic_close_to_filter)
+            binding.buttonClearToPow.isClickable = true
         }
 
     }
 
     private fun canselFilter() {
         with(binding) {
-            industryPlace.text = ""
-            placeOfWorkCountryRegion.text = ""
             earn.setText("")
             viewModel.setSalary("")
             ischeced.isChecked = false
         }
-        hideHint()
+        restartIndusytries()
+        restartPlaceOfWork()
     }
 
     private fun checkSellary(str: String): String {
@@ -155,16 +168,29 @@ class SearchFiltersFragment : Fragment() {
         }
     }
 
-    private fun hideHint() {
-        binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
-        binding.hintIndustryPlace.text = context?.getString(R.string.empty)
-    }
-
     private fun getCondition(): Boolean {
         return binding.placeOfWorkCountryRegion.text.isNotEmpty() ||
             binding.industryPlace.text.isNotEmpty() ||
             checkSellary(binding.earn.text.toString()).isNotEmpty() ||
             binding.ischeced.isChecked
+    }
+
+    private fun restartPlaceOfWork() {
+        with(binding) {
+            placeOfWorkCountryRegion.text = ""
+            hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
+            buttonClearToPow.setImageResource(R.drawable.icon_next)
+            buttonClearToPow.isClickable = false
+        }
+    }
+
+    private fun restartIndusytries() {
+        with(binding) {
+            industryPlace.text = ""
+            hintIndustryPlace.text = context?.getString(R.string.empty)
+            buttonClearToInd.setImageResource(R.drawable.icon_next)
+            buttonClearToInd.isClickable = false
+        }
     }
 
     override fun onStart() {

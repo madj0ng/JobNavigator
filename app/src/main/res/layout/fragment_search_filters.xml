@@ -64,7 +64,7 @@
 
 
         <ImageView
-
+            android:id="@+id/button_clear_to_pow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dim_4dp"
@@ -109,6 +109,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/button_clear_to_ind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dim_4dp"
