@@ -144,7 +144,7 @@ class JobSearchFragment : Fragment() {
             VacancySearchParams(
                 query,
                 if (filterModel.area != null) {
-                    filterModel.area.id
+                    filterModel.area?.id
                 } else {
                     filterModel.country?.id
                 },

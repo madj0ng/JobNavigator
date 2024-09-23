@@ -10,10 +10,7 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
-import ru.practicum.android.diploma.domain.models.AreaFilterModel
-import ru.practicum.android.diploma.domain.models.CountryFilterModel
 import ru.practicum.android.diploma.domain.models.FilterModel
-import ru.practicum.android.diploma.domain.models.IndustriesFilterModel
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class SearchFiltersFragment : Fragment() {
@@ -30,16 +27,13 @@ class SearchFiltersFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.selectRegion = null
-        viewModel.selectCity = null
-        viewModel.selectedCountry = null
-        viewModel.selectIndustry(null)
-
         binding.groupButtons.visibility = View.GONE
 
-        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { init() }
-        viewModel.getFilter()
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
+            viewModel.saveSelectedFromFilter(filter)
+            init(filter)
+        }
+
 
         binding.industryBtn.setOnClickListener {
             findNavController()
@@ -55,6 +49,8 @@ class SearchFiltersFragment : Fragment() {
                 )
         }
 
+        viewModel.getFilter()
+
         binding.buttonBack.setOnClickListener {
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
@@ -64,8 +60,9 @@ class SearchFiltersFragment : Fragment() {
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
             val str = checkSellary(binding.earn.text.toString())
             viewModel.setSalary(str)
-            saveFiler()
-
+            if (binding.ischeced.isChecked) {
+                viewModel.setDontShowWithoutSalary(true)
+            }
             findNavController()
                 .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
         }
@@ -73,10 +70,11 @@ class SearchFiltersFragment : Fragment() {
         binding.buttonCancel.setOnClickListener {
             viewModel.unSelectCountry()
             viewModel.unSelectIndustry()
-            canselFilter()
-            binding.groupButtons.visibility = View.GONE
             viewModel.saveFilter(null)
-            init()
+            canselFilter()
+            viewModel.getFilter()
+            binding.groupButtons.visibility = View.GONE
+
         }
 
         binding.ischeced.setOnCheckedChangeListener { _, isChecked ->
@@ -97,58 +95,67 @@ class SearchFiltersFragment : Fragment() {
                     binding.groupButtons.visibility = View.GONE
                 }
             }
+            viewModel.setSalary(checkSellary(str.toString()))
         }
 
-        init()
+        binding.buttonClearToPow.setOnClickListener {
+            restartPlaceOfWork()
+            viewModel.unSelectCountry()
+            viewModel.deletePlaceOfWork()
+            viewModel.getFilter()
+        }
+
+        binding.buttonClearToInd.setOnClickListener {
+            restartIndusytries()
+            viewModel.unSelectIndustry()
+            viewModel.deleteIndustries()
+            viewModel.getFilter()
+        }
     }
 
-    private fun init() {
-        if (viewModel.salaryBase != null) {
-            binding.earn.setText(viewModel.salaryBase.toString())
+    private fun init(filter: FilterModel?) {
+        if (filter?.salary != null) {
+            binding.earn.setText(filter?.salary.toString())
         }
-        binding.ischeced.isChecked = viewModel.doNotShowWithoutSalary
-        val tempI = viewModel.savedIndustry
-        val tempCity = viewModel.savedCity
-        val tempR = viewModel.saveRegion
-        val tempC = viewModel.savedCountry
+        binding.ischeced.isChecked = filter?.onlyWithSalary ?: false
+        val tempI = filter?.industries
+        val tempR = filter?.area
+        val tempC = filter?.country
         val area = StringBuilder()
-        if (tempI != null) {
-            binding.industryPlace.text = tempI.name
+        if (!tempI?.name.isNullOrBlank()) {
+            binding.industryPlace.text = tempI?.name
             binding.hintIndustryPlace.text = context?.getString(R.string.Industry)
             binding.groupButtons.visibility = View.VISIBLE
+            binding.buttonClearToInd.setImageResource(R.drawable.ic_close_to_filter)
+            binding.buttonClearToInd.isClickable = true
         }
-        if (tempC != null) {
-            area.append(tempC.name)
+        if (!tempC?.name.isNullOrBlank()) {
+            area.append(tempC?.name)
         }
-        if (tempR != null) {
+        if (!tempR?.name.isNullOrBlank()) {
             if (area.isNotEmpty()) {
                 area.append(", ")
             }
-            area.append(tempR.name)
-        } else if (tempCity != null) {
-            if (area.isNotEmpty()) {
-                area.append(", ")
-            }
-            area.append(tempCity.name)
+            area.append(tempR?.name)
         }
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area
             binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.place_of_work)
             binding.groupButtons.visibility = View.VISIBLE
+            binding.buttonClearToPow.setImageResource(R.drawable.ic_close_to_filter)
+            binding.buttonClearToPow.isClickable = true
         }
 
     }
 
     private fun canselFilter() {
         with(binding) {
-            industryPlace.text = ""
-            placeOfWorkCountryRegion.text = ""
             earn.setText("")
             viewModel.setSalary("")
             ischeced.isChecked = false
-            viewModel.setDontShowWithoutSalary(false)
-            hideHint()
         }
+        restartIndusytries()
+        restartPlaceOfWork()
     }
 
     private fun checkSellary(str: String): String {
@@ -163,67 +170,6 @@ class SearchFiltersFragment : Fragment() {
         }
     }
 
-    private fun hideHint() {
-        binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
-        binding.hintIndustryPlace.text = context?.getString(R.string.empty)
-    }
-
-    private fun saveFiler() {
-        val countryModel: CountryFilterModel?
-        val areaModel: AreaFilterModel?
-        val industryModel: IndustriesFilterModel?
-        val salary: Int?
-        var onlyWithSalary: Boolean? = true
-
-        if (getCondition()) {
-            if (binding.placeOfWorkCountryRegion.text.isNotEmpty()) {
-                val saveCountry = viewModel.savedCountry
-                countryModel = CountryFilterModel(saveCountry!!.id, saveCountry.name)
-                areaModel = setRegion()
-            } else {
-                countryModel = null
-                areaModel = null
-            }
-
-            if (binding.industryPlace.text.isNotEmpty()) {
-                val saveIndustry = viewModel.savedIndustry
-                industryModel = IndustriesFilterModel(saveIndustry!!.id, saveIndustry.name)
-            } else {
-                industryModel = null
-            }
-
-            if (checkSellary(binding.earn.text.toString()).isNotEmpty()) {
-                salary = viewModel.salaryBase
-            } else {
-                salary = null
-            }
-
-            if (!binding.ischeced.isChecked) {
-                onlyWithSalary = null
-            }
-
-            viewModel.saveFilter(FilterModel(countryModel, areaModel, industryModel, salary, onlyWithSalary))
-        } else {
-            viewModel.saveFilter(null)
-        }
-    }
-
-    private fun setRegion(): AreaFilterModel? {
-        val areaModel: AreaFilterModel?
-        val city = viewModel.savedCity
-        val region = viewModel.saveRegion
-        if (city == null) {
-            if (region == null) {
-                areaModel = null
-            } else {
-                areaModel = AreaFilterModel(region.id, region.name)
-            }
-        } else {
-            areaModel = AreaFilterModel(city.id, city.name)
-        }
-        return areaModel
-    }
-
     private fun getCondition(): Boolean {
         return binding.placeOfWorkCountryRegion.text.isNotEmpty() ||
             binding.industryPlace.text.isNotEmpty() ||
@@ -231,14 +177,38 @@ class SearchFiltersFragment : Fragment() {
             binding.ischeced.isChecked
     }
 
+    private fun restartPlaceOfWork() {
+        with(binding) {
+            placeOfWorkCountryRegion.text = ""
+            hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
+            buttonClearToPow.setImageResource(R.drawable.icon_next)
+            buttonClearToPow.isClickable = false
+        }
+        if (!getCondition()) {
+            binding.groupButtons.visibility = View.GONE
+        }
+    }
+
+    private fun restartIndusytries() {
+        with(binding) {
+            industryPlace.text = ""
+            hintIndustryPlace.text = context?.getString(R.string.empty)
+            buttonClearToInd.setImageResource(R.drawable.icon_next)
+            buttonClearToInd.isClickable = false
+        }
+        if (!getCondition()) {
+            binding.groupButtons.visibility = View.GONE
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        init()
+        viewModel.getFilter()
     }
 
     override fun onResume() {
         super.onResume()
-        init()
+        viewModel.getFilter()
     }
 
     override fun onDestroyView() {

@@ -21,13 +21,93 @@ class FilterLocalStorage(
         return withContext(Dispatchers.IO) {
             val filterString = pref.getString(FILTER_KEY, null)
             if (filterString != null) gson.fromJson(filterString, FilterDto::class.java) else null
+
         }
     }
 
     suspend fun saveStorage(filter: FilterDto?) {
         withContext(Dispatchers.IO) {
-            val filterString = gson.toJson(filter)
-            pref.edit().putString(FILTER_KEY, filterString).apply()
+            if (filter != null) {
+                val filterString = gson.toJson(filter)
+                pref.edit().putString(FILTER_KEY, filterString).apply()
+            } else {
+                pref.edit().remove(FILTER_KEY).apply()
+            }
         }
+    }
+
+    suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.country = countriesDto
+            filter.area = areasDto
+        } else {
+            filter = FilterDto(country = countriesDto, area = areasDto)
+        }
+        saveStorage(filter)
+    }
+
+    suspend fun saveIndustries(industriesDto: IndustriesDto) {
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.industries = industriesDto
+        } else {
+            filter = FilterDto(industries = industriesDto)
+        }
+        saveStorage(filter)
+    }
+
+    suspend fun saveSalary(salaryDto: Int) {
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.salary = salaryDto
+        } else {
+            filter = FilterDto(salary = salaryDto)
+        }
+        saveStorage(filter)
+    }
+
+    suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
+        var filter = getFromStorage()
+        if (filter != null) {
+            filter.onlyWithSalary = onlyWithSalary
+        } else {
+            filter = FilterDto(onlyWithSalary = onlyWithSalary)
+        }
+        saveStorage(filter)
+    }
+
+    suspend fun deletePlaceOfWork() {
+        val filter = getFromStorage()
+        if (getConditionToPow(filter)) {
+            saveStorage(null)
+        } else {
+            filter?.area = null
+            filter?.country = null
+            saveStorage(filter)
+        }
+    }
+
+    suspend fun deleteIndustries() {
+        val filter = getFromStorage()
+        if (getConditionToInd(filter)) {
+            saveStorage(null)
+        } else {
+            filter?.industries = null
+            saveStorage(filter)
+        }
+    }
+
+    private fun getConditionToPow(filter: FilterDto?): Boolean {
+        return filter?.onlyWithSalary == null &&
+            filter?.industries == null &&
+            filter?.salary == null
+    }
+
+    private fun getConditionToInd(filter: FilterDto?): Boolean {
+        return filter?.onlyWithSalary == null &&
+            filter?.country == null &&
+            filter?.area == null &&
+            filter?.salary == null
     }
 }

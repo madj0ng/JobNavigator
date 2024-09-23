@@ -1,9 +1,9 @@
 package ru.practicum.android.diploma.data.dto.model
 
-data class FilterDto(
-    val country: CountriesDto? = null,
-    val area: AreasDto? = null,
-    val industries: IndustriesDto? = null,
-    val salary: Int? = null,
-    val onlyWithSalary: Boolean? = null,
+class FilterDto(
+    var country: CountriesDto? = null,
+    var area: AreasDto? = null,
+    var industries: IndustriesDto? = null,
+    var salary: Int? = null,
+    var onlyWithSalary: Boolean? = null,
 )

@@ -5,9 +5,12 @@ import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.filter.FilterRepository
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
+import ru.practicum.android.diploma.domain.models.AreaFilterModel
 import ru.practicum.android.diploma.domain.models.CityModel
+import ru.practicum.android.diploma.domain.models.CountryFilterModel
 import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.FilterModel
+import ru.practicum.android.diploma.domain.models.IndustriesFilterModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
@@ -66,12 +69,37 @@ class FilterInteractorImpl(
         }
     }
 
-    override suspend fun getFilter(): FilterModel? {
-        val filter = repository.getFilter()
-        return if (filter != null) {
-            converter.map(filter)
-        } else {
-            null
+    override suspend fun getFilter(): Flow<FilterModel?> {
+        return repository.getFilter().map { filter ->
+            if (filter != null) {
+                converter.map(filter)
+            } else {
+                null
+            }
         }
+    }
+
+    override suspend fun savePlaceOfWork(countryFilterModel: CountryFilterModel, areaFilterModel: AreaFilterModel) {
+        repository.savePlaceOfWork(converter.mapCountry(countryFilterModel), converter.mapArea(areaFilterModel))
+    }
+
+    override suspend fun saveIndustries(industriesFilterModel: IndustriesFilterModel) {
+        repository.saveIndustries(converter.mapIndustries(industriesFilterModel))
+    }
+
+    override suspend fun saveSalary(salary: Int) {
+        repository.saveSalary(salary)
+    }
+
+    override suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
+        repository.saveOnlyWithSalary(onlyWithSalary)
+    }
+
+    override suspend fun deletePlaceOfWork() {
+        repository.deletePlaceOfWork()
+    }
+
+    override suspend fun deleteIndustries() {
+        repository.deleteIndustries()
     }
 }
