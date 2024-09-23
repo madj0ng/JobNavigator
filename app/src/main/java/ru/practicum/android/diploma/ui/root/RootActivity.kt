@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.ui.root
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Group
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,44 +23,29 @@ class RootActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigationGroup = findViewById<Group>(R.id.bottomNavigationGroup)
         bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.searchFiltersFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.searchFiltersFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.jobDetailsFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.jobDetailsFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.searchFiltersFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.searchFiltersFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.countryChooseFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.countryChooseFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.industryChooseFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.industryChooseFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.placeOfWorkFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.placeOfWorkFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.searchFiltersRegionFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.searchFiltersRegionFragment -> bottomNavigationGroup.visibility = View.GONE
 
-                R.id.searchFiltersCityFragment -> {
-                    bottomNavigationView.visibility = View.GONE
-                }
+                R.id.searchFiltersCityFragment -> bottomNavigationGroup.visibility = View.GONE
 
                 else -> {
-                    bottomNavigationView.visibility = View.VISIBLE
+                    bottomNavigationGroup.visibility = View.VISIBLE
                 }
             }
         }
