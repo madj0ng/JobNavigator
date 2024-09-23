@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.domain.filters.impl
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import ru.practicum.android.diploma.data.filter.FilterRepository
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
@@ -69,12 +70,11 @@ class FilterInteractorImpl(
         }
     }
 
-    override suspend fun getFilter(): FilterModel? {
-        val filter = repository.getFilter()
-        return if (filter != null) {
-            converter.map(filter)
-        } else {
-            null
+    override suspend fun getFilter(): Flow<FilterModel?> {
+        return repository.getFilter().map { filter ->
+            if (filter != null) {
+                converter.map(filter)
+            } else null
         }
     }
 

@@ -102,11 +102,13 @@ class SearchFiltersFragment : Fragment() {
 
         binding.buttonClearToPow.setOnClickListener {
             restartPlaceOfWork()
+            viewModel.unSelectCountry()
             viewModel.deletePlaceOfWork()
         }
 
         binding.buttonClearToInd.setOnClickListener {
             restartIndusytries()
+            viewModel.unSelectIndustry()
             viewModel.deleteIndustries()
         }
     }

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -316,8 +317,9 @@ class FilterViewModel(
                 }
             }
 
-            val filterModel = filterInteractor.getFilter()
-            _searchFilterLiveData.value = filterModel
+            filterInteractor.getFilter().collect{ filter ->
+                _searchFilterLiveData.postValue(filter)
+            }
         }
     }
 

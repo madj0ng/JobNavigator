@@ -49,8 +49,8 @@ class FilterRepositoryImpl(
         filterLocalStorage.saveStorage(filterDto)
     }
 
-    override suspend fun getFilter(): FilterDto? {
-        return filterLocalStorage.getFromStorage()
+    override suspend fun getFilter(): Flow<FilterDto?> = flow {
+        emit(filterLocalStorage.getFromStorage())
     }
 
     override suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {

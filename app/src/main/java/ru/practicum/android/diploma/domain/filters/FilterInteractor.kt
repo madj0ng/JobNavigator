@@ -12,7 +12,7 @@ import ru.practicum.android.diploma.domain.models.Resource
 interface FilterInteractor {
     fun getAreas(): Flow<Resource<List<CountryModel>>>
     fun getIndustrias(): Flow<Resource<List<IndustryModel>>>
-    suspend fun getFilter(): FilterModel?
+    suspend fun getFilter(): Flow<FilterModel?>
     suspend fun saveFilter(filterModel: FilterModel?)
     suspend fun savePlaceOfWork(countryFilterModel: CountryFilterModel, areaFilterModel: AreaFilterModel)
     suspend fun saveIndustries(industriesFilterModel: IndustriesFilterModel)

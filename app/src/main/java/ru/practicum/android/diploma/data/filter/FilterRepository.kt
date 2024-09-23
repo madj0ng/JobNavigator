@@ -11,7 +11,7 @@ interface FilterRepository {
 
     fun getCountries(): Flow<ListResponseWrapper<AreaResponse>>
     fun getIndustries(): Flow<ListResponseWrapper<IndustryResponse>>
-    suspend fun getFilter(): FilterDto?
+    suspend fun getFilter(): Flow<FilterDto?>
     suspend fun saveFilter(filterDto: FilterDto?)
     suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto)
     suspend fun saveIndustries(industriesDto: IndustriesDto)
