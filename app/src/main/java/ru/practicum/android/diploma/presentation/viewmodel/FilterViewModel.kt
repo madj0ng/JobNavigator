@@ -270,17 +270,21 @@ class FilterViewModel(
 
     private fun selectedRegionFromFilter(filterModel: FilterModel?) {
         selectedCountry?.regions?.forEach {
-            if (it.city.isNotEmpty()) {
-                it.city.forEach {
-                    if (it.id == filterModel?.area?.id) {
-                        savedCity = it
-                        selectCity = savedCity
-                    }
-                }
-            }
+            selectedCityFromFilter(it.city, filterModel)
             if (it.id == filterModel?.area?.id) {
                 saveRegion = it
                 selectRegion = saveRegion
+            }
+        }
+    }
+
+    private fun selectedCityFromFilter(city: List<CityModel>, filterModel: FilterModel?) {
+        if (city.isNotEmpty()) {
+            city.forEach {
+                if (it.id == filterModel?.area?.id) {
+                    savedCity = it
+                    selectCity = savedCity
+                }
             }
         }
     }
