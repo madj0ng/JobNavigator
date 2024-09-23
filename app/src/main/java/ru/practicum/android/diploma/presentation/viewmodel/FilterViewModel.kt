@@ -7,9 +7,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
+import ru.practicum.android.diploma.domain.models.AreaFilterModel
 import ru.practicum.android.diploma.domain.models.CityModel
+import ru.practicum.android.diploma.domain.models.CountryFilterModel
 import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.FilterModel
+import ru.practicum.android.diploma.domain.models.IndustriesFilterModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
@@ -77,6 +80,19 @@ class FilterViewModel(
         savedCountry = selectedCountry
         saveRegion = selectRegion
         savedCity = selectCity
+        viewModelScope.launch {
+            if (savedCity != null) {
+                filterInteractor.savePlaceOfWork(
+                    CountryFilterModel(savedCountry!!.id, savedCountry!!.name),
+                    AreaFilterModel(savedCity!!.id, savedCity!!.name)
+                )
+            } else {
+                filterInteractor.savePlaceOfWork(
+                    CountryFilterModel(savedCountry!!.id, savedCountry!!.name),
+                    AreaFilterModel(saveRegion!!.id, saveRegion!!.name)
+                )
+            }
+        }
     }
 
     fun selectCountry(country: CountryModel) {
@@ -195,6 +211,9 @@ class FilterViewModel(
 
     fun saveIndustry() {
         savedIndustry = selectIndustry
+        viewModelScope.launch {
+            filterInteractor.saveIndustries(IndustriesFilterModel(savedIndustry!!.id, savedIndustry!!.name))
+        }
     }
 
     fun saveFilter(filterModel: FilterModel?) {

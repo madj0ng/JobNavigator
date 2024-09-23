@@ -48,9 +48,9 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.btnSelect.setOnClickListener {
+            viewModel.saveArea()
             findNavController()
                 .navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
-            viewModel.saveArea()
         }
 
     }

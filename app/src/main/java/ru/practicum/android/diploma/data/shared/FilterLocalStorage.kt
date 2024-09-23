@@ -30,4 +30,29 @@ class FilterLocalStorage(
             pref.edit().putString(FILTER_KEY, filterString).apply()
         }
     }
+
+    suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
+        val filter = getFromStorage()
+        filter?.country = countriesDto
+        filter?.area = areasDto
+        saveStorage(filter)
+    }
+
+    suspend fun saveIndustries(industriesDto: IndustriesDto) {
+        val filter = getFromStorage()
+        filter?.industries = industriesDto
+        saveStorage(filter)
+    }
+
+    suspend fun saveSalary(salaryDto: Int) {
+        val filter = getFromStorage()
+        filter?.salary = salaryDto
+        saveStorage(filter)
+    }
+
+    suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
+        val filter = getFromStorage()
+        filter?.onlyWithSalary = onlyWithSalary
+        saveStorage(filter)
+    }
 }
