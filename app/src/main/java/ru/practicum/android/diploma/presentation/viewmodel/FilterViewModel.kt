@@ -85,6 +85,11 @@ class FilterViewModel(
     }
 
     fun selectRegion(regionModel: RegionModel) {
+        areaList.forEach {
+            if (it.regions.contains(regionModel)) {
+                selectedCountry = it
+            }
+        }
         selectRegion = regionModel
     }
 
@@ -125,7 +130,12 @@ class FilterViewModel(
 
     fun getRegions() {
         if (selectedCountry == null) {
-            _regionsLiveData.value = RegionScreenState.ErrorNoList
+            val list = mutableListOf<RegionModel>()
+            areaList.forEach {
+                list.addAll(it.regions)
+            }
+            regionsList = list
+            _regionsLiveData.value = RegionScreenState.Content(regionsList)
         } else {
             regionsList = selectedCountry!!.regions
             _regionsLiveData.value = RegionScreenState.Content(regionsList)
@@ -197,11 +207,30 @@ class FilterViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val filterModel = filterInteractor.getFilter()
             if (filterModel != null) {
+                getAreas()
                 if (filterModel.country!!.id.isNotEmpty()) {
-                    savedCountry = CountryModel(filterModel.country.name, filterModel.country.id, emptyList())
+                    areaList.forEach {
+                        if (it.id == filterModel.country.id) {
+                            savedCountry = it
+                            selectedCountry = it
+                        }
+                    }
                 }
-                if (filterModel.area!!.id.isNotEmpty()) {
-                    savedCity = CityModel(filterModel.area.id, filterModel.area.name)
+                if (!filterModel.area?.id.isNullOrEmpty()) {
+                    selectedCountry?.regions?.forEach {
+                        if (it.city.isNotEmpty()) {
+                            it.city.forEach {
+                                if (it.id == filterModel.area?.id) {
+                                    savedCity = it
+                                    selectCity = it
+                                }
+                            }
+                        }
+                        if (it.id == filterModel.area?.id) {
+                            saveRegion = it
+                            selectRegion = it
+                        }
+                    }
                 }
                 if (filterModel.industries!!.id.isNotEmpty()) {
                     savedIndustry = IndustryModel(filterModel.industries.id, filterModel.industries.name)
@@ -211,6 +240,9 @@ class FilterViewModel(
                 viewModelScope.launch(Dispatchers.Main) {
                     _searchFilterLiveData.value = true
                 }
+                selectRegion = saveRegion
+                selectCity = savedCity
+                selectIndustry = savedIndustry
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
                     _searchFilterLiveData.value = false

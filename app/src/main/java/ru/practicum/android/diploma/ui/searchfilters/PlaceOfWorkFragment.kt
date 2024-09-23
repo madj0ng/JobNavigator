@@ -27,6 +27,7 @@ class PlaceOfWorkFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getAreas()
         binding.countryBtn.setOnClickListener {
             findNavController()
                 .navigate(
