@@ -1,14 +1,15 @@
 package ru.practicum.android.diploma.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
 import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
@@ -16,45 +17,47 @@ import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 import ru.practicum.android.diploma.presentation.models.RegionScreenState
 
-class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewModel() {
-    private val areaLiveData = MutableLiveData<AreasScreenState>()
+class FilterViewModel(
+    private val filterInteractor: FilterInteractor
+) : ViewModel() {
+    private var _areaLiveData = MutableLiveData<AreasScreenState>()
+    val areaLiveData: LiveData<AreasScreenState> get() = _areaLiveData
+    private var _regionsLiveData = MutableLiveData<RegionScreenState>()
+    val regionsLiveData: LiveData<RegionScreenState> get() = _regionsLiveData
+    private var _cityLiveData = MutableLiveData<List<CityModel>>()
+    val cityLiveData: LiveData<List<CityModel>> get() = _cityLiveData
+    private var _selectIndustryLiveData = MutableLiveData<IndustryModel?>()
+    val selectIndustryLiveData: LiveData<IndustryModel?> get() = _selectIndustryLiveData
+    private var _industryLiveData = MutableLiveData<IndustryScreenState>()
+    val industryLiveData: LiveData<IndustryScreenState> get() = _industryLiveData
+    private var _searchFilterLiveData = MutableLiveData<Boolean>()
+    val searchFilterLiveData: LiveData<Boolean> get() = _searchFilterLiveData
+
     private var areaList = listOf<CountryModel>()
-    private val regionsLiveData = MutableLiveData<RegionScreenState>()
     private var regionsList = listOf<RegionModel>()
-    private val cityLiveData = MutableLiveData<List<CityModel>>()
     private var cityList = listOf<CityModel>()
-    private var selectedCountry: CountryModel? = null
-    private var selectIndustry: IndustryModel? = null
-    private var selectRegion: RegionModel? = null
-    private var selectCity: CityModel? = null
-    private var selectIndustryLiveData = MutableLiveData<IndustryModel?>()
-    private val industryLiveData = MutableLiveData<IndustryScreenState>()
     private var industryList = listOf<IndustryModel>()
-    private var savedIndustry: IndustryModel? = null
-    private var saveRegion: RegionModel? = null
-    private var savedCity: CityModel? = null
-    private var savedCountry: CountryModel? = null
-    private var salarybase: Int? = null
-    private var dontShowWithoutSalary: Boolean = false
+    var selectedCountry: CountryModel? = null
+    private var selectIndustry: IndustryModel? = null
+    var selectRegion: RegionModel? = null
+    var selectCity: CityModel? = null
+    var savedIndustry: IndustryModel? = null
+    var saveRegion: RegionModel? = null
+    var savedCity: CityModel? = null
+    var savedCountry: CountryModel? = null
+    var salaryBase: Int? = null
+    var doNotShowWithoutSalary: Boolean = false
 
     fun setDontShowWithoutSalary(show: Boolean) {
-        dontShowWithoutSalary = show
-    }
-
-    fun getDontShowWithoutSalary(): Boolean {
-        return dontShowWithoutSalary
+        doNotShowWithoutSalary = show
     }
 
     fun setSalary(salary: String) {
         if (salary.isEmpty()) {
-            salarybase = null
+            salaryBase = null
         } else {
-            salarybase = salary.toInt()
+            salaryBase = salary.toInt()
         }
-    }
-
-    fun getSalary(): Int? {
-        return salarybase
     }
 
     fun getAreas() {
@@ -62,9 +65,9 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
             filterInteractor.getAreas().collect { res ->
                 if (res !is Resource.Error) {
                     areaList = (res as Resource.Success).data
-                    areaLiveData.value = AreasScreenState.Content((res as Resource.Success).data)
+                    _areaLiveData.value = AreasScreenState.Content((res as Resource.Success).data)
                 } else {
-                    areaLiveData.value = AreasScreenState.Error
+                    _areaLiveData.value = AreasScreenState.Error
                 }
             }
         }
@@ -76,41 +79,9 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         savedCity = selectCity
     }
 
-    fun getCitySaved(): CityModel? {
-        return savedCity
-    }
-
-    fun getRegionSaved(): RegionModel? {
-        return saveRegion
-    }
-
-    fun getCountrySaved(): CountryModel? {
-        return savedCountry
-    }
-
-    fun getRegionLiveData(): LiveData<RegionScreenState> {
-        return regionsLiveData
-    }
-
-    fun getAreaLiveData(): LiveData<AreasScreenState> {
-        return areaLiveData
-    }
-
     fun selectCountry(country: CountryModel) {
         selectedCountry = country
         selectRegion = null
-    }
-
-    fun getSelectedCountry(): CountryModel? {
-        return selectedCountry
-    }
-
-    fun getSelectedCity(): CityModel? {
-        return selectCity
-    }
-
-    fun getSelectedRegion(): RegionModel? {
-        return selectRegion
     }
 
     fun selectRegion(regionModel: RegionModel) {
@@ -124,6 +95,8 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
     fun unSelectCountry() {
         selectedCountry = null
         savedCountry = null
+        selectRegion = null
+        saveRegion = null
         selectCity = null
         savedCity = null
     }
@@ -134,12 +107,12 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
                 area.name.lowercase().contains(strRegion.lowercase())
             }
             if (listRes.isEmpty()) {
-                regionsLiveData.value = RegionScreenState.ErrorNoRegion
+                _regionsLiveData.value = RegionScreenState.ErrorNoRegion
             } else {
-                regionsLiveData.value = RegionScreenState.Content(listRes)
+                _regionsLiveData.value = RegionScreenState.Content(listRes)
             }
         } else {
-            regionsLiveData.value = RegionScreenState.Content(regionsList)
+            _regionsLiveData.value = RegionScreenState.Content(regionsList)
         }
     }
 
@@ -147,15 +120,15 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         val listRes = cityList.filter { city ->
             city.name.lowercase().contains(strCity.lowercase())
         }
-        cityLiveData.value = listRes
+        _cityLiveData.value = listRes
     }
 
     fun getRegions() {
         if (selectedCountry == null) {
-            regionsLiveData.value = RegionScreenState.ErrorNoList
+            _regionsLiveData.value = RegionScreenState.ErrorNoList
         } else {
             regionsList = selectedCountry!!.regions
-            regionsLiveData.value = RegionScreenState.Content(regionsList)
+            _regionsLiveData.value = RegionScreenState.Content(regionsList)
         }
     }
 
@@ -163,38 +136,34 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         regionsList.forEach {
             if (it.name == selectRegion?.name) {
                 cityList = it.city
-                cityLiveData.value = it.city
+                _cityLiveData.value = it.city
             }
         }
-    }
-
-    fun getCityLiveData(): LiveData<List<CityModel>> {
-        return cityLiveData
     }
 
     fun getIndustries() {
         viewModelScope.launch {
             filterInteractor.getIndustrias().collect() { res ->
                 when (res) {
-                    is Resource.Error -> industryLiveData.value = IndustryScreenState.ErrorInternet
+                    is Resource.Error -> _industryLiveData.value = IndustryScreenState.ErrorInternet
                     is Resource.Success -> {
                         industryList = res.data
-                        industryLiveData.value = IndustryScreenState.Content(industryList)
+                        _industryLiveData.value = IndustryScreenState.Content(industryList)
                     }
                 }
             }
         }
     }
 
-    fun selectIndustry(industryModel: IndustryModel) {
+    fun selectIndustry(industryModel: IndustryModel?) {
         selectIndustry = industryModel
-        selectIndustryLiveData.value = industryModel
+        _selectIndustryLiveData.value = industryModel
     }
 
     fun unSelectIndustry() {
         selectIndustry = null
         savedIndustry = null
-        selectIndustryLiveData.value = null
+        _selectIndustryLiveData.value = null
     }
 
     fun searchIndustry(strIndustry: String) {
@@ -205,12 +174,12 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
             }
 
             if (listRes.isEmpty()) {
-                industryLiveData.value = IndustryScreenState.ErrorContent
+                _industryLiveData.value = IndustryScreenState.ErrorContent
             } else {
-                industryLiveData.value = IndustryScreenState.Content(listRes)
+                _industryLiveData.value = IndustryScreenState.Content(listRes)
             }
         } else {
-            industryLiveData.value = IndustryScreenState.Content(industryList)
+            _industryLiveData.value = IndustryScreenState.Content(industryList)
         }
     }
 
@@ -218,20 +187,35 @@ class FilterViewModel(private val filterInteractor: FilterInteractor) : ViewMode
         savedIndustry = selectIndustry
     }
 
-    fun getSavedIndustry(): IndustryModel? {
-        return savedIndustry
+    fun saveFilter(filterModel: FilterModel?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            filterInteractor.saveFilter(filterModel)
+        }
     }
 
-    fun getSelectedIndustryLiveData(): LiveData<IndustryModel?> {
-        return selectIndustryLiveData
-    }
-
-    fun getIndustryLiveData(): LiveData<IndustryScreenState> {
-        return industryLiveData
-    }
-
-    companion object {
-        const val ERROR_EMPTY = -1
-        const val MESSAGE_EMPTY = ""
+    fun getFilter() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val filterModel = filterInteractor.getFilter()
+            if (filterModel != null) {
+                if (filterModel.country!!.id.isNotEmpty()) {
+                    savedCountry = CountryModel(filterModel.country.name, filterModel.country.id, emptyList())
+                }
+                if (filterModel.area!!.id.isNotEmpty()) {
+                    savedCity = CityModel(filterModel.area.id, filterModel.area.name)
+                }
+                if (filterModel.industries!!.id.isNotEmpty()) {
+                    savedIndustry = IndustryModel(filterModel.industries.id, filterModel.industries.name)
+                }
+                salaryBase = filterModel.salary
+                doNotShowWithoutSalary = filterModel.onlyWithSalary ?: false
+                viewModelScope.launch(Dispatchers.Main) {
+                    _searchFilterLiveData.value = true
+                }
+            } else {
+                viewModelScope.launch(Dispatchers.Main) {
+                    _searchFilterLiveData.value = false
+                }
+            }
+        }
     }
 }

@@ -31,7 +31,7 @@ class SearchFiltersRegionFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getRegionLiveData().observe(viewLifecycleOwner) { state ->
+        viewModel.regionsLiveData.observe(viewLifecycleOwner) { state ->
             when (state) {
                 RegionScreenState.ErrorNoList -> seeErrorNoList()
                 RegionScreenState.ErrorNoRegion -> seeErrorNoRegion()
@@ -44,16 +44,26 @@ class SearchFiltersRegionFragment : Fragment() {
             viewModel.selectRegion(area)
             if (area.city.isEmpty()) {
                 viewModel.saveArea()
-                findNavController().navigateUp()
+                findNavController()
+                    .navigate(
+                        SearchFiltersRegionFragmentDirections.actionSearchFiltersRegionFragmentToPlaceOfWorkFragment()
+                    )
             } else {
-                findNavController().navigate(R.id.action_searchFiltersRegionFragment_to_searchFiltersCityFragment)
+                findNavController()
+                    .navigate(
+                        SearchFiltersRegionFragmentDirections
+                            .actionSearchFiltersRegionFragmentToSearchFiltersCityFragment()
+                    )
             }
         }
         binding.regionRecyclerview.adapter = filtersViewAdapterRegion
         viewModel.getRegions()
 
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController()
+                .navigate(
+                    SearchFiltersRegionFragmentDirections.actionSearchFiltersRegionFragmentToPlaceOfWorkFragment()
+                )
         }
 
         binding.Search.addTextChangedListener { str ->
