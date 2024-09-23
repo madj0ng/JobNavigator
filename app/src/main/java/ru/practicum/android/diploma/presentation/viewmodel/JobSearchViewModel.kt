@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.model.AreasDto
 import ru.practicum.android.diploma.data.dto.model.FilterDto
 import ru.practicum.android.diploma.data.dto.model.IndustriesDto
@@ -29,7 +30,7 @@ class JobSearchViewModel(
 ) : ViewModel() {
 
     private val toastLiveData = SingleLiveEvent<String>()
-    private val queryLiveData = MutableLiveData<QueryUiState>(QueryUiState.Search(query = ""))
+    private val queryLiveData = MutableLiveData<QueryUiState>(QueryUiState())
     fun observeSearch(): LiveData<QueryUiState> = queryLiveData
     private val filterLiveData = MutableLiveData<FilterDto>(FilterDto())
 
@@ -47,39 +48,26 @@ class JobSearchViewModel(
         searchRequest(query)
     }
 
+    private var _currentPage = 0
+    private var _maxPages = 0
+    private var _vacanciesList = emptyList<VacancyInfo>()
+    private var _isNextPageLoading = false
+
     fun onSearchQueryChanged(query: VacancySearchParams) {
-        queryLiveData.value = if (query.vacancyName.isEmpty()) {
-            // пустой запрос для отмены предыдущей задачи
-            debounceSearch(query)
-            QueryUiState.Search()
-        } else {
-            val oldQuery = queryLiveData.value?.query ?: ""
-            val oldFilter = filterLiveData.value as FilterDto
-            val newFilter = FilterDto(
-                area = AreasDto(query.area ?: ""),
-                industries = IndustriesDto(query.professionalRole ?: ""),
-                salary = query.salary,
-                onlyWithSalary = query.onlyWithSalary
-            )
-            if (query.vacancyName != oldQuery || newFilter != oldFilter) {
-                debounceSearch(query)
-                filterLiveData.value = newFilter
-            }
-            QueryUiState.Clear(query = query.vacancyName)
-        }
+        setEmptyList()
+
+        val newQuery = query.vacancyName
+        val oldQuery = queryLiveData.value?.query ?: ""
+        val isNewQuery = newQuery != oldQuery
+
+        val oldFilter = filterLiveData.value as FilterDto
+        val newFilter = getFilter(query)
+        val isNewFilter = newFilter != oldFilter
+
+        if (isNewQuery || isNewFilter) debounceSearch(query)
+        if (isNewFilter) setFilterState(newFilter)
+        if (isNewQuery) setQueryUiState(query.vacancyName)
     }
-
-    private val _currentPage = MutableLiveData<Int?>(null)
-    val currentPage: LiveData<Int?> get() = _currentPage
-
-    private val _maxPages = MutableLiveData<Int?>(null)
-    val maxPages: LiveData<Int?> get() = _maxPages
-
-    private val _vacanciesList = MutableLiveData<List<VacancyInfo>>(emptyList())
-    val vacanciesLis: LiveData<List<VacancyInfo>> get() = _vacanciesList
-
-    private val _isNextPageLoading = MutableLiveData<Boolean>(false)
-    private val isNextPageLoading: LiveData<Boolean> get() = _isNextPageLoading
 
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         if (vacancySearchParams.vacancyName.isEmpty()) {
@@ -97,23 +85,56 @@ class JobSearchViewModel(
         }
     }
 
-    private fun clearQuery(query: String) {
+    private fun clearQuery() {
+        debounceSearch(VacancySearchParams())
         _screenLiveData.postValue(SearchUiState.Default())
-        queryLiveData.postValue(QueryUiState.Search())
+        setQueryUiState("")
+        setEmptyList()
+    }
+
+    private fun setEmptyList() {
+        _currentPage = 0
+        _maxPages = 0
+        _vacanciesList = emptyList()
+        _isNextPageLoading = false
+    }
+
+    private fun setFilterState(filter: FilterDto) {
+        filterLiveData.postValue(filter)
+    }
+
+    private fun setQueryUiState(query: String) {
+        queryLiveData.postValue(
+            if (query.isEmpty()) {
+                QueryUiState(R.drawable.ic_search_lens, query, false)
+            } else {
+                QueryUiState(R.drawable.ic_close_cross, query, true)
+            }
+        )
+    }
+
+    private fun getFilter(query: VacancySearchParams): FilterDto {
+        return FilterDto(
+            area = AreasDto(query.area ?: ""),
+            industries = IndustriesDto(query.professionalRole ?: ""),
+            salary = query.salary,
+            onlyWithSalary = query.onlyWithSalary
+        )
     }
 
     private fun renderState(result: Resource<List<VacancyModel>>) {
         when (result) {
             is Resource.Success -> {
-                _isNextPageLoading.value = false
+                _isNextPageLoading = false
                 if (result.data.isEmpty()) {
                     _screenLiveData.value = SearchUiState.ErrorData()
                 } else {
                     val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
-                    _vacanciesList.value = _vacanciesList.value.orEmpty() + vacancyInfoList
-                    _currentPage.value = result.page
-                    _maxPages.value = result.pages
-                    _screenLiveData.value = SearchUiState.Content(data = vacancyInfoList, found = result.found ?: 0)
+                    _vacanciesList = _vacanciesList + vacancyInfoList
+                    _currentPage = result.page ?: 0
+                    _maxPages = result.pages ?: 0
+                    _screenLiveData.value =
+                        SearchUiState.Content(data = _vacanciesList, found = result.found ?: 0)
                 }
             }
 
@@ -141,22 +162,22 @@ class JobSearchViewModel(
     }
 
     fun onLastItemReached(vacancySearchParams: VacancySearchParams) {
-        if (_isNextPageLoading.value == true || _currentPage.value ?: 0 >= _maxPages.value ?: 0) {
+        if (_isNextPageLoading || _currentPage >= _maxPages - 1) {
             return
         }
-        var nextPage = _currentPage.value ?: 0
+        var nextPage = _currentPage
         nextPage += 1
         if (nextPage <= MAX_PAGE) {
-            _currentPage.value = nextPage
-            _isNextPageLoading.value = true
+            _currentPage = nextPage
+            _isNextPageLoading = true
             _screenLiveData.value = SearchUiState.LoadingPagination()
-            debounceSearch(vacancySearchParams.copy(page = nextPage))
+            searchRequest(vacancySearchParams.copy(page = nextPage))
         }
     }
 
     fun onClickSearchClear() {
-        if (queryLiveData.value is QueryUiState.Clear) {
-            clearQuery("")
+        if (true == queryLiveData.value?.isClose) {
+            clearQuery()
         }
     }
 

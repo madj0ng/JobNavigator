@@ -64,19 +64,18 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
         if (params.vacancyName.isNotBlank()) {
             options["text"] = params.vacancyName
         }
-        if (!params.area.isNullOrEmpty()) {
-            params.area.let { options["area"] = it }
+        if (params.area != null && params.area.isNotBlank()) {
+            options["area"] = params.area
         }
-        if (params.salary != null) {
-            params.salary.let { options["salary"] = it.toString() }
+        if (params.salary != null && params.salary != 0) {
+            options["salary"] = params.salary.toString()
         }
-        if (!params.professionalRole.isNullOrEmpty()) {
-            params.professionalRole.let { options["industry"] = it }
+        if (params.professionalRole != null && params.professionalRole.isNotBlank()) {
+            options["industry"] = params.salary.toString()
         }
-        params.page.let { options["page"] = it.toString() }
-        params.perPage.let { options["per_page"] = it.toString() }
-        params.onlyWithSalary.let { options["only_with_salary"] = it.toString() }
-
+        options["only_with_salary"] = params.onlyWithSalary.toString()
+        options["page"] = params.page.toString()
+        options["per_page"] = params.perPage.toString()
         return options
     }
 

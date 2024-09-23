@@ -73,7 +73,6 @@ class JobSearchFragment : Fragment() {
         }
         binding.ivSearchClear.setOnClickListener {
             viewModel.onClickSearchClear()
-            binding.etSearch.text = null
         }
         binding.rvJobList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -94,6 +93,9 @@ class JobSearchFragment : Fragment() {
     private fun updateSearchText(state: QueryUiState) {
         if (state.src != null) {
             binding.ivSearchClear.setImageResource(state.src!!)
+        }
+        if (!state.isClose) {
+            binding.etSearch.text = null
         }
     }
 
