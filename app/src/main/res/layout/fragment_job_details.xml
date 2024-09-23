@@ -265,25 +265,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dim_16dp"
-        android:text="@string/server_error_cats"
+        android:text="@string/error_server"
         android:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/right_guideline"
         app:layout_constraintStart_toEndOf="@+id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/ivInformImage" />
+        app:layout_constraintTop_toBottomOf="@+id/ivServerImgError" />
 
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_server_error"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:constraint_referenced_ids="ivServerImgError,ivServerTextError" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/vacancy_not_found"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:constraint_referenced_ids="ivInformImage, ivInformBottomText" />
 
     <ImageView

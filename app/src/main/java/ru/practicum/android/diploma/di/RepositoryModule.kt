@@ -21,7 +21,11 @@ val repositoryModule = module {
     }
 
     single<VacancyRepository> {
-        VacancyRepositoryImpl(get())
+        VacancyRepositoryImpl(
+            retrofitNetworkClient = get(),
+            favoriteRepository = get(),
+            mapper = get()
+        )
     }
 
     single<FavoriteJobsRepository> {

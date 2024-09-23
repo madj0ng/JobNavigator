@@ -25,7 +25,7 @@ interface HHApiService {
     )
     suspend fun getVacancy(
         @Path("vacancy_id") vacancyId: String
-    ): VacancyDetailsDto
+    ): VacancyDetailsDto?
 
     @GET("industries")
     @Headers(
