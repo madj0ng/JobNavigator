@@ -7,6 +7,19 @@ import ru.practicum.android.diploma.data.dto.Salary
 import ru.practicum.android.diploma.domain.models.SalaryModel
 
 class FormatConverter(private val context: Context) {
+    private val cur: MutableMap<String, String> = mutableMapOf(
+        Pair("RUR", "₽"),
+        Pair("USD", "$"),
+        Pair("BYR", "Br"),
+        Pair("EUR", "€"),
+        Pair("KZT", "₸"),
+        Pair("UAH", "₴"),
+        Pair("AZN", "₼"),
+        Pair("UZS", "\u20C0"),
+        Pair("GEL", "₾"),
+        Pair("KGT", "\u20C0"),
+    )
+
     fun dpToPx(dp: Float): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -19,15 +32,12 @@ class FormatConverter(private val context: Context) {
         if (salary == null) {
             return context.getString(R.string.salary_not_specified)
         }
-
-        val from = if (salary.from != null) context.getString(R.string.salary_from, salary.from.toString()) else ""
-        val to = if (salary.to != null) context.getString(R.string.salary_to, salary.to.toString()) else ""
-        val currency = salary.currency
-        return if (from.isEmpty() && to.isEmpty()) {
-            context.getString(R.string.salary_not_specified)
-        } else {
-            "$from$to $currency"
-        }
+        val space = " "
+        val list = mutableListOf<String>()
+        list.add(if (salary.from != null) context.getString(R.string.salary_from, salary.from.toString()) else "")
+        list.add(if (salary.to != null) context.getString(R.string.salary_to, salary.to.toString()) else "")
+        list.add(getCurrencyWord(salary.currency))
+        return list.joinToString(separator = space)
     }
 
     fun toSalaryString(salary: SalaryModel?): String {
@@ -38,4 +48,7 @@ class FormatConverter(private val context: Context) {
         return toSalaryString(Salary(salary.currency ?: "", salary.from, salary.to))
     }
 
+    private fun getCurrencyWord(currency: String): String {
+        return cur.get(currency) ?: ""
+    }
 }

@@ -41,6 +41,11 @@ class JobSearchViewModel(
         searchRequest(query)
     }
 
+    private var _currentPage = 0
+    private var _maxPages = 0
+    private var _vacanciesList = emptyList<VacancyInfo>()
+    private var _isNextPageLoading = false
+
     fun onSearchQueryChanged(query: VacancySearchParams) {
         setEmptyList()
 
@@ -56,11 +61,6 @@ class JobSearchViewModel(
         if (isNewFilter) setFilterState(newFilter)
         if (isNewQuery) setQueryUiState(query.vacancyName)
     }
-
-    private var _currentPage = 0
-    private var _maxPages = 0
-    private var _vacanciesList = emptyList<VacancyInfo>()
-    private var _isNextPageLoading = false
 
     private fun searchRequest(vacancySearchParams: VacancySearchParams) {
         if (vacancySearchParams.vacancyName.isEmpty()) {
@@ -155,7 +155,7 @@ class JobSearchViewModel(
     }
 
     fun onLastItemReached(vacancySearchParams: VacancySearchParams) {
-        if (_isNextPageLoading == true || _currentPage >= _maxPages - 1) {
+        if (_isNextPageLoading || _currentPage >= _maxPages - 1) {
             return
         }
         var nextPage = _currentPage
@@ -169,7 +169,7 @@ class JobSearchViewModel(
     }
 
     fun onClickSearchClear() {
-        if (queryLiveData.value?.isClose ?: false) {
+        if (true == queryLiveData.value?.isClose) {
             clearQuery()
         }
     }
