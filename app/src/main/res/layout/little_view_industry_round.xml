@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/industry"
+        style="@style/VacancyItemSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/dim_16dp"
+        android:layout_marginRight="@dimen/dim_16dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLength="85"
+        android:maxLines="2"
+        android:text="@string/choosing_place_of_work" />
+
+    <RadioButton
+        android:id="@+id/industry_src"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dim_16dp"
+        android:layout_marginVertical="@dimen/dim_18dp"
+        android:clickable="false"
+        android:contentDescription="@string/industry_choosing"
+        android:theme="@style/CheckBoxTheme"
+        android:button="@drawable/radio_btn_choise"/>
+
+</LinearLayout>

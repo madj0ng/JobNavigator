@@ -12,7 +12,7 @@ val utillModule = module {
     }
 
     factory {
-        FormatConverter
+        FormatConverter(androidContext())
     }
 
 }

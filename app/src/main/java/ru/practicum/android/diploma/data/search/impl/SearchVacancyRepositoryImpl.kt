@@ -45,17 +45,16 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
                             salary = salary
                         )
                     }
-                    val found = response.found
-                    emit(Resource.Success(vacancies, found))
+                    emit(Resource.Success(vacancies, response.found, response.page, response.pages))
                 }
             }
 
             ERROR_CODE -> {
-                emit(Resource.Error(response.message))
+                emit(Resource.Error(response.resultCode, response.message))
             }
 
             else -> {
-                emit(Resource.Error(response.message))
+                emit(Resource.Error(response.resultCode, response.message))
             }
         }
     }
@@ -67,9 +66,11 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
         }
         params.area?.let { options["area"] = it }
         params.salary?.let { options["salary"] = it.toString() }
-        params.onlyWithSalary.let { options["onlyWithSalary"] = it.toString() }
-        params.professionalRole?.let { options["professionalRole"] = it }
-        options["per_page"] = "10"
+        params.page.let { options["page"] = it.toString() }
+        params.perPage.let { options["per_page"] = it.toString() }
+        params.onlyWithSalary.let { options["only_with_salary"] = it.toString() }
+        params.professionalRole?.let { options["industry"] = it }
+
         return options
     }
 

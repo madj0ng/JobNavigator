@@ -4,32 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentJobSearchBinding
-import ru.practicum.android.diploma.presentation.models.JobSearchScreenState
-import ru.practicum.android.diploma.presentation.models.VacancyInfo
+import ru.practicum.android.diploma.domain.models.VacancySearchParams
+import ru.practicum.android.diploma.presentation.models.QueryUiState
+import ru.practicum.android.diploma.presentation.models.SearchUiState
+import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
-import ru.practicum.android.diploma.util.debounce
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: JobSearchViewModel by viewModel()
+    private val filtersViewModel: FilterViewModel by activityViewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
-
-    private val debounceSearch = debounce<String>(
-        delayMillis = 2000L,
-        coroutineScope = lifecycleScope,
-        useLastParam = true
-    ) { query ->
-        viewModel.onSearchQueryChanged(query)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,71 +40,104 @@ class JobSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.etSearch.addTextChangedListener { query ->
-            debounceSearch(query.toString())
+            viewModel.onSearchQueryChanged(
+                setQueryParam(query.toString(), filtersViewModel)
+            )
         }
 
-        jobSearchViewAdapter = JobSearchViewAdapter { }
+        jobSearchViewAdapter = JobSearchViewAdapter {
+            val action = JobSearchFragmentDirections.actionJobSearchFragmentToJobDetailsFragment(it)
+            findNavController().navigate(action)
+        }
+
         binding.rvJobList.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = jobSearchViewAdapter
         }
 
-        viewModel.screenLiveData.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is JobSearchScreenState.Content -> {
-                    showContent(state.data, state.found)
-                }
-
-                is JobSearchScreenState.Loading -> {
-                    showLoading()
-                }
-
-                is JobSearchScreenState.Empty -> {
-                    showEmptyState()
-                }
-
-                else -> {
-                    showDefault()
+        viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
+        viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
+        binding.ifbFilter.setOnClickListener {
+            findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
+        }
+        binding.ivSearchClear.setOnClickListener {
+            viewModel.onClickSearchClear()
+            binding.etSearch.text = null
+        }
+        binding.rvJobList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val itemsCount = jobSearchViewAdapter!!.itemCount
+                    if (pos >= itemsCount - 1) {
+                        viewModel.onLastItemReached(
+                            setQueryParam(viewModel.observeSearch().value?.query ?: "", filtersViewModel)
+                        )
+                    }
                 }
             }
+        })
+    }
+
+    private fun updateSearchText(state: QueryUiState) {
+        if (state.src != null) {
+            binding.ivSearchClear.setImageResource(state.src!!)
         }
-
     }
 
-    private fun showLoading() {
-        hideAll()
-        binding.pbJobList.visibility = View.VISIBLE
+    private fun updateUiState(uiState: SearchUiState) {
+        when (uiState) {
+            is SearchUiState.Content -> showContent(uiState)
+            is SearchUiState.Default -> showDefault(uiState)
+            else -> showScreen(uiState)
+        }
     }
 
-    private fun showEmptyState() {
-        hideAll()
-        binding.ivInformImage.setImageResource(R.drawable.error_no_data)
-        binding.ivInformImage.visibility = View.VISIBLE
-        binding.tvJobSearchCount.text = getString(R.string.search_job_no_such_vacancies)
-        binding.tvJobSearchCount.visibility = View.VISIBLE
-        binding.ivInformBottomText.text = getString(R.string.search_job_no_such_vacancies)
-        binding.ivInformBottomText.visibility = View.VISIBLE
+    private fun showScreen(uiState: SearchUiState) {
+        binding.rvJobList.isVisible = uiState.isJobsList
+        binding.tvJobSearchCount.isVisible = uiState.isJobsCount
+        binding.pbJobList.isVisible = uiState.isJobsListBrogressBar
+        binding.pbPage.isVisible = uiState.isProgressBar
+        binding.pbJobList.isVisible = uiState.isPaginationProgressBar
+        binding.ivInformImage.isVisible = uiState.isInformImage
+        binding.ivInformBottomText.isVisible = uiState.isBottomText
+        if (uiState.topText != null) {
+            binding.tvJobSearchCount.setText(uiState.topText!!)
+        }
+        if (uiState.bottomText != null) {
+            binding.ivInformBottomText.setText(uiState.bottomText!!)
+        }
+        if (uiState.url != null) {
+            binding.ivInformImage.setImageResource(uiState.url!!)
+        }
     }
 
-    private fun showContent(data: List<VacancyInfo>, found: Int) {
-        hideAll()
-        jobSearchViewAdapter?.setList(data)
-        binding.rvJobList.visibility = View.VISIBLE
-        binding.tvJobSearchCount.visibility = View.VISIBLE
-        binding.tvJobSearchCount.text = getString(R.string.search_job_list_count, found)
+    private fun showContent(uiState: SearchUiState.Content) {
+        showScreen(uiState)
+        if (uiState.topText != null) {
+            binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
+        }
+        jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
     }
 
-    private fun showDefault() {
-        hideAll()
-        binding.ivInformImage.visibility = View.VISIBLE
+    private fun showDefault(uiState: SearchUiState.Default) {
+        showScreen(uiState)
+        jobSearchViewAdapter?.setList(listOf())
     }
 
-    private fun hideAll() {
-        binding.rvJobList.visibility = View.GONE
-        binding.pbJobList.visibility = View.GONE
-        binding.ivInformImage.visibility = View.GONE
-        binding.tvJobSearchCount.visibility = View.GONE
-        binding.ivInformBottomText.visibility = View.GONE
+    private fun setQueryParam(query: String, filtersViewModel: FilterViewModel): VacancySearchParams {
+        return VacancySearchParams(
+            query,
+            if (filtersViewModel.getCitySaved() != null) {
+                filtersViewModel.getCitySaved()!!.id
+            } else {
+                filtersViewModel.getCountrySaved()?.id
+            },
+            filtersViewModel.getSalary(),
+            filtersViewModel.getDontShowWithoutSalary(),
+            filtersViewModel.getSavedIndustry()?.id
+        )
     }
 
     override fun onDestroyView() {

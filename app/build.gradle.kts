@@ -3,6 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-android")
+
 }
 
 android {
@@ -86,5 +89,6 @@ dependencies {
 
     // image
     implementation(libs.glide)
+    kapt(libs.glide.compiler)
     // end image
 }

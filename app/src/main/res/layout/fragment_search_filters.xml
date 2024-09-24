@@ -1,19 +1,231 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.searchfilters.SearchFiltersFragment">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/button_back"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_64dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dim_4dp"
+            android:layout_marginVertical="@dimen/dim_8dp"
+            android:contentDescription="@string/back"
+            app:srcCompat="@drawable/ic_back" />
+
+        <TextView
+            style="@style/PageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dim_20dp"
+            android:text="@string/filter_page_title" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/place_of_work"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_60dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hint_place_of_work_country_region"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dim_16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/dim_14sp" />
+
+            <TextView
+                android:id="@+id/place_of_work_country_region"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dim_16dp"
+                android:layout_weight="2"
+                android:hint="@string/place_of_work"
+                android:textColor="@color/day_black_night_white" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dim_4dp"
+            android:layout_marginEnd="@dimen/dim_16dp"
+            android:contentDescription="@string/filter_page_title"
+            app:srcCompat="@drawable/icon_next" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/industry_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim_60dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hint_industry_place"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dim_16dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/dim_14sp" />
+
+            <TextView
+                android:id="@+id/industry_place"
+                style="@style/VacancyItemSmall"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dim_16dp"
+                android:layout_weight="2"
+                android:hint="@string/Industry"
+                android:textColor="@color/day_black_night_white" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dim_4dp"
+            android:layout_marginEnd="@dimen/dim_16dp"
+            android:contentDescription="@string/filter_page_title"
+            app:srcCompat="@drawable/icon_next" />
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputEditText.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_margin="@dimen/dim_16dp"
+        android:background="@drawable/background_grey"
+        app:expandedHintEnabled="false"
+        android:textColorHint="@color/hint_color"
+        android:hint="@string/require_salary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/earn"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:autofillHints=""
+            android:background="@drawable/rounded_corners_8dp_grey"
+            android:drawablePadding="8dp"
+            android:hint="@string/enter_salary"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLength="45"
+            android:maxLines="1"
+            android:paddingStart="@dimen/dim_16dp"
+            android:singleLine="true"
+            android:textColor="@color/black_universal"
+            android:textColorHint="@color/day_gray_night_white"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textSize="@dimen/dim_16sp"
+            tools:ignore="TouchTargetSizeCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SearchFiltersFragment"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="@dimen/dim_24dp"
+
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/VacancyItemSmallReverseColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dim_16dp"
+            android:layout_weight="0.5"
+            android:text="@string/show_without_salary" />
+
+        <CheckBox
+            android:id="@+id/ischeced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:button="@drawable/checkbox_custom_click"
+            android:buttonTint="@color/blue"
+            android:checked="false"
+            android:clickable="true"
+            android:paddingVertical="@dimen/dim_18dp"
+            android:theme="@style/CheckBoxTheme" />
+
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dim_16dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6"/>
+
+        <Button
+            android:id="@+id/button_apply"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            style="@style/TextDisplayMedium500"
+            android:text="@string/apply"
+            android:textSize="@dimen/dim_16sp"
+            android:textColor="@color/white_universal"
+            android:background="@drawable/background_blue"
+            app:layout_constraintTop_toBottomOf="@id/bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_cancel"/>
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            style="@style/TextDisplayMedium500"
+            android:text="@string/cancel"
+            android:textSize="@dimen/dim_16sp"
+            android:textColor="@color/red"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@+id/button_apply"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="button_apply, button_cancel"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
