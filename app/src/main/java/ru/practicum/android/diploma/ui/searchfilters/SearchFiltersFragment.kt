@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedDispatcher
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,7 @@ class SearchFiltersFragment : Fragment() {
             viewModel.saveSelectedFromFilter(filter)
             init(filter)
         }
+        viewModel.getFilter()
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -47,14 +49,16 @@ class SearchFiltersFragment : Fragment() {
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
                 )
         }
-        viewModel.getFilter()
         binding.buttonBack.setOnClickListener {
+            viewModel.saveCheckSalary(binding.ischeced.isChecked)
+            viewModel.saveSalary()
             findNavController()
                 .navigateUp()
         }
         binding.buttonApply.setOnClickListener {
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
             viewModel.setSalary(format.clearIfNotInt(binding.earn.text.toString()))
+            viewModel.saveSalary()
             if (binding.ischeced.isChecked) {
                 viewModel.setDontShowWithoutSalary(true)
             }
@@ -103,6 +107,10 @@ class SearchFiltersFragment : Fragment() {
             viewModel.unSelectIndustry()
             viewModel.deleteIndustries()
             viewModel.getFilter()
+        }
+        OnBackPressedDispatcher {
+            viewModel.saveCheckSalary(binding.ischeced.isChecked)
+            viewModel.saveSalary()
         }
     }
 
@@ -179,11 +187,6 @@ class SearchFiltersFragment : Fragment() {
         if (!getCondition()) {
             binding.groupButtons.visibility = View.GONE
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.getFilter()
     }
 
     override fun onResume() {

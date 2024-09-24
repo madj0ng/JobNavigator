@@ -15,8 +15,8 @@ interface FilterRepository {
     suspend fun saveFilter(filterDto: FilterDto?)
     suspend fun savePlaceOfWork(countriesDto: CountriesDto?, areasDto: AreasDto?)
     suspend fun saveIndustries(industriesDto: IndustriesDto)
-    suspend fun saveSalary(salaryDto: Int)
-    suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean)
+    suspend fun saveSalary(salaryDto: Int?)
     suspend fun deletePlaceOfWork()
     suspend fun deleteIndustries()
+    suspend fun saveCheckSalary(onlyWithSalary: Boolean)
 }

@@ -89,12 +89,8 @@ class FilterInteractorImpl(
         repository.saveIndustries(converter.mapIndustries(industriesFilterModel))
     }
 
-    override suspend fun saveSalary(salary: Int) {
+    override suspend fun saveSalary(salary: Int?) {
         repository.saveSalary(salary)
-    }
-
-    override suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
-        repository.saveOnlyWithSalary(onlyWithSalary)
     }
 
     override suspend fun deletePlaceOfWork() {
@@ -103,5 +99,9 @@ class FilterInteractorImpl(
 
     override suspend fun deleteIndustries() {
         repository.deleteIndustries()
+    }
+
+    override suspend fun saveCheckSalary(onlyWithSalary: Boolean) {
+        repository.saveCheckSalary(onlyWithSalary)
     }
 }

@@ -57,24 +57,21 @@ class FilterLocalStorage(
         saveStorage(filter)
     }
 
-    suspend fun saveSalary(salaryDto: Int) {
+    suspend fun saveSalary(salaryDto: Int?) {
         var filter = getFromStorage()
         if (filter != null) {
-            filter.salary = salaryDto
+            if (getConditionToSalary(filter) && salaryDto == null) {
+                saveStorage(null)
+            } else {
+                filter.salary = salaryDto
+                saveStorage(filter)
+            }
         } else {
-            filter = FilterDto(salary = salaryDto)
+            if (salaryDto != null) {
+                filter = FilterDto(salary = salaryDto)
+                saveStorage(filter)
+            }
         }
-        saveStorage(filter)
-    }
-
-    suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
-        var filter = getFromStorage()
-        if (filter != null) {
-            filter.onlyWithSalary = onlyWithSalary
-        } else {
-            filter = FilterDto(onlyWithSalary = onlyWithSalary)
-        }
-        saveStorage(filter)
     }
 
     suspend fun deletePlaceOfWork() {
@@ -98,6 +95,38 @@ class FilterLocalStorage(
         }
     }
 
+    suspend fun saveCheckSalary(onlyWithSalary: Boolean) {
+        var filter = getFromStorage()
+        if (filter == null) {
+            if (onlyWithSalary) {
+                filter = FilterDto(onlyWithSalary = onlyWithSalary)
+                saveStorage(filter)
+            }
+        } else {
+            if (getConditionToCheckSalary(filter) && !onlyWithSalary) {
+                saveStorage(null)
+            } else {
+                compareCheckAndSaveCheck(onlyWithSalary, filter)
+            }
+        }
+    }
+
+    private suspend fun compareCheckAndSaveCheck(onlyWithSalary: Boolean, filter: FilterDto?) {
+        if (filter?.onlyWithSalary != onlyWithSalary) {
+            if (onlyWithSalary) {
+                filter?.onlyWithSalary = true
+                saveStorage(filter)
+            } else {
+                if (getConditionToCheckSalary(filter)) {
+                    saveStorage(null)
+                } else {
+                    filter?.onlyWithSalary = onlyWithSalary
+                    saveStorage(filter)
+                }
+            }
+        }
+    }
+
     private fun getConditionToPow(filter: FilterDto?): Boolean {
         return filter?.onlyWithSalary == null &&
             filter?.industries == null &&
@@ -109,5 +138,19 @@ class FilterLocalStorage(
             filter?.country == null &&
             filter?.area == null &&
             filter?.salary == null
+    }
+
+    private fun getConditionToCheckSalary(filter: FilterDto?): Boolean {
+        return filter?.salary == null &&
+            filter?.country == null &&
+            filter?.area == null &&
+            filter?.industries == null
+    }
+
+    private fun getConditionToSalary(filter: FilterDto?): Boolean {
+        return filter?.onlyWithSalary == null &&
+            filter?.country == null &&
+            filter?.area == null &&
+            filter?.industries == null
     }
 }

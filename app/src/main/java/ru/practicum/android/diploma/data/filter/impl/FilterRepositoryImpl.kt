@@ -61,12 +61,8 @@ class FilterRepositoryImpl(
         filterLocalStorage.saveIndustries(industriesDto)
     }
 
-    override suspend fun saveSalary(salaryDto: Int) {
+    override suspend fun saveSalary(salaryDto: Int?) {
         filterLocalStorage.saveSalary(salaryDto)
-    }
-
-    override suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
-        filterLocalStorage.saveOnlyWithSalary(onlyWithSalary)
     }
 
     override suspend fun deletePlaceOfWork() {
@@ -75,5 +71,9 @@ class FilterRepositoryImpl(
 
     override suspend fun deleteIndustries() {
         filterLocalStorage.deleteIndustries()
+    }
+
+    override suspend fun saveCheckSalary(onlyWithSalary: Boolean) {
+        filterLocalStorage.saveCheckSalary(onlyWithSalary)
     }
 }
