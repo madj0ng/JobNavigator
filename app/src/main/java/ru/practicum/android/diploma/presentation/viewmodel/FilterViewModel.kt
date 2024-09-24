@@ -64,9 +64,7 @@ class FilterViewModel(
 
     fun setDontShowWithoutSalary(show: Boolean) {
         doNotShowWithoutSalary = show
-        viewModelScope.launch {
-            filterInteractor.saveOnlyWithSalary(show)
-        }
+        saveCheckSalary(show)
     }
 
     fun setSalary(salary: String) {
@@ -74,11 +72,16 @@ class FilterViewModel(
             salaryBase = null
         } else {
             salaryBase = salary.toInt()
-            if (salaryBase!! > 0) {
-                viewModelScope.launch {
-                    filterInteractor.saveSalary(salaryBase!!)
-                }
+            if (salaryBase!! == 0) {
+                salaryBase = null
             }
+        }
+        saveSalary()
+    }
+
+    fun saveSalary() {
+        viewModelScope.launch {
+            filterInteractor.saveSalary(salaryBase)
         }
     }
 

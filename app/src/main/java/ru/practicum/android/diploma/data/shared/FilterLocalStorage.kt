@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.shared
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,7 +37,7 @@ class FilterLocalStorage(
         }
     }
 
-    suspend fun savePlaceOfWork(countriesDto: CountriesDto?, areasDto: AreasDto) {
+    suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
         var filter = getFromStorage()
         if (filter != null) {
             filter.country = countriesDto
@@ -57,24 +58,22 @@ class FilterLocalStorage(
         saveStorage(filter)
     }
 
-    suspend fun saveSalary(salaryDto: Int) {
+    suspend fun saveSalary(salaryDto: Int?) {
         var filter = getFromStorage()
         if (filter != null) {
-            filter.salary = salaryDto
+            if (getConditionToSalary(filter) && salaryDto == null) {
+                saveStorage(null)
+            } else {
+                filter.salary = salaryDto
+                Log.d("AAAAAAA", "${filter.salary}")
+                saveStorage(filter)
+            }
         } else {
-            filter = FilterDto(salary = salaryDto)
+            if (salaryDto != null) {
+                filter = FilterDto(salary = salaryDto)
+                saveStorage(filter)
+            }
         }
-        saveStorage(filter)
-    }
-
-    suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
-        var filter = getFromStorage()
-        if (filter != null) {
-            filter.onlyWithSalary = onlyWithSalary
-        } else {
-            filter = FilterDto(onlyWithSalary = onlyWithSalary)
-        }
-        saveStorage(filter)
     }
 
     suspend fun deletePlaceOfWork() {
@@ -138,6 +137,13 @@ class FilterLocalStorage(
 
     private fun getConditionToCheckSalary(filter: FilterDto?): Boolean {
         return filter?.salary == null &&
+            filter?.country == null &&
+            filter?.area == null &&
+            filter?.industries == null
+    }
+
+    private fun getConditionToSalary(filter: FilterDto?): Boolean {
+        return filter?.onlyWithSalary == null &&
             filter?.country == null &&
             filter?.area == null &&
             filter?.industries == null
