@@ -49,13 +49,13 @@ class PlaceOfWorkFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
+                .navigateUp()
         }
 
         binding.btnSelect.setOnClickListener {
             viewModel.saveArea()
             findNavController()
-                .navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
+                .navigateUp()
         }
     }
 

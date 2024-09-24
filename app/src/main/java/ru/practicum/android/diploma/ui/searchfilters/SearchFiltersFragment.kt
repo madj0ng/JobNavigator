@@ -53,7 +53,7 @@ class SearchFiltersFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
+                .navigateUp()
         }
 
         binding.buttonApply.setOnClickListener {
@@ -64,7 +64,7 @@ class SearchFiltersFragment : Fragment() {
                 viewModel.setDontShowWithoutSalary(true)
             }
             findNavController()
-                .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
+                .navigateUp()
         }
 
         binding.buttonCancel.setOnClickListener {

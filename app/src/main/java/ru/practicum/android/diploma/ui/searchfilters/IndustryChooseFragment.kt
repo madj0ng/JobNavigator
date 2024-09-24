@@ -57,7 +57,7 @@ class IndustryChooseFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .navigate(IndustryChooseFragmentDirections.actionIndustryChooseFragmentToSearchFiltersFragment())
+                .navigateUp()
         }
         binding.search.addTextChangedListener { str ->
             changeIcon(str.toString())
@@ -67,7 +67,7 @@ class IndustryChooseFragment : Fragment() {
         binding.btnSelect.setOnClickListener {
             viewModel.saveIndustry()
             findNavController()
-                .navigate(IndustryChooseFragmentDirections.actionIndustryChooseFragmentToSearchFiltersFragment())
+                .navigateUp()
         }
 
         binding.clearText.setOnClickListener {

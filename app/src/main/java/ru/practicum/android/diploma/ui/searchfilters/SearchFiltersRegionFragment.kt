@@ -45,9 +45,7 @@ class SearchFiltersRegionFragment : Fragment() {
             if (area.city.isEmpty()) {
                 viewModel.saveArea()
                 findNavController()
-                    .navigate(
-                        SearchFiltersRegionFragmentDirections.actionSearchFiltersRegionFragmentToPlaceOfWorkFragment()
-                    )
+                    .popBackStack()
             } else {
                 findNavController()
                     .navigate(
@@ -61,9 +59,7 @@ class SearchFiltersRegionFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .navigate(
-                    SearchFiltersRegionFragmentDirections.actionSearchFiltersRegionFragmentToPlaceOfWorkFragment()
-                )
+                .navigateUp()
         }
 
         binding.Search.addTextChangedListener { str ->
