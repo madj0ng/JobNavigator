@@ -26,12 +26,6 @@ class FilterViewModel(
     private val filterInteractor: FilterInteractor,
     private val mapperIndustry: MapperIndystry
 ) : ViewModel() {
-    init {
-        getAreas()
-        getIndustries()
-        getFilter()
-    }
-
     private var _areaLiveData = MutableLiveData<AreasScreenState>()
     val areaLiveData: LiveData<AreasScreenState> get() = _areaLiveData
     private var _regionsLiveData = MutableLiveData<RegionScreenState>()

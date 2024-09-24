@@ -40,6 +40,7 @@ class SearchFiltersFragment : Fragment() {
             viewModel.saveSelectedFromFilter(filter)
             init(filter)
         }
+        viewModel.getFilter()
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -52,16 +53,16 @@ class SearchFiltersFragment : Fragment() {
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
                 )
         }
-        viewModel.getFilter()
         binding.buttonBack.setOnClickListener {
             viewModel.saveCheckSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(format.clearIfNotInt(binding.earn.text.toString()))
+            viewModel.saveSalary()
             findNavController()
                 .navigateUp()
         }
         binding.buttonApply.setOnClickListener {
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
             viewModel.setSalary(format.clearIfNotInt(binding.earn.text.toString()))
+            viewModel.saveSalary()
             if (binding.ischeced.isChecked) {
                 viewModel.setDontShowWithoutSalary(true)
             }
@@ -76,7 +77,6 @@ class SearchFiltersFragment : Fragment() {
             viewModel.unSelectCountry()
             viewModel.unSelectIndustry()
             viewModel.saveFilter(null)
-            viewModel.saveSalary()
             canselFilter()
             viewModel.getFilter()
             binding.groupButtons.visibility = View.GONE
@@ -88,9 +88,6 @@ class SearchFiltersFragment : Fragment() {
                 if (!getCondition()) {
                     binding.groupButtons.visibility = View.GONE
                 }
-            }
-            if (clickDebounce()) {
-                viewModel.saveCheckSalary(isChecked)
             }
         }
         binding.earn.addTextChangedListener { str ->
@@ -196,14 +193,8 @@ class SearchFiltersFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.getFilter()
-    }
-
     override fun onResume() {
         super.onResume()
-        isClickAllowed = true
         viewModel.getFilter()
     }
 
@@ -212,20 +203,7 @@ class SearchFiltersFragment : Fragment() {
         _binding = null
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
-
     companion object {
         const val NEW_QUERY_FLAG = "new_query_flag"
-        const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }

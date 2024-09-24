@@ -98,11 +98,18 @@ class FilterLocalStorage(
     }
 
     suspend fun saveCheckSalary(onlyWithSalary: Boolean) {
-        val filter = getFromStorage()
-        if (getConditionToCheckSalary(filter) && !onlyWithSalary) {
-            saveStorage(null)
+        var filter = getFromStorage()
+        if (filter == null) {
+            if (onlyWithSalary) {
+                filter = FilterDto(onlyWithSalary = onlyWithSalary)
+                saveStorage(filter)
+            }
         } else {
-            compareCheckAndSaveCheck(onlyWithSalary, filter)
+            if (getConditionToCheckSalary(filter) && !onlyWithSalary) {
+                saveStorage(null)
+            } else {
+                compareCheckAndSaveCheck(onlyWithSalary, filter)
+            }
         }
     }
 
