@@ -17,12 +17,14 @@ import ru.practicum.android.diploma.domain.models.IndustryModel
 import ru.practicum.android.diploma.domain.models.PlaceOfWorkModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
+import ru.practicum.android.diploma.presentation.mapper.MapperIndystry
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 import ru.practicum.android.diploma.presentation.models.RegionScreenState
 
 class FilterViewModel(
-    private val filterInteractor: FilterInteractor
+    private val filterInteractor: FilterInteractor,
+    private val mapperIndustry: MapperIndystry
 ) : ViewModel() {
     init {
         getAreas()
@@ -50,10 +52,10 @@ class FilterViewModel(
     private var cityList = listOf<CityModel>()
     private var industryList = listOf<IndustryModel>()
     var selectedCountry: CountryModel? = null
-    private var selectIndustry: IndustryModel? = null
+
     var selectRegion: RegionModel? = null
     private var selectCity: CityModel? = null
-    private var savedIndustry: IndustryModel? = null
+
     private var saveRegion: RegionModel? = null
     private var savedCity: CityModel? = null
     private var savedCountry: CountryModel? = null
@@ -209,22 +211,18 @@ class FilterViewModel(
     }
 
     fun selectIndustry(industryModel: IndustryModel?) {
-        selectIndustry = industryModel
         _selectIndustryLiveData.postValue(industryModel)
     }
 
     fun unSelectIndustry() {
-        selectIndustry = null
-        savedIndustry = null
+        _selectIndustryLiveData.postValue(null)
     }
 
     fun searchIndustry(strIndustry: String) {
         if (strIndustry.isNotEmpty()) {
             val listRes = industryList.filter { industry ->
-
                 industry.name.lowercase().contains(strIndustry.lowercase())
             }
-
             if (listRes.isEmpty()) {
                 _industryLiveData.postValue(IndustryScreenState.ErrorContent)
             } else {
@@ -236,9 +234,12 @@ class FilterViewModel(
     }
 
     fun saveIndustry() {
-        savedIndustry = selectIndustry
-        viewModelScope.launch {
-            filterInteractor.saveIndustries(IndustriesFilterModel(savedIndustry!!.id, savedIndustry!!.name))
+        if (_selectIndustryLiveData.value != null) {
+            viewModelScope.launch {
+                filterInteractor.saveIndustries(mapperIndustry.map(_selectIndustryLiveData.value!!))
+            }
+        } else {
+            deleteIndustries()
         }
     }
 
@@ -246,18 +247,8 @@ class FilterViewModel(
         _placeOfWorkLiveData.postValue(PlaceOfWorkModel(selectedCountry, selectRegion, selectCity))
     }
 
-    fun checkSelectedIndustries() {
-        _selectIndustryLiveData.postValue(selectIndustry)
-    }
-
     fun saveSelectedFromFilter(filterModel: FilterModel?) {
         selectedAreaFromFilter(filterModel)
-        industryList.forEach {
-            if (it.id == filterModel?.industries?.id) {
-                savedIndustry = it
-                selectIndustry = savedIndustry
-            }
-        }
         salaryBase = filterModel?.salary
         doNotShowWithoutSalary = filterModel?.onlyWithSalary ?: false
     }
@@ -310,7 +301,6 @@ class FilterViewModel(
                     }
                 }
             }
-
             filterInteractor.getAreas().collect { res ->
                 if (res !is Resource.Error) {
                     areaList = (res as Resource.Success).data
@@ -319,9 +309,9 @@ class FilterViewModel(
                     _areaLiveData.postValue(AreasScreenState.Error)
                 }
             }
-
             filterInteractor.getFilter().collect { filter ->
                 _searchFilterLiveData.postValue(filter)
+                selectIndustry(getIndustriesModelFromFilter(filter?.industries))
             }
         }
     }
@@ -336,5 +326,9 @@ class FilterViewModel(
         viewModelScope.launch {
             filterInteractor.deleteIndustries()
         }
+    }
+
+    fun getIndustriesModelFromFilter(industry: IndustriesFilterModel?): IndustryModel? {
+        return if (industry != null) mapperIndustry.map(industry) else null
     }
 }

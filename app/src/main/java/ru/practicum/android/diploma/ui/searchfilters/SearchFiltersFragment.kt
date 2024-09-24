@@ -7,16 +7,19 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
 import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.util.FormatConverter
 
 class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
+    private val format: FormatConverter = getKoin().get()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,45 +31,36 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.groupButtons.visibility = View.GONE
-
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
             viewModel.saveSelectedFromFilter(filter)
             init(filter)
         }
-
-
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToIndustryChooseFragment()
                 )
         }
-
         binding.placeOfWork.setOnClickListener {
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
                 )
         }
-
         viewModel.getFilter()
-
         binding.buttonBack.setOnClickListener {
             findNavController()
                 .popBackStack()
         }
-
         binding.buttonApply.setOnClickListener {
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            val str = checkSellary(binding.earn.text.toString())
-            viewModel.setSalary(str)
+            viewModel.setSalary(format.clearIfNotInt(binding.earn.text.toString()))
             if (binding.ischeced.isChecked) {
                 viewModel.setDontShowWithoutSalary(true)
             }
             findNavController()
                 .popBackStack()
         }
-
         binding.buttonCancel.setOnClickListener {
             viewModel.unSelectCountry()
             viewModel.unSelectIndustry()
@@ -74,9 +68,7 @@ class SearchFiltersFragment : Fragment() {
             canselFilter()
             viewModel.getFilter()
             binding.groupButtons.visibility = View.GONE
-
         }
-
         binding.ischeced.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.groupButtons.visibility = View.VISIBLE
@@ -86,7 +78,6 @@ class SearchFiltersFragment : Fragment() {
                 }
             }
         }
-
         binding.earn.addTextChangedListener { str ->
             if (str.toString().isNotEmpty()) {
                 binding.groupButtons.visibility = View.VISIBLE
@@ -95,16 +86,14 @@ class SearchFiltersFragment : Fragment() {
                     binding.groupButtons.visibility = View.GONE
                 }
             }
-            viewModel.setSalary(checkSellary(str.toString()))
+            viewModel.setSalary(format.clearIfNotInt(str.toString()))
         }
-
         binding.buttonClearToPow.setOnClickListener {
             restartPlaceOfWork()
             viewModel.unSelectCountry()
             viewModel.deletePlaceOfWork()
             viewModel.getFilter()
         }
-
         binding.buttonClearToInd.setOnClickListener {
             restartIndusytries()
             viewModel.unSelectIndustry()
@@ -145,7 +134,6 @@ class SearchFiltersFragment : Fragment() {
             binding.buttonClearToPow.setImageResource(R.drawable.ic_close_to_filter)
             binding.buttonClearToPow.isClickable = true
         }
-
     }
 
     private fun canselFilter() {
@@ -158,22 +146,10 @@ class SearchFiltersFragment : Fragment() {
         restartPlaceOfWork()
     }
 
-    private fun checkSellary(str: String): String {
-        try {
-            return if (str.toInt() > 0) {
-                str
-            } else {
-                ""
-            }
-        } catch (e: NumberFormatException) {
-            return ""
-        }
-    }
-
     private fun getCondition(): Boolean {
         return binding.placeOfWorkCountryRegion.text.isNotEmpty() ||
             binding.industryPlace.text.isNotEmpty() ||
-            checkSellary(binding.earn.text.toString()).isNotEmpty() ||
+            format.clearIfNotInt(binding.earn.text.toString()).isNotEmpty() ||
             binding.ischeced.isChecked
     }
 
