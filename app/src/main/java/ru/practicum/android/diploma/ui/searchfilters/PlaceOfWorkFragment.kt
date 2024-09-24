@@ -50,7 +50,7 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
-//            viewModel.unSelectCountry()
+            viewModel.unSelectCountry()
             findNavController()
                 .navigateUp()
         }
@@ -88,9 +88,9 @@ class PlaceOfWorkFragment : Fragment() {
         viewModel.checkSelectedPlaceOfWork()
     }
 
-    override fun onPause() {
-        super.onPause()
-//        viewModel.checkSelectedPlaceOfWork()
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkSelectedPlaceOfWork()
     }
 
     override fun onDestroyView() {
