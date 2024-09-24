@@ -331,4 +331,10 @@ class FilterViewModel(
     fun getIndustriesModelFromFilter(industry: IndustriesFilterModel?): IndustryModel? {
         return if (industry != null) mapperIndustry.map(industry) else null
     }
+
+    fun saveCheckSalary(onlyWithSalary: Boolean) {
+        viewModelScope.launch {
+            filterInteractor.saveCheckSalary(onlyWithSalary)
+        }
+    }
 }

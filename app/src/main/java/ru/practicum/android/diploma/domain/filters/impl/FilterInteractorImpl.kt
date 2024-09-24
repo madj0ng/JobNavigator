@@ -102,4 +102,8 @@ class FilterInteractorImpl(
     override suspend fun deleteIndustries() {
         repository.deleteIndustries()
     }
+
+    override suspend fun saveCheckSalary(onlyWithSalary: Boolean) {
+        repository.saveCheckSalary(onlyWithSalary)
+    }
 }

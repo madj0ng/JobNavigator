@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
@@ -20,6 +23,7 @@ class SearchFiltersFragment : Fragment() {
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private val format: FormatConverter = getKoin().get()
+    private var isClickAllowed = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -80,6 +84,9 @@ class SearchFiltersFragment : Fragment() {
                 if (!getCondition()) {
                     binding.groupButtons.visibility = View.GONE
                 }
+            }
+            if (clickDebounce()) {
+                viewModel.saveCheckSalary(isChecked)
             }
         }
         binding.earn.addTextChangedListener { str ->
@@ -188,6 +195,7 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        isClickAllowed = true
         viewModel.getFilter()
     }
 
@@ -196,7 +204,20 @@ class SearchFiltersFragment : Fragment() {
         _binding = null
     }
 
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
     companion object {
         const val NEW_QUERY_FLAG = "new_query_flag"
+        const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }

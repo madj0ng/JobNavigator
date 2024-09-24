@@ -20,4 +20,5 @@ interface FilterInteractor {
     suspend fun saveOnlyWithSalary(onlyWithSalary: Boolean)
     suspend fun deletePlaceOfWork()
     suspend fun deleteIndustries()
+    suspend fun saveCheckSalary(onlyWithSalary: Boolean)
 }
