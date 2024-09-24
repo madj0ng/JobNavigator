@@ -41,13 +41,13 @@ class CountryChooseFragment : Fragment() {
         filtersViewAdapterCountry = FiltersViewAdapterArea() { area ->
             viewModel.selectCountry(area)
             findNavController()
-                .navigateUp()
+                .popBackStack()
         }
         binding.countryRecyclerview.adapter = filtersViewAdapterCountry
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .navigateUp()
+                .popBackStack()
         }
     }
 
