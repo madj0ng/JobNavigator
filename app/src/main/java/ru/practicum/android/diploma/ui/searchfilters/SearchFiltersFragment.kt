@@ -50,7 +50,7 @@ class SearchFiltersFragment : Fragment() {
         viewModel.getFilter()
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .popBackStack()
+                .navigateUp()
         }
         binding.buttonApply.setOnClickListener {
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
@@ -58,8 +58,12 @@ class SearchFiltersFragment : Fragment() {
             if (binding.ischeced.isChecked) {
                 viewModel.setDontShowWithoutSalary(true)
             }
+            val newQuery = true
             findNavController()
-                .popBackStack()
+                .navigateUp()
+            findNavController().currentBackStackEntry
+                ?.savedStateHandle
+                ?.set(NEW_QUERY_FLAG, newQuery)
         }
         binding.buttonCancel.setOnClickListener {
             viewModel.unSelectCountry()
@@ -190,5 +194,9 @@ class SearchFiltersFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val NEW_QUERY_FLAG = "new_query_flag"
     }
 }

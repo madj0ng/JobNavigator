@@ -49,13 +49,13 @@ class PlaceOfWorkFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .popBackStack()
+                .navigateUp()
         }
 
         binding.btnSelect.setOnClickListener {
             viewModel.saveArea()
             findNavController()
-                .popBackStack()
+                .navigateUp()
         }
     }
 

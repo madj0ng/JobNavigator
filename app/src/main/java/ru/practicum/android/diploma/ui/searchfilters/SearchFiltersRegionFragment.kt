@@ -59,7 +59,7 @@ class SearchFiltersRegionFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             findNavController()
-                .popBackStack()
+                .navigateUp()
         }
 
         binding.Search.addTextChangedListener { str ->
