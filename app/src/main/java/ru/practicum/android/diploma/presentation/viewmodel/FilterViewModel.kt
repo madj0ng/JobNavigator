@@ -36,8 +36,6 @@ class FilterViewModel(
     val industryLiveData: LiveData<IndustryScreenState> get() = _industryLiveData
     private var _searchFilterLiveData = MutableLiveData<FilterModel?>()
     val searchFilterLiveData: LiveData<FilterModel?> get() = _searchFilterLiveData
-//    private var _placeOfWorkLiveData = MutableLiveData<PlaceOfWorkModel>()
-//    val placeOfWorkLiveData: LiveData<PlaceOfWorkModel> get() = _placeOfWorkLiveData
 
     private var selectRegionLiveData = MutableLiveData<RegionModel?>()
     fun getSelectRegionLiveData(): LiveData<RegionModel?> = selectRegionLiveData
@@ -89,22 +87,9 @@ class FilterViewModel(
         selectCityLiveData.postValue(model)
     }
 
-    private fun getAreas() {
-        viewModelScope.launch {
-            filterInteractor.getAreas().collect { res ->
-                if (res !is Resource.Error) {
-                    areaList = (res as Resource.Success).data
-                    _areaLiveData.postValue(AreasScreenState.Content(res.data))
-                } else {
-                    _areaLiveData.postValue(AreasScreenState.Error)
-                }
-            }
-        }
-    }
-
     fun saveArea() {
         var area: AreaFilterModel? = null
-        var country = if (selectCountryLiveData.value != null) {
+        val country = if (selectCountryLiveData.value != null) {
             mapperFilter.map(selectCountryLiveData.value!!)
         } else {
             null
@@ -129,9 +114,7 @@ class FilterViewModel(
     fun selectRegion(regionModel: RegionModel) {
         var country: CountryModel? = null
         areaList.forEach {
-            if (it.regions.contains(regionModel)) {
-                country = it
-            }
+            if (it.regions.contains(regionModel)) country = it
         }
         setCountryModel(country)
         setRegionModel(regionModel)
@@ -234,10 +217,6 @@ class FilterViewModel(
         }
     }
 
-    fun checkSelectedPlaceOfWork() {
-//        _placeOfWorkLiveData.postValue(PlaceOfWorkModel(selectedCountry, selectRegion, selectCity))
-    }
-
     fun saveSelectedFromFilter(filterModel: FilterModel?) {
         selectedAreaFromFilter(filterModel)
         salaryBase = filterModel?.salary
@@ -306,10 +285,6 @@ class FilterViewModel(
                 selectIndustry(getIndustriesModelFromFilter(filter?.industries))
             }
         }
-    }
-
-    fun selectFilter(filter: FilterModel) {
-        _searchFilterLiveData.postValue(filter)
     }
 
     fun deletePlaceOfWork() {
