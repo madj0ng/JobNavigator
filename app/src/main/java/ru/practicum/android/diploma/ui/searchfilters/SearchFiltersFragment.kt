@@ -34,6 +34,7 @@ class SearchFiltersFragment : Fragment() {
         binding.groupButtons.visibility = View.GONE
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
             viewModel.saveSelectedFromFilter(filter)
+            viewModel.filterModel = filter
             init(filter)
         }
         viewModel.getFilter()
@@ -44,6 +45,8 @@ class SearchFiltersFragment : Fragment() {
                 )
         }
         binding.placeOfWork.setOnClickListener {
+            val str = binding.placeOfWorkCountryRegion.text
+            viewModel.isHaveSaveFilter = str.isNotEmpty()
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
