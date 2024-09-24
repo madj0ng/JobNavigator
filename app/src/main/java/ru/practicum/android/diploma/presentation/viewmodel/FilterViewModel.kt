@@ -9,22 +9,20 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.filters.FilterInteractor
 import ru.practicum.android.diploma.domain.models.AreaFilterModel
 import ru.practicum.android.diploma.domain.models.CityModel
-import ru.practicum.android.diploma.domain.models.CountryFilterModel
 import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.IndustriesFilterModel
 import ru.practicum.android.diploma.domain.models.IndustryModel
-import ru.practicum.android.diploma.domain.models.PlaceOfWorkModel
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.domain.models.Resource
-import ru.practicum.android.diploma.presentation.mapper.MapperIndystry
+import ru.practicum.android.diploma.presentation.mapper.MapperFilter
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
 import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 import ru.practicum.android.diploma.presentation.models.RegionScreenState
 
 class FilterViewModel(
     private val filterInteractor: FilterInteractor,
-    private val mapperIndustry: MapperIndystry
+    private val mapperFilter: MapperFilter
 ) : ViewModel() {
     init {
         getAreas()
@@ -44,21 +42,28 @@ class FilterViewModel(
     val industryLiveData: LiveData<IndustryScreenState> get() = _industryLiveData
     private var _searchFilterLiveData = MutableLiveData<FilterModel?>()
     val searchFilterLiveData: LiveData<FilterModel?> get() = _searchFilterLiveData
-    private var _placeOfWorkLiveData = MutableLiveData<PlaceOfWorkModel>()
-    val placeOfWorkLiveData: LiveData<PlaceOfWorkModel> get() = _placeOfWorkLiveData
+//    private var _placeOfWorkLiveData = MutableLiveData<PlaceOfWorkModel>()
+//    val placeOfWorkLiveData: LiveData<PlaceOfWorkModel> get() = _placeOfWorkLiveData
+
+    private var selectRegionLiveData = MutableLiveData<RegionModel?>()
+    fun getSelectRegionLiveData(): LiveData<RegionModel?> = selectRegionLiveData
+    private var selectCountryLiveData = MutableLiveData<CountryModel?>()
+    fun getSelectCountryLiveData(): LiveData<CountryModel?> = selectCountryLiveData
+    private var selectCityLiveData = MutableLiveData<CityModel?>()
+    fun getSelectCityLiveData(): LiveData<CityModel?> = selectCityLiveData
 
     private var areaList = listOf<CountryModel>()
     private var regionsList = listOf<RegionModel>()
     private var cityList = listOf<CityModel>()
     private var industryList = listOf<IndustryModel>()
-    var selectedCountry: CountryModel? = null
+//    var selectedCountry: CountryModel? = null
 
-    var selectRegion: RegionModel? = null
-    private var selectCity: CityModel? = null
+//    var selectRegion: RegionModel? = null
+//    private var selectCity: CityModel? = null
 
-    private var saveRegion: RegionModel? = null
-    private var savedCity: CityModel? = null
-    private var savedCountry: CountryModel? = null
+    //    private var saveRegion: RegionModel? = null
+//    private var savedCity: CityModel? = null
+//    private var savedCountry: CountryModel? = null
     private var salaryBase: Int? = null
     private var doNotShowWithoutSalary: Boolean = false
 
@@ -82,6 +87,18 @@ class FilterViewModel(
         }
     }
 
+    private fun setCountryModel(model: CountryModel?) {
+        selectCountryLiveData.postValue(model)
+    }
+
+    fun setRegionModel(model: RegionModel?) {
+        selectRegionLiveData.postValue(model)
+    }
+
+    private fun setCityModel(model: CityModel?) {
+        selectCityLiveData.postValue(model)
+    }
+
     private fun getAreas() {
         viewModelScope.launch {
             filterInteractor.getAreas().collect { res ->
@@ -96,51 +113,51 @@ class FilterViewModel(
     }
 
     fun saveArea() {
-        savedCountry = selectedCountry
-        saveRegion = selectRegion
-        savedCity = selectCity
+//        savedCountry = selectedCountry
+//        saveRegion = selectRegion
+//        savedCity = selectCity
+        var area: AreaFilterModel? = null
+        var country = if (selectCountryLiveData.value != null) {
+            mapperFilter.map(selectCountryLiveData.value!!)
+        } else {
+            null
+        }
+        if (selectRegionLiveData.value != null) {
+            area = mapperFilter.mapRegion(selectRegionLiveData.value!!)
+        }
+        if (selectCityLiveData.value != null) {
+            area = mapperFilter.mapCity(selectCityLiveData.value!!)
+        }
         viewModelScope.launch {
-            if (savedCity != null) {
-                filterInteractor.savePlaceOfWork(
-                    CountryFilterModel(savedCountry!!.id, savedCountry!!.name),
-                    AreaFilterModel(savedCity!!.id, savedCity!!.name)
-                )
-            } else {
-                filterInteractor.savePlaceOfWork(
-                    CountryFilterModel(savedCountry!!.id, savedCountry!!.name),
-                    AreaFilterModel(saveRegion!!.id, saveRegion!!.name)
-                )
-            }
-            filterInteractor.getFilter()
+            filterInteractor.savePlaceOfWork(country, area)
         }
     }
 
     fun selectCountry(country: CountryModel) {
-        selectedCountry = country
-        selectRegion = null
-        selectCity = null
+        setCityModel(null)
+        setRegionModel(null)
+        setCountryModel(country)
     }
 
     fun selectRegion(regionModel: RegionModel) {
+        var country: CountryModel? = null
         areaList.forEach {
             if (it.regions.contains(regionModel)) {
-                selectedCountry = it
+                country = it
             }
         }
-        selectRegion = regionModel
+        setCountryModel(country)
+        setRegionModel(regionModel)
     }
 
     fun selectCity(cityModel: CityModel) {
-        selectCity = cityModel
+        setCityModel(cityModel)
     }
 
     fun unSelectCountry() {
-        selectedCountry = null
-        savedCountry = null
-        selectRegion = null
-        saveRegion = null
-        selectCity = null
-        savedCity = null
+        setCityModel(null)
+        setCountryModel(null)
+        setRegionModel(null)
     }
 
     fun searchRegion(strRegion: String) {
@@ -166,7 +183,8 @@ class FilterViewModel(
     }
 
     fun getRegions() {
-        if (selectedCountry == null) {
+        val country = selectCountryLiveData.value
+        if (country == null) {
             val list = mutableListOf<RegionModel>()
             areaList.forEach {
                 list.addAll(it.regions)
@@ -178,10 +196,10 @@ class FilterViewModel(
                 _regionsLiveData.postValue(RegionScreenState.Content(regionsList))
             }
         } else {
-            if (selectedCountry!!.regions.isEmpty()) {
+            if (country.regions.isEmpty()) {
                 _regionsLiveData.postValue(RegionScreenState.ErrorNoList)
             } else {
-                regionsList = selectedCountry!!.regions
+                regionsList = country.regions
                 _regionsLiveData.postValue(RegionScreenState.Content(regionsList))
             }
         }
@@ -189,7 +207,7 @@ class FilterViewModel(
 
     fun getCity() {
         regionsList.forEach {
-            if (it.name == selectRegion?.name) {
+            if (it.name == selectRegionLiveData.value?.name) {
                 cityList = it.city
                 _cityLiveData.value = it.city
             }
@@ -236,7 +254,7 @@ class FilterViewModel(
     fun saveIndustry() {
         if (_selectIndustryLiveData.value != null) {
             viewModelScope.launch {
-                filterInteractor.saveIndustries(mapperIndustry.map(_selectIndustryLiveData.value!!))
+                filterInteractor.saveIndustries(mapperFilter.map(_selectIndustryLiveData.value!!))
             }
         } else {
             deleteIndustries()
@@ -244,7 +262,7 @@ class FilterViewModel(
     }
 
     fun checkSelectedPlaceOfWork() {
-        _placeOfWorkLiveData.postValue(PlaceOfWorkModel(selectedCountry, selectRegion, selectCity))
+//        _placeOfWorkLiveData.postValue(PlaceOfWorkModel(selectedCountry, selectRegion, selectCity))
     }
 
     fun saveSelectedFromFilter(filterModel: FilterModel?) {
@@ -254,21 +272,25 @@ class FilterViewModel(
     }
 
     private fun selectedAreaFromFilter(filterModel: FilterModel?) {
-        areaList.forEach {
-            if (it.id == filterModel?.country?.id) {
-                savedCountry = it
-                selectedCountry = savedCountry
+        if (selectCountryLiveData.value != null) {
+            areaList.forEach {
+                if (it.id == filterModel?.country?.id) {
+                    setCountryModel(it)
+                }
             }
         }
         selectedRegionFromFilter(filterModel)
     }
 
     private fun selectedRegionFromFilter(filterModel: FilterModel?) {
-        selectedCountry?.regions?.forEach {
-            selectedCityFromFilter(it.city, filterModel)
-            if (it.id == filterModel?.area?.id) {
-                saveRegion = it
-                selectRegion = saveRegion
+        if (selectRegionLiveData.value != null) {
+            selectCountryLiveData.value?.regions?.forEach {
+                selectedCityFromFilter(it.city, filterModel)
+                if (it.id == filterModel?.area?.id) {
+                    setRegionModel(it)
+//                    saveRegion = it
+//                    selectRegion = saveRegion
+                }
             }
         }
     }
@@ -277,8 +299,9 @@ class FilterViewModel(
         if (city.isNotEmpty()) {
             city.forEach {
                 if (it.id == filterModel?.area?.id) {
-                    savedCity = it
-                    selectCity = savedCity
+                    setCityModel(it)
+//                        savedCity = it
+//                        selectCity = savedCity
                 }
             }
         }
@@ -329,6 +352,6 @@ class FilterViewModel(
     }
 
     fun getIndustriesModelFromFilter(industry: IndustriesFilterModel?): IndustryModel? {
-        return if (industry != null) mapperIndustry.map(industry) else null
+        return if (industry != null) mapperFilter.map(industry) else null
     }
 }

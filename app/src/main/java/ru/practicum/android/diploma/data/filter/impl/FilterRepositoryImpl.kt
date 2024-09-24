@@ -53,7 +53,7 @@ class FilterRepositoryImpl(
         emit(filterLocalStorage.getFromStorage())
     }
 
-    override suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
+    override suspend fun savePlaceOfWork(countriesDto: CountriesDto?, areasDto: AreasDto?) {
         filterLocalStorage.savePlaceOfWork(countriesDto, areasDto)
     }
 
