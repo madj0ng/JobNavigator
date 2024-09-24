@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -63,8 +64,12 @@ class SearchFiltersFragment : Fragment() {
             if (binding.ischeced.isChecked) {
                 viewModel.setDontShowWithoutSalary(true)
             }
+            val newQuery = true
             findNavController()
                 .navigateUp()
+            findNavController().currentBackStackEntry
+                ?.savedStateHandle
+                ?.set(NEW_QUERY_FLAG, newQuery)
         }
 
         binding.buttonCancel.setOnClickListener {
@@ -214,5 +219,9 @@ class SearchFiltersFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val NEW_QUERY_FLAG = "new_query_flag"
     }
 }

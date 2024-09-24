@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.jobsearch
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import ru.practicum.android.diploma.domain.models.VacancySearchParams
 import ru.practicum.android.diploma.presentation.models.QueryUiState
 import ru.practicum.android.diploma.presentation.models.SearchUiState
 import ru.practicum.android.diploma.presentation.viewmodel.JobSearchViewModel
+import ru.practicum.android.diploma.ui.searchfilters.SearchFiltersFragment
 
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
@@ -39,11 +41,23 @@ class JobSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var newQuery = findNavController().currentBackStackEntry
+            ?.savedStateHandle
+            ?.remove<Boolean>(SearchFiltersFragment.NEW_QUERY_FLAG)
+
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filterModel ->
             if (filterModel != null) {
-                this.filterModel = filterModel
                 binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue)
+                if (newQuery != null && newQuery!!) {
+                    newQuery = false
+                    this.filterModel = filterModel
+                    val query = binding.etSearch.text
+                    viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
+                }
             } else {
+                this.filterModel = filterModel
+                val query = binding.etSearch.text
+                viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
                 binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_transparent)
             }
         }
@@ -155,6 +169,11 @@ class JobSearchFragment : Fragment() {
         } else {
             VacancySearchParams(query)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getFilter()
     }
 
     override fun onDestroyView() {
