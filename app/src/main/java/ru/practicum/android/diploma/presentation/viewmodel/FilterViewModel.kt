@@ -22,7 +22,7 @@ import ru.practicum.android.diploma.presentation.models.RegionScreenState
 
 class FilterViewModel(
     private val filterInteractor: FilterInteractor,
-    private val mapperFilter: MapperFilter
+    private val mapperFilter: MapperFilter,
 ) : ViewModel() {
     private var _areaLiveData = MutableLiveData<AreasScreenState>()
     val areaLiveData: LiveData<AreasScreenState> get() = _areaLiveData
@@ -46,11 +46,12 @@ class FilterViewModel(
     private var regionsList = listOf<RegionModel>()
     private var cityList = listOf<CityModel>()
     private var industryList = listOf<IndustryModel>()
+
     var filterModel: FilterModel? = null
     var isHaveSaveFilter: Boolean = false
+
     private var salaryBase: Int? = null
     private var doNotShowWithoutSalary: Boolean = false
-
     fun setDontShowWithoutSalary(show: Boolean) {
         doNotShowWithoutSalary = show
         saveCheckSalary(show)
@@ -60,12 +61,11 @@ class FilterViewModel(
             salaryBase = null
         } else {
             salaryBase = salary.toInt()
-            if (salaryBase!! == 0) {
-                salaryBase = null
-            }
+            if (salaryBase!! == 0) salaryBase = null
         }
         saveSalary()
     }
+
     fun saveSalary() {
         viewModelScope.launch {
             filterInteractor.saveSalary(salaryBase)
@@ -80,38 +80,36 @@ class FilterViewModel(
     private fun setCityModel(model: CityModel?) {
         selectCityLiveData.postValue(model)
     }
+
     fun saveArea() {
         var area: AreaFilterModel? = null
-        var country = if (selectCountryLiveData.value != null) {
+        val country = if (selectCountryLiveData.value != null) {
             mapperFilter.map(selectCountryLiveData.value!!)
         } else {
             null
         }
-        if (selectRegionLiveData.value != null) {
-            area = mapperFilter.mapRegion(selectRegionLiveData.value!!)
-        }
-        if (selectCityLiveData.value != null) {
-            area = mapperFilter.mapCity(selectCityLiveData.value!!)
-        }
-        viewModelScope.launch {
-            filterInteractor.savePlaceOfWork(country, area)
-        }
+        if (selectRegionLiveData.value != null) area = mapperFilter.mapRegion(selectRegionLiveData.value!!)
+        if (selectCityLiveData.value != null) area = mapperFilter.mapCity(selectCityLiveData.value!!)
+        viewModelScope.launch { filterInteractor.savePlaceOfWork(country, area) }
     }
+
     fun selectCountry(country: CountryModel) {
         setCityModel(null)
         setRegionModel(null)
+
+    fun selectPlaceOfWork(country: CountryModel? = null, region: RegionModel? = null, sity: CityModel? = null) {
+        setCityModel(sity)
+        setRegionModel(region)
+
         setCountryModel(country)
     }
     fun selectRegion(regionModel: RegionModel) {
         var country: CountryModel? = null
-        areaList.forEach {
-            if (it.regions.contains(regionModel)) {
-                country = it
-            }
-        }
+        areaList.forEach { if (it.regions.contains(regionModel)) country = it }
         setCountryModel(country)
         setRegionModel(regionModel)
     }
+
     fun selectCity(cityModel: CityModel) {
         setCityModel(cityModel)
     }
@@ -120,6 +118,9 @@ class FilterViewModel(
         setCountryModel(null)
         setRegionModel(null)
     }
+
+    fun selectCity(cityModel: CityModel) { setCityModel(cityModel) }
+
     fun searchRegion(strRegion: String) {
         if (strRegion.isNotEmpty()) {
             val listRes = regionsList.filter { area ->
@@ -134,7 +135,6 @@ class FilterViewModel(
             _regionsLiveData.postValue(RegionScreenState.Content(regionsList))
         }
     }
-
     fun searchCity(strCity: String) {
         val listRes = cityList.filter { city ->
             city.name.lowercase().contains(strCity.lowercase())
@@ -145,9 +145,7 @@ class FilterViewModel(
         val country = selectCountryLiveData.value
         if (country == null) {
             val list = mutableListOf<RegionModel>()
-            areaList.forEach {
-                list.addAll(it.regions)
-            }
+            areaList.forEach { list.addAll(it.regions) }
             regionsList = list
             if (regionsList.isEmpty()) {
                 _regionsLiveData.postValue(RegionScreenState.ErrorNoList)
@@ -171,12 +169,14 @@ class FilterViewModel(
             }
         }
     }
+
     fun selectIndustry(industryModel: IndustryModel?) {
         _selectIndustryLiveData.postValue(industryModel)
     }
     fun unSelectIndustry() {
         _selectIndustryLiveData.postValue(null)
     }
+
     fun searchIndustry(strIndustry: String) {
         if (strIndustry.isNotEmpty()) {
             val listRes = industryList.filter { industry ->
@@ -200,6 +200,7 @@ class FilterViewModel(
             deleteIndustries()
         }
     }
+
     fun checkSelectedPlaceOfWork() {
         if (isHaveSaveFilter) {
             selectedAreaFromFilter(filterModel)
@@ -208,6 +209,7 @@ class FilterViewModel(
             isHaveSaveFilter = false
         }
     }
+
     fun saveSelectedFromFilter(filterModel: FilterModel?) {
         selectedAreaFromFilter(filterModel)
         salaryBase = filterModel?.salary
@@ -245,9 +247,7 @@ class FilterViewModel(
         }
     }
     fun saveFilter(filterModel: FilterModel?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            filterInteractor.saveFilter(filterModel)
-        }
+        viewModelScope.launch(Dispatchers.IO) { filterInteractor.saveFilter(filterModel) }
     }
     fun getFilter() {
         viewModelScope.launch {
@@ -261,11 +261,12 @@ class FilterViewModel(
                 }
             }
             filterInteractor.getAreas().collect { res ->
-                if (res !is Resource.Error) {
-                    areaList = (res as Resource.Success).data
-                    _areaLiveData.postValue(AreasScreenState.Content(res.data))
-                } else {
-                    _areaLiveData.postValue(AreasScreenState.Error)
+                when (res) {
+                    is Resource.Error -> _areaLiveData.postValue(AreasScreenState.Error)
+                    else -> {
+                        areaList = (res as Resource.Success).data
+                        _areaLiveData.postValue(AreasScreenState.Content(res.data))
+                    }
                 }
             }
             filterInteractor.getFilter().collect { filter ->
@@ -285,12 +286,12 @@ class FilterViewModel(
             filterInteractor.deleteIndustries()
         }
     }
+=======
+
     fun getIndustriesModelFromFilter(industry: IndustriesFilterModel?): IndustryModel? {
         return if (industry != null) mapperFilter.map(industry) else null
     }
     fun saveCheckSalary(onlyWithSalary: Boolean) {
-        viewModelScope.launch {
-            filterInteractor.saveCheckSalary(onlyWithSalary)
-        }
+        viewModelScope.launch { filterInteractor.saveCheckSalary(onlyWithSalary) }
     }
 }

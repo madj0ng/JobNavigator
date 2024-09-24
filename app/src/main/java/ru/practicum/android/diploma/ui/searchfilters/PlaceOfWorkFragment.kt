@@ -33,8 +33,6 @@ class PlaceOfWorkFragment : Fragment() {
         viewModel.getSelectRegionLiveData().observe(viewLifecycleOwner, this::init)
         viewModel.getSelectCountryLiveData().observe(viewLifecycleOwner, this::init)
 
-        viewModel.checkSelectedPlaceOfWork()
-
         binding.countryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -50,7 +48,11 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
+
             viewModel.unSelectCountry()
+=======
+            viewModel.selectPlaceOfWork()
+
             findNavController()
                 .navigateUp()
         }
@@ -82,7 +84,6 @@ class PlaceOfWorkFragment : Fragment() {
             binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
     }
-
     override fun onStart() {
         super.onStart()
         viewModel.checkSelectedPlaceOfWork()
@@ -92,6 +93,8 @@ class PlaceOfWorkFragment : Fragment() {
         super.onResume()
         viewModel.checkSelectedPlaceOfWork()
     }
+
+=======
 
     override fun onDestroyView() {
         super.onDestroyView()
