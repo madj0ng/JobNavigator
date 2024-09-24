@@ -26,12 +26,6 @@ class FilterViewModel(
     private val filterInteractor: FilterInteractor,
     private val mapperIndustry: MapperIndystry
 ) : ViewModel() {
-    init {
-        getAreas()
-        getIndustries()
-        getFilter()
-    }
-
     private var _areaLiveData = MutableLiveData<AreasScreenState>()
     val areaLiveData: LiveData<AreasScreenState> get() = _areaLiveData
     private var _regionsLiveData = MutableLiveData<RegionScreenState>()
@@ -64,9 +58,7 @@ class FilterViewModel(
 
     fun setDontShowWithoutSalary(show: Boolean) {
         doNotShowWithoutSalary = show
-        viewModelScope.launch {
-            filterInteractor.saveOnlyWithSalary(show)
-        }
+        saveCheckSalary(show)
     }
 
     fun setSalary(salary: String) {
@@ -74,11 +66,16 @@ class FilterViewModel(
             salaryBase = null
         } else {
             salaryBase = salary.toInt()
-            if (salaryBase!! > 0) {
-                viewModelScope.launch {
-                    filterInteractor.saveSalary(salaryBase!!)
-                }
+            if (salaryBase!! == 0) {
+                salaryBase = null
             }
+        }
+        saveSalary()
+    }
+
+    fun saveSalary() {
+        viewModelScope.launch {
+            filterInteractor.saveSalary(salaryBase)
         }
     }
 
@@ -330,5 +327,11 @@ class FilterViewModel(
 
     fun getIndustriesModelFromFilter(industry: IndustriesFilterModel?): IndustryModel? {
         return if (industry != null) mapperIndustry.map(industry) else null
+    }
+
+    fun saveCheckSalary(onlyWithSalary: Boolean) {
+        viewModelScope.launch {
+            filterInteractor.saveCheckSalary(onlyWithSalary)
+        }
     }
 }
