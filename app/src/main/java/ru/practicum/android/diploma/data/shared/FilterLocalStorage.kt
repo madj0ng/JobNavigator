@@ -103,17 +103,21 @@ class FilterLocalStorage(
         if (getConditionToCheckSalary(filter) && !onlyWithSalary) {
             saveStorage(null)
         } else {
-            if (filter?.onlyWithSalary != onlyWithSalary) {
-                if (onlyWithSalary) {
-                    filter?.onlyWithSalary = true
-                    saveStorage(filter)
+            compareCheckAndSaveCheck(onlyWithSalary, filter)
+        }
+    }
+
+    private suspend fun compareCheckAndSaveCheck(onlyWithSalary: Boolean, filter: FilterDto?) {
+        if (filter?.onlyWithSalary != onlyWithSalary) {
+            if (onlyWithSalary) {
+                filter?.onlyWithSalary = true
+                saveStorage(filter)
+            } else {
+                if (getConditionToCheckSalary(filter)) {
+                    saveStorage(null)
                 } else {
-                    if (getConditionToCheckSalary(filter)) {
-                        saveStorage(null)
-                    } else {
-                        filter?.onlyWithSalary = onlyWithSalary
-                        saveStorage(filter)
-                    }
+                    filter?.onlyWithSalary = onlyWithSalary
+                    saveStorage(filter)
                 }
             }
         }
