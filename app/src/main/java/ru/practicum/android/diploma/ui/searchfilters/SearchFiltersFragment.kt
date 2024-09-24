@@ -46,7 +46,7 @@ class SearchFiltersFragment : Fragment() {
         }
         binding.placeOfWork.setOnClickListener {
             val str = binding.placeOfWorkCountryRegion.text
-            viewModel.isHaveSaveFilter = (str.isNotEmpty())
+            viewModel.isHaveSaveFilter = str.isNotEmpty()
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()

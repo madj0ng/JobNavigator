@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.doOnNextLayout
 import androidx.core.widget.addTextChangedListener
@@ -56,6 +57,8 @@ class IndustryChooseFragment : Fragment() {
             viewModel.selectIndustry(null)
             findNavController()
                 .navigateUp()
+            binding.btnSelect.visibility = View.GONE
+            restoreRvList()
         }
         binding.search.addTextChangedListener { str ->
             changeIcon(str.toString())
@@ -63,6 +66,8 @@ class IndustryChooseFragment : Fragment() {
         }
 
         binding.btnSelect.setOnClickListener {
+            binding.btnSelect.visibility = View.GONE
+            restoreRvList()
             viewModel.saveIndustry()
             findNavController()
                 .navigateUp()
@@ -70,6 +75,12 @@ class IndustryChooseFragment : Fragment() {
 
         binding.clearText.setOnClickListener {
             binding.search.setText("")
+        }
+
+        OnBackPressedDispatcher {
+            binding.btnSelect.visibility = View.GONE
+            restoreRvList()
+            findNavController().navigateUp()
         }
     }
 
@@ -125,6 +136,12 @@ class IndustryChooseFragment : Fragment() {
         binding.root.doOnNextLayout {
             val pad = binding.frameLayout.bottom - binding.btnSelect.bottom
             binding.industriesRecyclerView.setPadding(0, 0, 0, pad / 2)
+        }
+    }
+
+    private fun restoreRvList() {
+        binding.root.doOnNextLayout {
+            binding.industriesRecyclerView.setPadding(0, 0, 0, 0)
         }
     }
 
