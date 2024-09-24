@@ -20,7 +20,8 @@ val viewModelModule = module {
     viewModel {
         FavoriteJobsViewModel(get())
     }
+
     viewModel {
-        FilterViewModel(get())
+        FilterViewModel(get(), get())
     }
 }

@@ -52,6 +52,18 @@ class FormatConverter(private val context: Context) {
         return toSalaryString(Salary(salary.currency ?: "", salary.from, salary.to))
     }
 
+    fun clearIfNotInt(str: String): String {
+        try {
+            return if (str.toInt() > 0) {
+                str
+            } else {
+                ""
+            }
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+    }
+
     private fun getCurrencyWord(currency: String): String {
         return cur[currency] ?: currency
     }

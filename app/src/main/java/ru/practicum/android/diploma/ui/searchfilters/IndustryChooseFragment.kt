@@ -13,7 +13,6 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.IndustryChoosingFragmentBinding
 import ru.practicum.android.diploma.domain.models.IndustryModel
-import ru.practicum.android.diploma.domain.models.Resource
 import ru.practicum.android.diploma.presentation.models.IndustryScreenState
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
@@ -48,14 +47,13 @@ class IndustryChooseFragment : Fragment() {
             }
         }
 
-        viewModel.checkSelectedIndustries()
-
         filtersViewAdapterIndustry = FiltersViewAdapterIndustry { industry ->
             viewModel.selectIndustry(industry)
         }
         binding.industriesRecyclerView.adapter = filtersViewAdapterIndustry
 
         binding.buttonBack.setOnClickListener {
+            viewModel.selectIndustry(null)
             findNavController()
                 .navigateUp()
         }
@@ -77,11 +75,9 @@ class IndustryChooseFragment : Fragment() {
 
     private fun render(state: IndustryScreenState) {
         when (state) {
-            IndustryScreenState.ErrorContent -> seeErrorContent()
-            IndustryScreenState.ErrorInternet -> seeErrorInternet()
-            IndustryScreenState
-                .Content((state as IndustryScreenState.Content).data) -> seeContent(state.data)
-            else -> seeErrorContent()
+            is IndustryScreenState.ErrorContent -> seeErrorContent()
+            is IndustryScreenState.ErrorInternet -> seeErrorInternet()
+            is IndustryScreenState.Content -> seeContent(state.data)
         }
     }
 
