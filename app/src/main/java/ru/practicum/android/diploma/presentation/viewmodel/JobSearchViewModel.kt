@@ -69,7 +69,7 @@ class JobSearchViewModel(
         if (isNewQuery) setQueryUiState(query.vacancyName)
     }
 
-    private fun searchRequest(vacancySearchParams: VacancySearchParams) {
+    fun searchRequest(vacancySearchParams: VacancySearchParams) {
         if (vacancySearchParams.vacancyName.isEmpty()) {
             return
         }

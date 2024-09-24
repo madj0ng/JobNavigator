@@ -1,9 +1,11 @@
 package ru.practicum.android.diploma.ui.jobsearch
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -27,6 +29,7 @@ class JobSearchFragment : Fragment() {
     private val viewModel: JobSearchViewModel by viewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
     private var filterModel: FilterModel? = null
+    private var lastQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,12 +54,12 @@ class JobSearchFragment : Fragment() {
                     newQuery = false
                     this.filterModel = filterModel
                     val query = binding.etSearch.text
-                    viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
+                    viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
                 }
             } else {
                 this.filterModel = filterModel
                 val query = binding.etSearch.text
-                viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
+                viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
                 binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_transparent)
             }
         }
@@ -64,9 +67,11 @@ class JobSearchFragment : Fragment() {
         viewModel.getFilter()
 
         binding.etSearch.addTextChangedListener { query ->
-            viewModel.onSearchQueryChanged(
-                setQueryParam(query.toString(), filterModel)
-            )
+            if (lastQuery != query.toString()) {
+                viewModel.onSearchQueryChanged(
+                    setQueryParam(query.toString(), filterModel)
+                )
+            }
         }
 
         jobSearchViewAdapter = JobSearchViewAdapter {
@@ -82,6 +87,7 @@ class JobSearchFragment : Fragment() {
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
         viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
         binding.ifbFilter.setOnClickListener {
+            lastQuery = binding.etSearch.text.toString()
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
         }
         binding.ivSearchClear.setOnClickListener {
@@ -137,6 +143,10 @@ class JobSearchFragment : Fragment() {
         if (uiState.url != null) {
             binding.ivInformImage.setImageResource(uiState.url!!)
         }
+
+        if (uiState is SearchUiState.Loading) {
+            view?.hideKeyboard()
+        }
     }
 
     private fun showContent(uiState: SearchUiState.Content) {
@@ -168,6 +178,13 @@ class JobSearchFragment : Fragment() {
         } else {
             VacancySearchParams(query)
         }
+    }
+
+    private fun View.hideKeyboard() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+
     }
 
     override fun onResume() {
