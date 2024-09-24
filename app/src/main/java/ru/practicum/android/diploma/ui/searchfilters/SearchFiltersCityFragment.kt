@@ -29,7 +29,6 @@ class SearchFiltersCityFragment : Fragment() {
                 hideAll()
                 binding.cityError.visibility = View.VISIBLE
             } else {
-//                viewModel.selectRegion = null
                 viewModel.setRegionModel(null)
                 hideAll()
                 binding.cityRecyclerview.visibility = View.VISIBLE

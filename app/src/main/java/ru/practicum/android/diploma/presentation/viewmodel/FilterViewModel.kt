@@ -50,14 +50,7 @@ class FilterViewModel(
     private var regionsList = listOf<RegionModel>()
     private var cityList = listOf<CityModel>()
     private var industryList = listOf<IndustryModel>()
-//    var selectedCountry: CountryModel? = null
 
-//    var selectRegion: RegionModel? = null
-//    private var selectCity: CityModel? = null
-
-    //    private var saveRegion: RegionModel? = null
-//    private var savedCity: CityModel? = null
-//    private var savedCountry: CountryModel? = null
     private var salaryBase: Int? = null
     private var doNotShowWithoutSalary: Boolean = false
 
@@ -110,9 +103,6 @@ class FilterViewModel(
     }
 
     fun saveArea() {
-//        savedCountry = selectedCountry
-//        saveRegion = selectRegion
-//        savedCity = selectCity
         var area: AreaFilterModel? = null
         var country = if (selectCountryLiveData.value != null) {
             mapperFilter.map(selectCountryLiveData.value!!)
@@ -211,20 +201,6 @@ class FilterViewModel(
         }
     }
 
-    private fun getIndustries() {
-        viewModelScope.launch {
-            filterInteractor.getIndustrias().collect() { res ->
-                when (res) {
-                    is Resource.Error -> _industryLiveData.postValue(IndustryScreenState.ErrorInternet)
-                    is Resource.Success -> {
-                        industryList = res.data
-                        _industryLiveData.postValue(IndustryScreenState.Content(industryList))
-                    }
-                }
-            }
-        }
-    }
-
     fun selectIndustry(industryModel: IndustryModel?) {
         _selectIndustryLiveData.postValue(industryModel)
     }
@@ -285,8 +261,6 @@ class FilterViewModel(
                 selectedCityFromFilter(it.city, filterModel)
                 if (it.id == filterModel?.area?.id) {
                     setRegionModel(it)
-//                    saveRegion = it
-//                    selectRegion = saveRegion
                 }
             }
         }
@@ -297,8 +271,6 @@ class FilterViewModel(
             city.forEach {
                 if (it.id == filterModel?.area?.id) {
                     setCityModel(it)
-//                        savedCity = it
-//                        selectCity = savedCity
                 }
             }
         }
@@ -334,6 +306,10 @@ class FilterViewModel(
                 selectIndustry(getIndustriesModelFromFilter(filter?.industries))
             }
         }
+    }
+
+    fun selectFilter(filter: FilterModel) {
+        _searchFilterLiveData.postValue(filter)
     }
 
     fun deletePlaceOfWork() {
