@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedDispatcher
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
@@ -24,7 +21,6 @@ class SearchFiltersFragment : Fragment() {
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private val format: FormatConverter = getKoin().get()
-    private var isClickAllowed = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -112,7 +108,7 @@ class SearchFiltersFragment : Fragment() {
             viewModel.deleteIndustries()
             viewModel.getFilter()
         }
-        OnBackPressedDispatcher{
+        OnBackPressedDispatcher {
             viewModel.saveCheckSalary(binding.ischeced.isChecked)
             viewModel.saveSalary()
         }

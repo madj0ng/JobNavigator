@@ -65,7 +65,6 @@ class FilterLocalStorage(
                 saveStorage(null)
             } else {
                 filter.salary = salaryDto
-                Log.d("AAAAAAA", "${filter.salary}")
                 saveStorage(filter)
             }
         } else {
