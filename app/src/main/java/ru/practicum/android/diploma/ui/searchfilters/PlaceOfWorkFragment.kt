@@ -48,7 +48,7 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
-            viewModel.unSelectCountry()
+            viewModel.selectPlaceOfWork()
             findNavController()
                 .navigateUp()
         }

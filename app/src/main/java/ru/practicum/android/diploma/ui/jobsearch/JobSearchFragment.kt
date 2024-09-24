@@ -26,7 +26,6 @@ import ru.practicum.android.diploma.ui.searchfilters.SearchFiltersFragment
 class JobSearchFragment : Fragment() {
     private var _binding: FragmentJobSearchBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: JobSearchViewModel by viewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
     private var filterModel: FilterModel? = null
@@ -43,7 +42,6 @@ class JobSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         var newQuery = findNavController().currentBackStackEntry
             ?.savedStateHandle
             ?.remove<Boolean>(SearchFiltersFragment.NEW_QUERY_FLAG)
@@ -63,14 +61,11 @@ class JobSearchFragment : Fragment() {
         viewModel.getFilter()
         binding.etSearch.addTextChangedListener { query ->
             if (lastQuery != query.toString()) {
-                viewModel.onSearchQueryChanged(
-                    setQueryParam(query.toString(), filterModel)
-                )
+                viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
             }
         }
         jobSearchViewAdapter = JobSearchViewAdapter {
-            val action = JobSearchFragmentDirections.actionJobSearchFragmentToJobDetailsFragment(it)
-            findNavController().navigate(action)
+            findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToJobDetailsFragment(it))
         }
         binding.rvJobList.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -82,16 +77,13 @@ class JobSearchFragment : Fragment() {
             lastQuery = binding.etSearch.text.toString()
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
         }
-        binding.ivSearchClear.setOnClickListener {
-            viewModel.onClickSearchClear()
-        }
+        binding.ivSearchClear.setOnClickListener { viewModel.onClickSearchClear() }
         binding.rvJobList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
                     val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                    val itemsCount = jobSearchViewAdapter!!.itemCount
-                    if (pos >= itemsCount - 1) {
+                    if (pos >= jobSearchViewAdapter!!.itemCount - 1) {
                         viewModel.onLastItemReached(
                             setQueryParam(viewModel.observeSearch().value?.query ?: "", filterModel)
                         )
@@ -102,12 +94,8 @@ class JobSearchFragment : Fragment() {
     }
 
     private fun updateSearchText(state: QueryUiState) {
-        if (state.src != null) {
-            binding.ivSearchClear.setImageResource(state.src!!)
-        }
-        if (!state.isClose) {
-            binding.etSearch.text = null
-        }
+        if (state.src != null) binding.ivSearchClear.setImageResource(state.src!!)
+        if (!state.isClose) binding.etSearch.text = null
     }
 
     private fun updateUiState(uiState: SearchUiState) {
@@ -126,26 +114,15 @@ class JobSearchFragment : Fragment() {
         binding.pbJobList.isVisible = uiState.isPaginationProgressBar
         binding.ivInformImage.isVisible = uiState.isInformImage
         binding.ivInformBottomText.isVisible = uiState.isBottomText
-        if (uiState.topText != null) {
-            binding.tvJobSearchCount.setText(uiState.topText!!)
-        }
-        if (uiState.bottomText != null) {
-            binding.ivInformBottomText.setText(uiState.bottomText!!)
-        }
-        if (uiState.url != null) {
-            binding.ivInformImage.setImageResource(uiState.url!!)
-        }
-
-        if (uiState is SearchUiState.Loading) {
-            view?.hideKeyboard()
-        }
+        if (uiState.topText != null) binding.tvJobSearchCount.setText(uiState.topText!!)
+        if (uiState.bottomText != null) binding.ivInformBottomText.setText(uiState.bottomText!!)
+        if (uiState.url != null) binding.ivInformImage.setImageResource(uiState.url!!)
+        if (uiState is SearchUiState.Loading) view?.hideKeyboard()
     }
 
     private fun showContent(uiState: SearchUiState.Content) {
         showScreen(uiState)
-        if (uiState.topText != null) {
-            binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
-        }
+        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
     }
 

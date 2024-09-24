@@ -70,8 +70,8 @@ class SearchFiltersFragment : Fragment() {
                 ?.set(NEW_QUERY_FLAG, newQuery)
         }
         binding.buttonCancel.setOnClickListener {
-            viewModel.unSelectCountry()
-            viewModel.unSelectIndustry()
+            viewModel.selectPlaceOfWork()
+            viewModel.selectIndustry()
             viewModel.saveFilter(null)
             canselFilter()
             viewModel.getFilter()
@@ -98,13 +98,13 @@ class SearchFiltersFragment : Fragment() {
         }
         binding.buttonClearToPow.setOnClickListener {
             restartPlaceOfWork()
-            viewModel.unSelectCountry()
+            viewModel.selectPlaceOfWork()
             viewModel.deletePlaceOfWork()
             viewModel.getFilter()
         }
         binding.buttonClearToInd.setOnClickListener {
             restartIndusytries()
-            viewModel.unSelectIndustry()
+            viewModel.selectIndustry()
             viewModel.deleteIndustries()
             viewModel.getFilter()
         }
