@@ -98,6 +98,27 @@ class FilterLocalStorage(
         }
     }
 
+    suspend fun saveCheckSalary(onlyWithSalary: Boolean) {
+        val filter = getFromStorage()
+        if (getConditionToCheckSalary(filter) && !onlyWithSalary) {
+            saveStorage(null)
+        } else {
+            if (filter?.onlyWithSalary != onlyWithSalary) {
+                if (onlyWithSalary) {
+                    filter?.onlyWithSalary = true
+                    saveStorage(filter)
+                } else {
+                    if (getConditionToCheckSalary(filter)) {
+                        saveStorage(null)
+                    } else {
+                        filter?.onlyWithSalary = onlyWithSalary
+                        saveStorage(filter)
+                    }
+                }
+            }
+        }
+    }
+
     private fun getConditionToPow(filter: FilterDto?): Boolean {
         return filter?.onlyWithSalary == null &&
             filter?.industries == null &&
@@ -109,5 +130,12 @@ class FilterLocalStorage(
             filter?.country == null &&
             filter?.area == null &&
             filter?.salary == null
+    }
+
+    private fun getConditionToCheckSalary(filter: FilterDto?): Boolean {
+        return filter?.salary == null &&
+            filter?.country == null &&
+            filter?.area == null &&
+            filter?.industries == null
     }
 }
