@@ -79,8 +79,10 @@ class FilterInteractorImpl(
         }
     }
 
-    override suspend fun savePlaceOfWork(countryFilterModel: CountryFilterModel, areaFilterModel: AreaFilterModel) {
-        repository.savePlaceOfWork(converter.mapCountry(countryFilterModel), converter.mapArea(areaFilterModel))
+    override suspend fun savePlaceOfWork(countryFilterModel: CountryFilterModel?, areaFilterModel: AreaFilterModel?) {
+        val country = if (countryFilterModel != null) converter.mapCountry(countryFilterModel) else null
+        val area = if (areaFilterModel != null) converter.mapArea(areaFilterModel) else null
+        repository.savePlaceOfWork(country, area)
     }
 
     override suspend fun saveIndustries(industriesFilterModel: IndustriesFilterModel) {

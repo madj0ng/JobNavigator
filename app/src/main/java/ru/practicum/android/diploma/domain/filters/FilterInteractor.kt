@@ -14,7 +14,7 @@ interface FilterInteractor {
     fun getIndustrias(): Flow<Resource<List<IndustryModel>>>
     suspend fun getFilter(): Flow<FilterModel?>
     suspend fun saveFilter(filterModel: FilterModel?)
-    suspend fun savePlaceOfWork(countryFilterModel: CountryFilterModel, areaFilterModel: AreaFilterModel)
+    suspend fun savePlaceOfWork(countryFilterModel: CountryFilterModel?, areaFilterModel: AreaFilterModel?)
     suspend fun saveIndustries(industriesFilterModel: IndustriesFilterModel)
     suspend fun saveSalary(salary: Int?)
     suspend fun deletePlaceOfWork()

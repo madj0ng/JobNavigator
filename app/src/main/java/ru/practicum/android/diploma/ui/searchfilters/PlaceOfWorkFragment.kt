@@ -9,7 +9,9 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.PlaceOfWorkFragmentBinding
-import ru.practicum.android.diploma.domain.models.PlaceOfWorkModel
+import ru.practicum.android.diploma.domain.models.CityModel
+import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class PlaceOfWorkFragment : Fragment() {
@@ -27,9 +29,9 @@ class PlaceOfWorkFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.placeOfWorkLiveData.observe(viewLifecycleOwner) { area ->
-            init(area)
-        }
+        viewModel.getSelectCityLiveData().observe(viewLifecycleOwner, this::init)
+        viewModel.getSelectRegionLiveData().observe(viewLifecycleOwner, this::init)
+        viewModel.getSelectCountryLiveData().observe(viewLifecycleOwner, this::init)
 
         viewModel.checkSelectedPlaceOfWork()
 
@@ -48,6 +50,7 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
+//            viewModel.unSelectCountry()
             findNavController()
                 .navigateUp()
         }
@@ -59,20 +62,23 @@ class PlaceOfWorkFragment : Fragment() {
         }
     }
 
-    private fun init(area: PlaceOfWorkModel) {
-        val tempC = area.country
-        val tempR = area.region
-        val tempCity = area.city
-        if (tempC != null) {
-            binding.countryTextarea.text = tempC.name
+    private fun init(country: CountryModel?) {
+        if (country != null) {
+            binding.countryTextarea.text = country.name
             binding.hintCountryTextarea.text = context?.getString(R.string.country)
         }
-        if (tempR != null) {
-            binding.regionTextarea.text = tempR.name
+    }
+
+    private fun init(region: RegionModel?) {
+        if (region != null) {
+            binding.regionTextarea.text = region.name
             binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
-        if (tempCity != null) {
-            binding.regionTextarea.text = tempCity.name
+    }
+
+    private fun init(city: CityModel?) {
+        if (city != null) {
+            binding.regionTextarea.text = city.name
             binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
     }
@@ -84,7 +90,7 @@ class PlaceOfWorkFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.checkSelectedPlaceOfWork()
+//        viewModel.checkSelectedPlaceOfWork()
     }
 
     override fun onDestroyView() {

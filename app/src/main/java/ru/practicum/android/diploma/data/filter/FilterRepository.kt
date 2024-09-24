@@ -13,7 +13,7 @@ interface FilterRepository {
     fun getIndustries(): Flow<ListResponseWrapper<IndustryResponse>>
     suspend fun getFilter(): Flow<FilterDto?>
     suspend fun saveFilter(filterDto: FilterDto?)
-    suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto)
+    suspend fun savePlaceOfWork(countriesDto: CountriesDto?, areasDto: AreasDto?)
     suspend fun saveIndustries(industriesDto: IndustriesDto)
     suspend fun saveSalary(salaryDto: Int?)
     suspend fun deletePlaceOfWork()

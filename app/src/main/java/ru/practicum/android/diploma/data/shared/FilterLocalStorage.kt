@@ -36,7 +36,7 @@ class FilterLocalStorage(
         }
     }
 
-    suspend fun savePlaceOfWork(countriesDto: CountriesDto, areasDto: AreasDto) {
+    suspend fun savePlaceOfWork(countriesDto: CountriesDto?, areasDto: AreasDto?) {
         var filter = getFromStorage()
         if (filter != null) {
             filter.country = countriesDto
