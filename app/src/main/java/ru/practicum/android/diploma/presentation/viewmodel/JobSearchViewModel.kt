@@ -156,7 +156,8 @@ class JobSearchViewModel(
                 vacancyName = item.name,
                 departamentName = item.employer?.name ?: "",
                 salary = formatConverter.toSalaryString(item.salary),
-                logoUrl = item.employer?.logoUrls?.size90
+                logoUrl = item.employer?.logoUrls?.size90,
+                city = item.region.name,
             )
         }
     }

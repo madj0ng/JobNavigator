@@ -11,7 +11,8 @@ class MapperVacansyToJob {
             vacancyInfo.vacancyName,
             vacancyInfo.salary,
             vacancyInfo.departamentName,
-            vacancyInfo.logoUrl ?: ""
+            vacancyInfo.logoUrl ?: "",
+            vacancyInfo.city,
         )
     }
 
@@ -21,7 +22,8 @@ class MapperVacansyToJob {
             jobEntity.name,
             jobEntity.employer,
             jobEntity.salary,
-            jobEntity.logoUrl
+            jobEntity.logoUrl,
+            jobEntity.city,
         )
     }
 
