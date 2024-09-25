@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.ui.jobsearch
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
