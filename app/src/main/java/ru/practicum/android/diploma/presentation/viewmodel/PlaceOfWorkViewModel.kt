@@ -38,10 +38,19 @@ class PlaceOfWorkViewModel(
     private var cityList = listOf<CityModel>()
 
     fun getAreas() {
+        areaList = emptyList()
         viewModelScope.launch {
             filterInteractor.getAreas().collect { res ->
                 when (res) {
-                    is Resource.Error -> _areaLiveData.postValue(AreasScreenState.Error)
+                    is Resource.Error -> {
+                        areaList = emptyList()
+                        if (res.resultCode == ERROR_INTERNET) {
+                            _areaLiveData.postValue(AreasScreenState.ErrorInternet)
+                        } else {
+                            _areaLiveData.postValue(AreasScreenState.Error)
+                        }
+                    }
+
                     else -> {
                         areaList = (res as Resource.Success).data
                         _areaLiveData.postValue(AreasScreenState.Content(res.data))
@@ -51,9 +60,18 @@ class PlaceOfWorkViewModel(
         }
     }
 
-    private fun setCountryModel(model: CountryModel?) { selectCountryLiveData.postValue(model) }
-    fun setRegionModel(model: RegionModel?) { selectRegionLiveData.postValue(model) }
-    private fun setCityModel(model: CityModel?) { selectCityLiveData.postValue(model) }
+    private fun setCountryModel(model: CountryModel?) {
+        selectCountryLiveData.postValue(model)
+    }
+
+    fun setRegionModel(model: RegionModel?) {
+        selectRegionLiveData.postValue(model)
+    }
+
+    private fun setCityModel(model: CityModel?) {
+        selectCityLiveData.postValue(model)
+    }
+
     fun saveArea() {
         var area: AreaFilterModel? = null
         val country = if (selectCountryLiveData.value != null) {
@@ -65,18 +83,24 @@ class PlaceOfWorkViewModel(
         if (selectCityLiveData.value != null) area = mapperFilter.mapCity(selectCityLiveData.value!!)
         viewModelScope.launch { filterInteractor.savePlaceOfWork(country, area) }
     }
+
     fun selectPlaceOfWork(country: CountryModel? = null, region: RegionModel? = null, sity: CityModel? = null) {
         setCityModel(sity)
         setRegionModel(region)
         setCountryModel(country)
     }
+
     fun selectRegion(regionModel: RegionModel) {
         var country: CountryModel? = null
         areaList.forEach { if (it.regions.contains(regionModel)) country = it }
         setCountryModel(country)
         setRegionModel(regionModel)
     }
-    fun selectCity(cityModel: CityModel) { setCityModel(cityModel) }
+
+    fun selectCity(cityModel: CityModel) {
+        setCityModel(cityModel)
+    }
+
     fun searchRegion(strRegion: String) {
         if (strRegion.isNotEmpty()) {
             val listRes = regionsList.filter { area ->
@@ -91,9 +115,11 @@ class PlaceOfWorkViewModel(
             _regionsLiveData.postValue(RegionScreenState.Content(regionsList))
         }
     }
+
     fun searchCity(strCity: String) {
         _cityLiveData.value = cityList.filter { it.name.lowercase().contains(strCity.lowercase()) }
     }
+
     fun getRegions() {
         val country = selectCountryLiveData.value
         if (country == null) {
@@ -114,6 +140,7 @@ class PlaceOfWorkViewModel(
             }
         }
     }
+
     fun getCity() {
         regionsList.forEach {
             if (it.name == selectRegionLiveData.value?.name) {
@@ -126,18 +153,24 @@ class PlaceOfWorkViewModel(
     fun saveSelectedFromFilter(filterModel: FilterModel?) {
         selectedAreaFromFilter(filterModel)
     }
+
     private fun selectedAreaFromFilter(filterModel: FilterModel?) {
         areaList.forEach { if (it.id == filterModel?.country?.id) setCountryModel(it) }
         selectedRegionFromFilter(filterModel)
     }
+
     private fun selectedRegionFromFilter(filterModel: FilterModel?) {
         selectCountryLiveData.value?.regions?.forEach {
             selectedCityFromFilter(it.city, filterModel)
             if (it.id == filterModel?.area?.id) setRegionModel(it)
         }
     }
+
     private fun selectedCityFromFilter(city: List<CityModel>, filterModel: FilterModel?) {
         if (city.isNotEmpty()) city.forEach { if (it.id == filterModel?.area?.id) setCityModel(it) }
     }
 
+    companion object {
+        private const val ERROR_INTERNET = -1
+    }
 }

@@ -40,6 +40,8 @@ class SearchFiltersRegionFragment : Fragment() {
             }
         }
 
+        viewModel.getRegions()
+
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel.selectRegion(area)
             if (area.city.isEmpty()) {
@@ -55,7 +57,6 @@ class SearchFiltersRegionFragment : Fragment() {
             }
         }
         binding.regionRecyclerview.adapter = filtersViewAdapterRegion
-        viewModel.getRegions()
 
         binding.buttonBack.setOnClickListener {
             findNavController()

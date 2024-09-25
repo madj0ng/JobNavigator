@@ -94,6 +94,11 @@ class PlaceOfWorkFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAreas()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
