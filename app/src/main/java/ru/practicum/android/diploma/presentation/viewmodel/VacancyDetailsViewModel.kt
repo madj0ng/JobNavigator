@@ -36,7 +36,8 @@ class VacancyDetailsViewModel(
             is Resource.Error -> {
                 when (res.resultCode) {
                     RetrofitNetworkClient.ERROR_CODE_SERVER -> stateLiveData.postValue(
-                        VacancyDetailsScreenState.ErrorServer)
+                        VacancyDetailsScreenState.ErrorServer
+                    )
 
                     RetrofitNetworkClient.ERROR_CODE_INTERNET -> getVacancyFromStorage(id)
                 }

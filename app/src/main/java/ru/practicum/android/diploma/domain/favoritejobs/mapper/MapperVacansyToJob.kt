@@ -34,7 +34,7 @@ class MapperVacansyToJob(private val gson: Gson) {
         }
     }
 
-    fun map(id:String, vacancy: VacancyDetailsModel): VacancyEntity {
+    fun map(id: String, vacancy: VacancyDetailsModel): VacancyEntity {
         val professionalRoles = gson.toJson(vacancy.professionalRoles)
         val keySkills = gson.toJson(vacancy.keySkills)
         return VacancyEntity(
@@ -50,7 +50,7 @@ class MapperVacansyToJob(private val gson: Gson) {
             vacancy.employerIcon,
             vacancy.employerName,
             vacancy.alternativeUrl,
-            vacancy.isFavorite
+            true
         )
     }
 
@@ -69,7 +69,7 @@ class MapperVacansyToJob(private val gson: Gson) {
             vacancy.employerIcon,
             vacancy.employerName,
             vacancy.alternativeUrl,
-            vacancy.isFavorite
+            true
         )
     }
 }
