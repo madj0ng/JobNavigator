@@ -38,7 +38,7 @@ class CountryChooseFragment : Fragment() {
             }
         }
 
-        filtersViewAdapterCountry = FiltersViewAdapterArea() { area ->
+        filtersViewAdapterCountry = FiltersViewAdapterArea { area ->
             viewModel.selectPlaceOfWork(country = area)
             findNavController()
                 .navigateUp()
@@ -51,7 +51,7 @@ class CountryChooseFragment : Fragment() {
         }
     }
 
-    fun hideAll() {
+    private fun hideAll() {
         binding.countryRecyclerview.visibility = View.GONE
         binding.countryError.visibility = View.GONE
     }

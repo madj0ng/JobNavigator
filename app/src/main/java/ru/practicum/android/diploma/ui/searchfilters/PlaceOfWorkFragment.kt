@@ -48,9 +48,6 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
-
-            viewModel.unSelectCountry()
-=======
             viewModel.selectPlaceOfWork()
 
             findNavController()
@@ -84,17 +81,6 @@ class PlaceOfWorkFragment : Fragment() {
             binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
     }
-    override fun onStart() {
-        super.onStart()
-        viewModel.checkSelectedPlaceOfWork()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.checkSelectedPlaceOfWork()
-    }
-
-=======
 
     override fun onDestroyView() {
         super.onDestroyView()
