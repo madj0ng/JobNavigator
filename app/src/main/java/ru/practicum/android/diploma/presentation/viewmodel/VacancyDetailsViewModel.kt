@@ -26,24 +26,23 @@ class VacancyDetailsViewModel(
         stateLiveData.value = VacancyDetailsScreenState.Loading
         viewModelScope.launch {
             vacancyDetailsInteractor.getVacancy(vacancyId).collect { res ->
-                renderState(res)
+                renderState(vacancyId, res)
             }
         }
     }
 
-    private fun renderState(res: Resource<VacancyDetailsModel>) {
+    private fun renderState(id: String, res: Resource<VacancyDetailsModel>) {
         when (res) {
             is Resource.Error -> {
                 when (res.resultCode) {
-                    RetrofitNetworkClient.ERROR_CODE_SERVER -> stateLiveData.value =
-                        VacancyDetailsScreenState.ErrorServer
+                    RetrofitNetworkClient.ERROR_CODE_SERVER -> stateLiveData.postValue(
+                        VacancyDetailsScreenState.ErrorServer)
 
-                    RetrofitNetworkClient.ERROR_CODE_INTERNET -> stateLiveData.value =
-                        VacancyDetailsScreenState.ErrorNoInternet
+                    RetrofitNetworkClient.ERROR_CODE_INTERNET -> getVacancyFromStorage(id)
                 }
             }
 
-            is Resource.Success -> stateLiveData.value = res.data.let { VacancyDetailsScreenState.Content(it) }
+            is Resource.Success -> stateLiveData.postValue(VacancyDetailsScreenState.Content(res.data))
         }
     }
 
@@ -54,21 +53,35 @@ class VacancyDetailsViewModel(
     private var _likeLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val likeLiveData: LiveData<Boolean> get() = _likeLiveData
 
-    fun addVacansyAtFavorite(vacancyInfo: VacancyInfo) {
+    fun addVacansyAtFavorite(vacancyInfo: VacancyInfo, vacancyDetailsModel: VacancyDetailsModel) {
         viewModelScope.launch(Dispatchers.IO) {
             favoriteJobsInteractor.insertJob(vacancyInfo)
+            favoriteJobsInteractor.insertVacancy(vacancyInfo.id, vacancyDetailsModel)
             _likeLiveData.postValue(true)
         }
     }
 
-    fun deleteVcancyFromFavorite(vacancyInfo: VacancyInfo) {
+    fun deleteVcancyFromFavorite(vacancyInfo: VacancyInfo, vacancyDetailsModel: VacancyDetailsModel) {
         viewModelScope.launch(Dispatchers.IO) {
             favoriteJobsInteractor.deleteJob(vacancyInfo)
+            favoriteJobsInteractor.deleteVacancy(vacancyInfo.id, vacancyDetailsModel)
             _likeLiveData.postValue(false)
         }
     }
 
     fun sharingVacancy(vacancyUrl: String) {
         sharingInteractor.sharingVacancy(vacancyUrl)
+    }
+
+    private fun getVacancyFromStorage(id: String) {
+        viewModelScope.launch {
+            favoriteJobsInteractor.getVacancy(id).collect { vacancy ->
+                if (vacancy != null) {
+                    stateLiveData.postValue(VacancyDetailsScreenState.Content(vacancy))
+                } else {
+                    stateLiveData.postValue(VacancyDetailsScreenState.ErrorNoInternet)
+                }
+            }
+        }
     }
 }

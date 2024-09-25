@@ -26,6 +26,7 @@ class JobDetailsFragment : Fragment() {
     private val binding get(): FragmentJobDetailsBinding = _binding!!
     private val viewModel: VacancyDetailsViewModel by viewModel()
     private var vacancyInfo: VacancyInfo? = null
+    private var vacancyDetailsModel: VacancyDetailsModel? = null
     private var vacancyId: String = ""
     private var vacancyUrl: String = ""
     private var isFavorite: Boolean = false
@@ -75,10 +76,10 @@ class JobDetailsFragment : Fragment() {
 
         binding.likeButton.setOnClickListener {
             if (isFavorite) {
-                viewModel.deleteVcancyFromFavorite(vacancyInfo!!)
+                viewModel.deleteVcancyFromFavorite(vacancyInfo!!, vacancyDetailsModel!!)
                 isFavorite = false
             } else {
-                viewModel.addVacansyAtFavorite(vacancyInfo!!)
+                viewModel.addVacansyAtFavorite(vacancyInfo!!, vacancyDetailsModel!!)
                 isFavorite = true
             }
         }
@@ -89,6 +90,7 @@ class JobDetailsFragment : Fragment() {
         vacancyInfo = VacancyInfo(vacancyId, state.data.name, state.data.employerName, state.data.salary
             ?: "", state.data.employerIcon
         )
+        vacancyDetailsModel = state.data
         isFavorite = state.data.isFavorite
     }
 
