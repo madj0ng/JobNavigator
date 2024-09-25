@@ -103,10 +103,7 @@ class FilterViewModel(
         }
     }
     fun searchCity(strCity: String) {
-        val listRes = cityList.filter { city ->
-            city.name.lowercase().contains(strCity.lowercase())
-        }
-        _cityLiveData.value = listRes
+        _cityLiveData.value = cityList.filter { it.name.lowercase().contains(strCity.lowercase()) }
     }
     fun getRegions() {
         val country = selectCountryLiveData.value
@@ -166,17 +163,13 @@ class FilterViewModel(
         doNotShowWithoutSalary = filterModel?.onlyWithSalary ?: false
     }
     private fun selectedAreaFromFilter(filterModel: FilterModel?) {
-        if (selectCountryLiveData.value != null) {
-            areaList.forEach { if (it.id == filterModel?.country?.id) setCountryModel(it) }
-        }
+        areaList.forEach { if (it.id == filterModel?.country?.id) setCountryModel(it) }
         selectedRegionFromFilter(filterModel)
     }
     private fun selectedRegionFromFilter(filterModel: FilterModel?) {
-        if (selectRegionLiveData.value != null) {
-            selectCountryLiveData.value?.regions?.forEach {
-                selectedCityFromFilter(it.city, filterModel)
-                if (it.id == filterModel?.area?.id) setRegionModel(it)
-            }
+        selectCountryLiveData.value?.regions?.forEach {
+            selectedCityFromFilter(it.city, filterModel)
+            if (it.id == filterModel?.area?.id) setRegionModel(it)
         }
     }
     private fun selectedCityFromFilter(city: List<CityModel>, filterModel: FilterModel?) {
@@ -187,14 +180,13 @@ class FilterViewModel(
     }
     fun getFilter() {
         viewModelScope.launch {
-            filterInteractor.getIndustrias().collect() { res ->
-                when (res) {
-                    is Resource.Error -> _industryLiveData.postValue(IndustryScreenState.ErrorInternet)
-                    is Resource.Success -> {
-                        industryList = res.data
-                        _industryLiveData.postValue(IndustryScreenState.Content(industryList))
-                    }
+            filterInteractor.getIndustrias().collect() { when (it) {
+                is Resource.Error -> _industryLiveData.postValue(IndustryScreenState.ErrorInternet)
+                is Resource.Success -> {
+                    industryList = it.data
+                    _industryLiveData.postValue(IndustryScreenState.Content(industryList))
                 }
+            }
             }
             filterInteractor.getAreas().collect { res ->
                 when (res) {
@@ -206,6 +198,7 @@ class FilterViewModel(
                 }
             }
             filterInteractor.getFilter().collect { filter ->
+                saveSelectedFromFilter(filter)
                 _searchFilterLiveData.postValue(filter)
                 selectIndustry(getIndustriesModelFromFilter(filter?.industries))
             }
