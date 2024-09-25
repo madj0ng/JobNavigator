@@ -9,6 +9,9 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.PlaceOfWorkFragmentBinding
+import ru.practicum.android.diploma.domain.models.CityModel
+import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
 
 class PlaceOfWorkFragment : Fragment() {
@@ -26,7 +29,10 @@ class PlaceOfWorkFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        viewModel.getSelectCityLiveData().observe(viewLifecycleOwner, this::init)
+        viewModel.getSelectRegionLiveData().observe(viewLifecycleOwner, this::init)
+        viewModel.getSelectCountryLiveData().observe(viewLifecycleOwner, this::init)
+
         binding.countryBtn.setOnClickListener {
             findNavController()
                 .navigate(
@@ -42,27 +48,35 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            viewModel.selectPlaceOfWork()
+            findNavController()
+                .navigateUp()
         }
 
         binding.btnSelect.setOnClickListener {
-            findNavController()
-                .navigate(PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersFragment())
             viewModel.saveArea()
+            findNavController()
+                .navigateUp()
         }
-
     }
 
-    override fun onResume() {
-        super.onResume()
-        val tempC = viewModel.getSelectedCountry()
-        val tempR = viewModel.getSelectedCity()
-        if (tempC != null) {
-            binding.countryTextarea.text = tempC.name
+    private fun init(country: CountryModel?) {
+        if (country != null) {
+            binding.countryTextarea.text = country.name
             binding.hintCountryTextarea.text = context?.getString(R.string.country)
         }
-        if (tempR != null) {
-            binding.regionTextarea.text = tempR.name
+    }
+
+    private fun init(region: RegionModel?) {
+        if (region != null) {
+            binding.regionTextarea.text = region.name
+            binding.hintRegionTextarea.text = context?.getString(R.string.region)
+        }
+    }
+
+    private fun init(city: CityModel?) {
+        if (city != null) {
+            binding.regionTextarea.text = city.name
             binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
     }

@@ -20,11 +20,7 @@ val interactorModule = module {
     }
 
     single<VacancyDetailsInteractor> {
-        VacancyDetailsInteractorImpl(
-            vacancyRepository = get(),
-            favoriteRepository = get(),
-            mapper = get()
-        )
+        VacancyDetailsInteractorImpl(get())
     }
 
     factory {
@@ -39,6 +35,6 @@ val interactorModule = module {
         SharingInteractorImpl(get())
     }
     single<FilterInteractor> {
-        FilterInteractorImpl(get())
+        FilterInteractorImpl(get(), get())
     }
 }

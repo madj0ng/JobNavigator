@@ -24,11 +24,12 @@ class SearchFiltersCityFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getCityLiveData().observe(viewLifecycleOwner) { city ->
+        viewModel.cityLiveData.observe(viewLifecycleOwner) { city ->
             if (city.isEmpty()) {
                 hideAll()
                 binding.cityError.visibility = View.VISIBLE
             } else {
+                viewModel.setRegionModel(null)
                 hideAll()
                 binding.cityRecyclerview.visibility = View.VISIBLE
                 filtersViewAdapterCity?.setList(city)
@@ -37,14 +38,16 @@ class SearchFiltersCityFragment : Fragment() {
 
         filtersViewAdapterCity = FiltersViewAdapterCity() { city ->
             viewModel.selectCity(city)
-            findNavController().navigate(R.id.action_searchFiltersCityFragment_to_placeOfWorkFragment)
+            findNavController()
+                .popBackStack(R.id.placeOfWorkFragment, false)
         }
 
         binding.cityRecyclerview.adapter = filtersViewAdapterCity
         viewModel.getCity()
 
         binding.buttonBack.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController()
+                .navigateUp()
         }
 
         binding.Search.addTextChangedListener { str ->
@@ -52,7 +55,7 @@ class SearchFiltersCityFragment : Fragment() {
         }
     }
 
-    fun hideAll() {
+    private fun hideAll() {
         with(binding) {
             cityRecyclerview.visibility = View.GONE
             cityError.visibility = View.GONE

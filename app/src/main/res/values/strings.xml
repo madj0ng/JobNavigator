@@ -21,8 +21,9 @@
     <string name="search_error_no_data">Не удалось получить список вакансий</string>
     <string name="filter_page_title">Настройки фильтрации</string>
     <string name="search_connection_faild">Нет интернета</string>
-    <string name="search_error_server">Не удалось получить список вакансий</string>
+<!--    <string name="search_error_server">Не удалось получить список вакансий</string>-->
     <string name="search_error_no_list">Не удалось получить список</string>
+    <string name="error_bad_request">Ошибочный запрос</string>
 
     <string name="favourites">Избранное</string>
     <string name="list_is_empty">Список пуст</string>
@@ -46,7 +47,7 @@
     <string name="key_skills">Ключевые навыки</string>
     <string name="conditions">Условия</string>
     <string name="vacancy_description">vacancy description</string>
-    <string name="server_error_cats">Ошибка сервера</string>
+<!--    <string name="server_error_cats">Ошибка сервера</string>-->
     <string name="vacancy_not_found_or_deleted">Вакансия не найдена или удалена</string>
     <string name="country">Страна</string>
     <string name="region">Регион</string>
@@ -68,4 +69,5 @@
     <string name="require_salary">Ожидаемая зарплата</string>
     <string name="apply">Применить</string>
     <string name="cancel">Сбросить</string>
+    <string name="empty">""</string>
 </resources>

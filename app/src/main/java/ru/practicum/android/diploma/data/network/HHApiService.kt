@@ -12,20 +12,32 @@ import ru.practicum.android.diploma.data.filter.IndustryResponse
 
 interface HHApiService {
     @GET("vacancies")
-    @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobNavigator (klimushin1996@mail.ru)"
+    )
     suspend fun getVacancies(@QueryMap options: Map<String, String>): VacancySearchResponse
 
     @GET("vacancies/{vacancy_id}")
-    @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobNavigator (klimushin1996@mail.ru)"
+    )
     suspend fun getVacancy(
         @Path("vacancy_id") vacancyId: String
-    ): VacancyDetailsDto
+    ): VacancyDetailsDto?
 
     @GET("industries")
-    @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobNavigator (klimushin1996@mail.ru)"
+    )
     suspend fun getIndustries(): List<IndustryResponse>
 
     @GET("areas")
-    @Headers("Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}")
+    @Headers(
+        "Authorization: Bearer ${BuildConfig.HH_ACCESS_TOKEN}",
+        "HH-User-Agent: JobNavigator (klimushin1996@mail.ru)"
+    )
     suspend fun getAreas(): List<AreaResponse>
 }

@@ -21,7 +21,11 @@ val repositoryModule = module {
     }
 
     single<VacancyRepository> {
-        VacancyRepositoryImpl(get())
+        VacancyRepositoryImpl(
+            retrofitNetworkClient = get(),
+            favoriteRepository = get(),
+            mapper = get()
+        )
     }
 
     single<FavoriteJobsRepository> {
@@ -34,6 +38,6 @@ val repositoryModule = module {
         SharingRepositoryImpl(androidContext())
     }
     single<FilterRepository> {
-        FilterRepositoryImpl(get())
+        FilterRepositoryImpl(get(), get())
     }
 }

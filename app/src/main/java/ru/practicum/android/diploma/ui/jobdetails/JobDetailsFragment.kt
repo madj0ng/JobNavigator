@@ -112,10 +112,14 @@ class JobDetailsFragment : Fragment() {
         binding.groupServerError.visibility = View.GONE
         binding.vacancyNotFound.visibility = View.GONE
         binding.pbPage.visibility = View.GONE
+        binding.shareButton.visibility = View.GONE
+        binding.likeButton.visibility = View.GONE
     }
 
     private fun showContent(vacancy: VacancyDetailsModel) {
         hideAll()
+        binding.shareButton.visibility = View.VISIBLE
+        binding.likeButton.visibility = View.VISIBLE
         binding.vacancyDetails.visibility = View.VISIBLE
         binding.vacancyName.text = vacancy.name
         binding.vacancySalary.text = vacancy.salary

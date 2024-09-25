@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +37,6 @@ class FiltersViewAdapterCity(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cityModel: CityModel) {
-            Log.d("BIND", cityModel.toString())
             binding.country.text = cityModel.name
             // Событие нажатия кнопки
             itemView.setOnClickListener { clickListener.onAreaClick(cityModel) }

@@ -4,17 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedDispatcher
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchFiltersBinding
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.util.FormatConverter
 
 class SearchFiltersFragment : Fragment() {
     private var _binding: FragmentSearchFiltersBinding? = null
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
+    private val format: FormatConverter = getKoin().get()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,92 +31,175 @@ class SearchFiltersFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+        binding.groupButtons.visibility = View.GONE
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
+            viewModel.saveSelectedFromFilter(filter)
+            init(filter)
+        }
+        viewModel.getFilter()
         binding.industryBtn.setOnClickListener {
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToIndustryChooseFragment()
                 )
         }
-
         binding.placeOfWork.setOnClickListener {
             findNavController()
                 .navigate(
                     SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
                 )
         }
-
         binding.buttonBack.setOnClickListener {
+            viewModel.saveCheckSalary(binding.ischeced.isChecked)
+            viewModel.saveSalary()
             findNavController()
-                .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
-            viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(binding.earn.text.toString())
+                .navigateUp()
         }
-
         binding.buttonApply.setOnClickListener {
-            findNavController()
-                .navigate(SearchFiltersFragmentDirections.actionSearchFiltersFragmentToJobSearchFragment())
             viewModel.setDontShowWithoutSalary(binding.ischeced.isChecked)
-            viewModel.setSalary(binding.earn.text.toString())
+            viewModel.setSalary(format.clearIfNotInt(binding.earn.text.toString()))
+            viewModel.saveSalary()
+            if (binding.ischeced.isChecked) {
+                viewModel.setDontShowWithoutSalary(true)
+            }
+            val newQuery = true
+            findNavController()
+                .navigateUp()
+            findNavController().currentBackStackEntry
+                ?.savedStateHandle
+                ?.set(NEW_QUERY_FLAG, newQuery)
         }
-
         binding.buttonCancel.setOnClickListener {
-            viewModel.unSelectCountry()
-            viewModel.unSelectIndustry()
+            viewModel.selectPlaceOfWork()
+            viewModel.selectIndustry()
+            viewModel.saveFilter(null)
             canselFilter()
-            init()
+            viewModel.getFilter()
+            binding.groupButtons.visibility = View.GONE
         }
-
-        init()
+        binding.ischeced.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.groupButtons.visibility = View.VISIBLE
+            } else {
+                if (!getCondition()) {
+                    binding.groupButtons.visibility = View.GONE
+                }
+            }
+        }
+        binding.earn.addTextChangedListener { str ->
+            if (str.toString().isNotEmpty()) {
+                binding.groupButtons.visibility = View.VISIBLE
+            } else {
+                if (!getCondition()) {
+                    binding.groupButtons.visibility = View.GONE
+                }
+            }
+            viewModel.setSalary(format.clearIfNotInt(str.toString()))
+        }
+        binding.buttonClearToPow.setOnClickListener {
+            restartPlaceOfWork()
+            viewModel.selectPlaceOfWork()
+            viewModel.deletePlaceOfWork()
+            viewModel.getFilter()
+        }
+        binding.buttonClearToInd.setOnClickListener {
+            restartIndusytries()
+            viewModel.selectIndustry()
+            viewModel.deleteIndustries()
+            viewModel.getFilter()
+        }
+        OnBackPressedDispatcher {
+            viewModel.saveCheckSalary(binding.ischeced.isChecked)
+            viewModel.saveSalary()
+        }
     }
 
-    fun init() {
-        if (viewModel.getSalary() != null) {
-            binding.earn.setText(viewModel.getSalary().toString())
+    private fun init(filter: FilterModel?) {
+        if (filter?.salary != null) {
+            binding.earn.setText(filter?.salary.toString())
         }
-        binding.ischeced.isChecked = viewModel.getDontShowWithoutSalary()
-        val tempI = viewModel.getSavedIndustry()
-        val tempR = viewModel.getCitySaved()
-        val tempC = viewModel.getCountrySaved()
+        binding.ischeced.isChecked = filter?.onlyWithSalary ?: false
+        val tempI = filter?.industries
+        val tempR = filter?.area
+        val tempC = filter?.country
         val area = StringBuilder()
-        if (tempI != null) {
-            binding.industryPlace.text = tempI.name
+        if (!tempI?.name.isNullOrBlank()) {
+            binding.industryPlace.text = tempI?.name
             binding.hintIndustryPlace.text = context?.getString(R.string.Industry)
+            binding.groupButtons.visibility = View.VISIBLE
+            binding.buttonClearToInd.setImageResource(R.drawable.ic_close_to_filter)
+            binding.buttonClearToInd.isClickable = true
         }
-        if (tempC != null) {
-            area.append(tempC.name)
+        if (!tempC?.name.isNullOrBlank()) {
+            area.append(tempC?.name)
         }
-        if (tempR != null) {
+        if (!tempR?.name.isNullOrBlank()) {
             if (area.isNotEmpty()) {
                 area.append(", ")
             }
-            area.append(tempR.name)
+            area.append(tempR?.name)
         }
         if (area.isNotEmpty()) {
             binding.placeOfWorkCountryRegion.text = area
             binding.hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.place_of_work)
+            binding.groupButtons.visibility = View.VISIBLE
+            binding.buttonClearToPow.setImageResource(R.drawable.ic_close_to_filter)
+            binding.buttonClearToPow.isClickable = true
         }
     }
 
     private fun canselFilter() {
         with(binding) {
-            industryPlace.text = ""
-            placeOfWorkCountryRegion.text = ""
             earn.setText("")
             viewModel.setSalary("")
             ischeced.isChecked = false
-            viewModel.setDontShowWithoutSalary(false)
+        }
+        restartIndusytries()
+        restartPlaceOfWork()
+    }
+
+    private fun getCondition(): Boolean {
+        return binding.placeOfWorkCountryRegion.text.isNotEmpty() ||
+            binding.industryPlace.text.isNotEmpty() ||
+            format.clearIfNotInt(binding.earn.text.toString()).isNotEmpty() ||
+            binding.ischeced.isChecked
+    }
+
+    private fun restartPlaceOfWork() {
+        with(binding) {
+            placeOfWorkCountryRegion.text = ""
+            hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
+            buttonClearToPow.setImageResource(R.drawable.icon_next)
+            buttonClearToPow.isClickable = false
+        }
+        if (!getCondition()) {
+            binding.groupButtons.visibility = View.GONE
+        }
+    }
+
+    private fun restartIndusytries() {
+        with(binding) {
+            industryPlace.text = ""
+            hintIndustryPlace.text = context?.getString(R.string.empty)
+            buttonClearToInd.setImageResource(R.drawable.icon_next)
+            buttonClearToInd.isClickable = false
+        }
+        if (!getCondition()) {
+            binding.groupButtons.visibility = View.GONE
         }
     }
 
     override fun onResume() {
         super.onResume()
-        init()
+        viewModel.getFilter()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val NEW_QUERY_FLAG = "new_query_flag"
     }
 }

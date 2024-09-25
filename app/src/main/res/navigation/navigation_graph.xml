@@ -50,7 +50,11 @@
         android:id="@+id/countryChooseFragment"
         android:name="ru.practicum.android.diploma.ui.searchfilters.CountryChooseFragment"
         android:label="fragment_country_choosing"
-        tools:layout="@layout/country_choose_fragment" />
+        tools:layout="@layout/country_choose_fragment" >
+        <action
+            android:id="@+id/action_countryChooseFragment_to_placeOfWorkFragment"
+            app:destination="@id/placeOfWorkFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFiltersRegionFragment"
         android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersRegionFragment"
@@ -59,6 +63,9 @@
         <action
             android:id="@+id/action_searchFiltersRegionFragment_to_searchFiltersCityFragment"
             app:destination="@id/searchFiltersCityFragment" />
+        <action
+            android:id="@+id/action_searchFiltersRegionFragment_to_placeOfWorkFragment"
+            app:destination="@id/placeOfWorkFragment" />
     </fragment>
     <fragment
         android:id="@+id/placeOfWorkFragment"
@@ -79,7 +86,11 @@
         android:id="@+id/industryChooseFragment"
         android:name="ru.practicum.android.diploma.ui.searchfilters.IndustryChooseFragment"
         android:label="industry_choosing_fragment"
-        tools:layout="@layout/industry_choosing_fragment" />
+        tools:layout="@layout/industry_choosing_fragment" >
+        <action
+            android:id="@+id/action_industryChooseFragment_to_searchFiltersFragment"
+            app:destination="@id/searchFiltersFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFiltersFragment"
         android:name="ru.practicum.android.diploma.ui.searchfilters.SearchFiltersFragment"
@@ -102,5 +113,8 @@
         <action
             android:id="@+id/action_searchFiltersCityFragment_to_placeOfWorkFragment"
             app:destination="@id/placeOfWorkFragment" />
+        <action
+            android:id="@+id/action_searchFiltersCityFragment_to_searchFiltersRegionFragment"
+            app:destination="@id/searchFiltersRegionFragment" />
     </fragment>
 </navigation>

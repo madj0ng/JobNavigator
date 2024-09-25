@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.domain.favoritejobs.FavoriteJobsInteractor
+import ru.practicum.android.diploma.domain.models.Resource
+import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.domain.sharing.SharingInteractor
 import ru.practicum.android.diploma.domain.vacancydetails.VacancyDetailsInteractor
 import ru.practicum.android.diploma.presentation.models.VacancyDetailsScreenState
@@ -24,16 +26,24 @@ class VacancyDetailsViewModel(
         stateLiveData.value = VacancyDetailsScreenState.Loading
         viewModelScope.launch {
             vacancyDetailsInteractor.getVacancy(vacancyId).collect { res ->
-                if (res.error == RetrofitNetworkClient.ERROR_CODE_SERVER) {
-                    stateLiveData.value = VacancyDetailsScreenState.ErrorServer
-                }
-                if (res.error == RetrofitNetworkClient.ERROR_CODE_INTERNET) {
-                    stateLiveData.value = VacancyDetailsScreenState.ErrorNoInternet
-                }
-                if (res.error == RetrofitNetworkClient.RESULT_CODE_SUCCESS) {
-                    stateLiveData.value = res.vacancyDetailsModel?.let { VacancyDetailsScreenState.Content(it) }
+                renderState(res)
+            }
+        }
+    }
+
+    private fun renderState(res: Resource<VacancyDetailsModel>) {
+        when (res) {
+            is Resource.Error -> {
+                when (res.resultCode) {
+                    RetrofitNetworkClient.ERROR_CODE_SERVER -> stateLiveData.value =
+                        VacancyDetailsScreenState.ErrorServer
+
+                    RetrofitNetworkClient.ERROR_CODE_INTERNET -> stateLiveData.value =
+                        VacancyDetailsScreenState.ErrorNoInternet
                 }
             }
+
+            is Resource.Success -> stateLiveData.value = res.data.let { VacancyDetailsScreenState.Content(it) }
         }
     }
 

@@ -21,7 +21,7 @@ class RetrofitNetworkClient(
     private val connected: Connected,
 ) : NetworkClient {
 
-    fun setCondition(dto: Any): Boolean {
+    private fun setCondition(dto: Any): Boolean {
         return (dto !is VacancySearchRequest
             && dto !is VacancyDetailsRequest
             && dto !is AreasRequest
@@ -31,7 +31,7 @@ class RetrofitNetworkClient(
 
     override suspend fun doRequest(dto: Any): NetworkResponse {
         if (setCondition(dto)) {
-            return errorResponse(ERROR_CODE_BAD_REQUEST, R.string.search_error_server)
+            return errorResponse(ERROR_CODE_BAD_REQUEST, R.string.error_bad_request)
 
         }
 
@@ -53,11 +53,11 @@ class RetrofitNetworkClient(
                         is VacancyDetailsRequest -> vacancyDetailsRequest(dto)
 
                         else -> {
-                            errorResponse(ERROR_CODE_SERVER, R.string.search_error_server)
+                            errorResponse(ERROR_CODE_SERVER, R.string.error_bad_request)
                         }
                     }
                 } catch (e: IOException) {
-                    errorResponse(ERROR_CODE_SERVER, R.string.search_error_server)
+                    errorResponse(ERROR_CODE_SERVER, R.string.error_server)
                     throw e
                 }
             } else {
@@ -71,9 +71,17 @@ class RetrofitNetworkClient(
         return hhApi.getVacancies(vacancySearchRequest.queryOptions).apply { resultCode = RESULT_CODE_SUCCESS }
     }
 
-    private suspend fun vacancyDetailsRequest(vacancyDetailsRequest: VacancyDetailsRequest): NetworkResponse {
-        return VacancyDetailsResponse(hhApi.getVacancy(vacancyDetailsRequest.vacancyId)).apply {
-            resultCode = RESULT_CODE_SUCCESS
+    private suspend fun vacancyDetailsRequest(vacancyDetailsRequest: VacancyDetailsRequest): VacancyDetailsResponse {
+        val response = hhApi.getVacancy(vacancyDetailsRequest.vacancyId)
+        return if (response != null) {
+            VacancyDetailsResponse(response).apply {
+                resultCode = RESULT_CODE_SUCCESS
+            }
+        } else {
+            VacancyDetailsResponse(null).apply {
+                resultCode = ERROR_CODE_INTERNET
+                message = context.getString(R.string.vacancy_not_found_or_deleted)
+            }
         }
     }
 
