@@ -47,7 +47,8 @@ class JobSearchFragment : Fragment() {
             ?.remove<Boolean>(SearchFiltersFragment.NEW_QUERY_FLAG)
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filterModel ->
             if (filterModel != null) {
-                binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue)
+                binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue_small)
+                binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter_white)
                 if (newQuery != null && newQuery!!) {
                     newQuery = false
                     this.filterModel = filterModel
@@ -55,7 +56,7 @@ class JobSearchFragment : Fragment() {
                     viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
                 }
             } else {
-                filterModelIsNotNull(view.resources.getDrawable(R.drawable.background_transparent), filterModel)
+                filterModelIsNotNull(filterModel)
             }
         }
         viewModel.getFilter()
@@ -151,11 +152,12 @@ class JobSearchFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    private fun filterModelIsNotNull(res: Drawable, filter: FilterModel?) {
+    private fun filterModelIsNotNull(filter: FilterModel?) {
         this.filterModel = filter
         val query = binding.etSearch.text
         viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
-        binding.ifbFilter.background = res
+        binding.ifbFilter.background = view?.resources?.getDrawable(R.drawable.background_transparent)
+        binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter)
     }
 
     override fun onResume() {
