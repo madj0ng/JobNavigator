@@ -51,7 +51,8 @@ class SearchFiltersFragment : Fragment() {
         binding.placeOfWork.setOnClickListener {
             findNavController()
                 .navigate(
-                    R.id.action_searchFiltersFragment_to_placeOfWorkFragment, bundleOf(FILTER to filterToSend)
+                    R.id.action_searchFiltersFragment_to_placeOfWorkFragment,
+                    bundleOf(FILTER to filterToSend)
                 )
         }
         binding.buttonBack.setOnClickListener {
