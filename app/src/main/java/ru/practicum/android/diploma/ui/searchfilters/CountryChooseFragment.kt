@@ -9,12 +9,12 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.CountryChooseFragmentBinding
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class CountryChooseFragment : Fragment() {
     private var _binding: CountryChooseFragmentBinding? = null
     private val binding: CountryChooseFragmentBinding get() = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: PlaceOfWorkViewModel by activityViewModel()
     private var filtersViewAdapterCountry: FiltersViewAdapterArea? = null
 
     override fun onCreateView(

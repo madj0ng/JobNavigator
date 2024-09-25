@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
+import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.PlaceOfWorkFragmentBinding
 import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
+import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.RegionModel
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class PlaceOfWorkFragment : Fragment() {
     private var _binding: PlaceOfWorkFragmentBinding? = null
     private val binding: PlaceOfWorkFragmentBinding get() = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: PlaceOfWorkViewModel by activityViewModel()
+    private val gson: Gson = getKoin().get()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +36,14 @@ class PlaceOfWorkFragment : Fragment() {
         viewModel.getSelectCityLiveData().observe(viewLifecycleOwner, this::init)
         viewModel.getSelectRegionLiveData().observe(viewLifecycleOwner, this::init)
         viewModel.getSelectCountryLiveData().observe(viewLifecycleOwner, this::init)
+
+        val filter = gson.fromJson(requireArguments().getString(SearchFiltersFragment.FILTER), FilterModel::class.java)
+
+        if (filter != null) {
+            viewModel.saveSelectedFromFilter(filter)
+        }
+
+        viewModel.getAreas()
 
         binding.countryBtn.setOnClickListener {
             findNavController()
@@ -49,12 +61,12 @@ class PlaceOfWorkFragment : Fragment() {
 
         binding.buttonBack.setOnClickListener {
             viewModel.selectPlaceOfWork()
-
             findNavController()
                 .navigateUp()
         }
 
         binding.btnSelect.setOnClickListener {
+            viewModel.selectPlaceOfWork()
             viewModel.saveArea()
             findNavController()
                 .navigateUp()

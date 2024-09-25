@@ -10,12 +10,12 @@ import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.SearchFiltersCityFragmentBinding
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class SearchFiltersCityFragment : Fragment() {
     private var _binding: SearchFiltersCityFragmentBinding? = null
     private val binding: SearchFiltersCityFragmentBinding get() = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: PlaceOfWorkViewModel by activityViewModel()
     private var filtersViewAdapterCity: FiltersViewAdapterCity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

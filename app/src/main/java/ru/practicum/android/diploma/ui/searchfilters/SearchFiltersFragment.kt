@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedDispatcher
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
@@ -21,6 +23,8 @@ class SearchFiltersFragment : Fragment() {
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private val format: FormatConverter = getKoin().get()
+    private val gson: Gson = getKoin().get()
+    private var filterToSend: String = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,6 +38,7 @@ class SearchFiltersFragment : Fragment() {
         binding.groupButtons.visibility = View.GONE
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
             viewModel.saveSelectedFromFilter(filter)
+            filterToSend = gson.toJson(filter)
             init(filter)
         }
         viewModel.getFilter()
@@ -46,7 +51,7 @@ class SearchFiltersFragment : Fragment() {
         binding.placeOfWork.setOnClickListener {
             findNavController()
                 .navigate(
-                    SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
+                    R.id.action_searchFiltersFragment_to_placeOfWorkFragment, bundleOf(FILTER to filterToSend)
                 )
         }
         binding.buttonBack.setOnClickListener {
@@ -70,7 +75,6 @@ class SearchFiltersFragment : Fragment() {
                 ?.set(NEW_QUERY_FLAG, newQuery)
         }
         binding.buttonCancel.setOnClickListener {
-            viewModel.selectPlaceOfWork()
             viewModel.selectIndustry()
             viewModel.saveFilter(null)
             canselFilter()
@@ -98,7 +102,6 @@ class SearchFiltersFragment : Fragment() {
         }
         binding.buttonClearToPow.setOnClickListener {
             restartPlaceOfWork()
-            viewModel.selectPlaceOfWork()
             viewModel.deletePlaceOfWork()
             viewModel.getFilter()
         }
@@ -201,5 +204,6 @@ class SearchFiltersFragment : Fragment() {
 
     companion object {
         const val NEW_QUERY_FLAG = "new_query_flag"
+        const val FILTER = "filter"
     }
 }

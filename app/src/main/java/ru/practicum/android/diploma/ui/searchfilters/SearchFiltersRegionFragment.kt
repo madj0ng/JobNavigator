@@ -13,12 +13,12 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.SearchFiltersRegionFragmentBinding
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.presentation.models.RegionScreenState
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class SearchFiltersRegionFragment : Fragment() {
     private var _binding: SearchFiltersRegionFragmentBinding? = null
     private val binding: SearchFiltersRegionFragmentBinding get() = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: PlaceOfWorkViewModel by activityViewModel()
     private var filtersViewAdapterRegion: FilterViewAdapterRegion? = null
 
     override fun onCreateView(

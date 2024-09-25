@@ -35,7 +35,6 @@
         android:layout_marginTop="@dimen/dim_16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/country_error"
         android:layout_width="match_parent"
@@ -81,5 +80,52 @@
             app:layout_constraintEnd_toStartOf="@+id/right_guideline"
             app:layout_constraintStart_toEndOf="@+id/left_guideline"
             app:layout_constraintTop_toBottomOf="@+id/ivInformImage" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/country_error_no_internet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guideline_int_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/dim_16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline_int_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/dim_16dp" />
+
+        <ImageView
+            android:id="@+id/ivInformImage_int_error"
+            style="@style/InformImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/search_page_title"
+            android:src="@drawable/error_no_connect"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h,16:9"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline_int_error"
+            app:layout_constraintStart_toEndOf="@+id/left_guideline_int_error"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ivInformBottomText_int_error"
+            style="@style/InformBottomText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_16dp"
+            android:text="@string/search_error_no_connect"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline_int_error"
+            app:layout_constraintStart_toEndOf="@+id/left_guideline_int_error"
+            app:layout_constraintTop_toBottomOf="@+id/ivInformImage_int_error" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
