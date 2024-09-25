@@ -6,45 +6,58 @@
     android:layout_marginTop="@dimen/dim_16dp"
     android:layout_marginBottom="@dimen/dim_16dp">
 
-    <ImageView
-        android:id="@+id/companyLogo"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_cover"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:paddingEnd="@dimen/dim_16dp"
-        android:src="@drawable/company_logo_placeholder"
+        android:layout_marginEnd="12dp"
+        app:cardElevation="0dp"
+        android:backgroundTint="@color/day_white_night_black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ru.practicum.android.diploma.SquareImageView
+            android:id="@+id/companyLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_grey_background_line"
+            android:padding="1dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/placeholder_for_vacancy" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/vacancyName"
+        style="@style/VacancyItemBig"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/VacancyItemBig"
-        app:layout_constraintStart_toEndOf="@+id/companyLogo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginLeft="@dimen/dim_12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cardView_cover"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/departmentName"
+        style="@style/VacancyItemSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dim_8dp"
-        style="@style/VacancyItemSmall"
         android:lines="1"
+        android:paddingTop="@dimen/dim_8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/vacancyName"
-        app:layout_constraintTop_toBottomOf="@id/vacancyName"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/vacancyName" />
 
     <TextView
         android:id="@+id/sallary"
+        style="@style/VacancyItemSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dim_8dp"
-        style="@style/VacancyItemSmall"
         android:lines="1"
+        android:paddingTop="@dimen/dim_8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/departmentName"
-        app:layout_constraintTop_toBottomOf="@id/departmentName"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/departmentName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

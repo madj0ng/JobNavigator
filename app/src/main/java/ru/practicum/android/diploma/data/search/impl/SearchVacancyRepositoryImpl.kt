@@ -6,6 +6,7 @@ import ru.practicum.android.diploma.data.dto.VacancySearchRequest
 import ru.practicum.android.diploma.data.dto.VacancySearchResponse
 import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
 import ru.practicum.android.diploma.data.search.SearchVacancyRepository
+import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.EmployerModel
 import ru.practicum.android.diploma.domain.models.LogoModel
 import ru.practicum.android.diploma.domain.models.Resource
@@ -42,7 +43,8 @@ class SearchVacancyRepositoryImpl(private val retrofitNetworkClient: RetrofitNet
                             id = dto.id,
                             name = dto.name,
                             employer = employer,
-                            salary = salary
+                            salary = salary,
+                            region = CityModel(dto.area.id, dto.area.name),
                         )
                     }
                     emit(Resource.Success(vacancies, response.found, response.page, response.pages))

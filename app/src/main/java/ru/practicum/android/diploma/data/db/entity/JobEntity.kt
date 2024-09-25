@@ -10,5 +10,6 @@ data class JobEntity(
     val name: String,
     val salary: String = "",
     val employer: String = "",
-    val logoUrl: String = ""
+    val logoUrl: String = "",
+    val city: String,
 )

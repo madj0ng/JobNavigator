@@ -86,8 +86,13 @@ class JobDetailsFragment : Fragment() {
 
     private fun setParam(state: VacancyDetailsScreenState.Content) {
         vacancyUrl = state.data.alternativeUrl
-        vacancyInfo = VacancyInfo(vacancyId, state.data.name, state.data.employerName, state.data.salary
-            ?: "", state.data.employerIcon
+        vacancyInfo = VacancyInfo(
+            vacancyId,
+            state.data.name,
+            state.data.employerName,
+            state.data.salary ?: "",
+            state.data.employerIcon,
+            state.data.address ?: "",
         )
         isFavorite = state.data.isFavorite
     }

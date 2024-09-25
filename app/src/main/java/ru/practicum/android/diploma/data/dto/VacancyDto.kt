@@ -6,5 +6,6 @@ data class VacancyDto(
     val id: String,
     val name: String,
     @SerializedName("employer") val employer: EmployerDto?,
-    @SerializedName("salary") val salary: SalaryDto?
+    @SerializedName("salary") val salary: SalaryDto?,
+    @SerializedName("area") val area: RegionDto,
 )

@@ -51,7 +51,7 @@ class FavoriteJobsViewAdapter(
 
         fun bind(vacancy: VacancyInfo) {
             binding.departmentName.text = vacancy.departamentName
-            binding.vacancyName.text = vacancy.vacancyName
+            binding.vacancyName.text = "${vacancy.vacancyName}, ${vacancy.city}"
             binding.sallary.text = vacancy.salary
 
             GlideApp.with(itemView)
