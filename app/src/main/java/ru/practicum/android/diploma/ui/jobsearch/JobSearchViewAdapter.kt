@@ -59,7 +59,11 @@ class JobSearchViewAdapter(
         fun bind(vacancy: VacancyInfo) {
             binding.departmentName.text = vacancy.departamentName
             binding.vacancyName.text = "${vacancy.vacancyName}, ${vacancy.city}"
-            binding.sallary.text = vacancy.salary
+            if (vacancy.salary.isNotBlank()) {
+                binding.sallary.text = vacancy.salary
+            } else {
+                binding.sallary.text = itemView.context.getString(R.string.no_earn)
+            }
 
             GlideApp.with(itemView)
                 .load(vacancy.logoUrl)
