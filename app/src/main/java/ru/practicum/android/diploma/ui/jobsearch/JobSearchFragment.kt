@@ -28,8 +28,8 @@ class JobSearchFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: JobSearchViewModel by viewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
-    private var filterModel: FilterModel? = null
-    private var lastQuery: String = ""
+//    private var filterModel: FilterModel? = null
+//    private var lastQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,28 +42,36 @@ class JobSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getFilter()
         var newQuery = findNavController().currentBackStackEntry
             ?.savedStateHandle
             ?.remove<Boolean>(SearchFiltersFragment.NEW_QUERY_FLAG)
-        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filterModel ->
-            if (filterModel != null) {
+        viewModel.setNewQueryFlag(newQuery)
+        viewModel.searchFilterLiveData.observe(viewLifecycleOwner) {
+            viewModel.onSearchFilterChanged()
+            if (it != null) {
                 binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue_small)
                 binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter_white)
-                if (newQuery != null && newQuery!!) {
-                    newQuery = false
-                    this.filterModel = filterModel
-                    val query = binding.etSearch.text
-                    viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
-                }
+//                if (newQuery != null && newQuery!!) {
+//                    newQuery = false
+//                    this.filterModel = filterModel
+//                    val query = binding.etSearch.text
+//                    viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
+//                }
             } else {
-                filterModelIsNotNull(filterModel)
+////                val query = binding.etSearch.text
+////                viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
+                binding.ifbFilter.background = view?.resources?.getDrawable(R.drawable.background_transparent)
+                binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter)
+//                filterModelIsNotNull(filterModel)
             }
         }
-        viewModel.getFilter()
         binding.etSearch.addTextChangedListener { query ->
-            if (lastQuery != query.toString()) {
-                viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
-            }
+//            if (lastQuery != query.toString()) {
+                viewModel.onSearchQueryChanged(query.toString())
+//                viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
+//            }
         }
         jobSearchViewAdapter = JobSearchViewAdapter {
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToJobDetailsFragment(it))
@@ -76,7 +84,7 @@ class JobSearchFragment : Fragment() {
         viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
         viewModel.getToast().observe(viewLifecycleOwner, this::showToast)
         binding.ifbFilter.setOnClickListener {
-            lastQuery = binding.etSearch.text.toString()
+//            lastQuery = binding.etSearch.text.toString()
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
         }
         binding.ivSearchClear.setOnClickListener { viewModel.onClickSearchClear() }
@@ -87,7 +95,7 @@ class JobSearchFragment : Fragment() {
                     val pos = (binding.rvJobList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                     if (pos >= jobSearchViewAdapter!!.itemCount - 1) {
                         viewModel.onLastItemReached(
-                            setQueryParam(viewModel.observeSearch().value?.query ?: "", filterModel)
+//                            setQueryParam(viewModel.observeSearch().value?.query ?: "", filterModel)
                         )
                     }
                 }
@@ -138,19 +146,20 @@ class JobSearchFragment : Fragment() {
         jobSearchViewAdapter?.notifyDataSetChanged()
     }
 
-    private fun setQueryParam(query: String, filterModel: FilterModel?): VacancySearchParams {
-        return if (filterModel != null) {
-            VacancySearchParams(
-                query,
-                if (filterModel.area != null) filterModel.area?.id else filterModel.country?.id,
-                filterModel.salary,
-                filterModel.onlyWithSalary ?: false,
-                filterModel.industries?.id
-            )
-        } else {
-            VacancySearchParams(query)
-        }
-    }
+    private fun setQueryParam(query: String): VacancySearchParams = VacancySearchParams(query)
+//    private fun setQueryParam(query: String, filterModel: FilterModel?): VacancySearchParams {
+//        return if (filterModel != null) {
+//            VacancySearchParams(
+//                query,
+//                if (filterModel.area != null) filterModel.area?.id else filterModel.country?.id,
+//                filterModel.salary,
+//                filterModel.onlyWithSalary ?: false,
+//                filterModel.industries?.id
+//            )
+//        } else {
+//            VacancySearchParams(query)
+//        }
+//    }
 
     private fun View.hideKeyboard() {
         val inputMethodManager =
@@ -158,13 +167,13 @@ class JobSearchFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    private fun filterModelIsNotNull(filter: FilterModel?) {
-        this.filterModel = filter
-        val query = binding.etSearch.text
-        viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
-        binding.ifbFilter.background = view?.resources?.getDrawable(R.drawable.background_transparent)
-        binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter)
-    }
+//    private fun filterModelIsNotNull(filter: FilterModel?) {
+//        this.filterModel = filter
+//        val query = binding.etSearch.text
+//        viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
+//        binding.ifbFilter.background = view?.resources?.getDrawable(R.drawable.background_transparent)
+//        binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter)
+//    }
 
     override fun onResume() {
         super.onResume()
