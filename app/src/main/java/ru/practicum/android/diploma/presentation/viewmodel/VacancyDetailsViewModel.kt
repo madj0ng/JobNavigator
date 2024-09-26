@@ -23,8 +23,7 @@ class VacancyDetailsViewModel(
 
     private val stateLiveData: MutableLiveData<VacancyDetailsScreenState> = MutableLiveData()
     fun getVacancy(vacancyId: String) {
-        stateLiveData.value = VacancyDetailsScreenState.Loading
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             vacancyDetailsInteractor.getVacancy(vacancyId).collect { res ->
                 renderState(vacancyId, res)
             }
@@ -32,7 +31,13 @@ class VacancyDetailsViewModel(
     }
 
     private fun renderState(id: String, res: Resource<VacancyDetailsModel>) {
+        stateLiveData.postValue(VacancyDetailsScreenState.Loading)
+
         when (res) {
+            is Resource.Success -> {
+                stateLiveData.postValue(VacancyDetailsScreenState.Content(res.data))
+            }
+
             is Resource.Error -> {
                 when (res.resultCode) {
                     RetrofitNetworkClient.ERROR_CODE_SERVER -> stateLiveData.postValue(
@@ -42,8 +47,6 @@ class VacancyDetailsViewModel(
                     RetrofitNetworkClient.ERROR_CODE_INTERNET -> getVacancyFromStorage(id)
                 }
             }
-
-            is Resource.Success -> stateLiveData.postValue(VacancyDetailsScreenState.Content(res.data))
         }
     }
 

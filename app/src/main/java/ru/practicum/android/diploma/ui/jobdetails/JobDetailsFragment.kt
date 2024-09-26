@@ -47,12 +47,12 @@ class JobDetailsFragment : Fragment() {
         }
         viewModel.getScreenLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
+                is VacancyDetailsScreenState.Loading -> showLoading()
+
                 is VacancyDetailsScreenState.Content -> {
                     showContent(state.data)
                     setParam(state)
                 }
-
-                is VacancyDetailsScreenState.Loading -> showLoading()
 
                 is VacancyDetailsScreenState.NotFound -> vacancyNotFoundOrDeleted()
 
@@ -60,11 +60,11 @@ class JobDetailsFragment : Fragment() {
             }
         }
 
+        viewModel.getVacancy(vacancyId)
+
         viewModel.likeLiveData.observe(viewLifecycleOwner) { state ->
             setLikeButton(state)
         }
-
-        viewModel.getVacancy(vacancyId)
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -125,6 +125,7 @@ class JobDetailsFragment : Fragment() {
 
     private fun showContent(vacancy: VacancyDetailsModel) {
         hideAll()
+        setLikeButton(vacancy.isFavorite)
         binding.shareButton.visibility = View.VISIBLE
         binding.likeButton.visibility = View.VISIBLE
         binding.vacancyDetails.visibility = View.VISIBLE
@@ -148,7 +149,6 @@ class JobDetailsFragment : Fragment() {
         }
         binding?.city?.text = vacancy.address
         binding?.companyName?.text = vacancy.employerName
-        setLikeButton(vacancy.isFavorite)
     }
 
     fun generateHtmlList(inputList: List<String>): String {
