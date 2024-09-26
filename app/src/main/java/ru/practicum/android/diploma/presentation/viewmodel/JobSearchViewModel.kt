@@ -28,8 +28,8 @@ class JobSearchViewModel(
     private val formatConverter: FormatConverter,
     private val filterInteractor: FilterInteractor
 ) : ViewModel() {
-
     private val toastLiveData = SingleLiveEvent<String>()
+    fun getToast(): LiveData<String> = toastLiveData
     private val queryLiveData = MutableLiveData<QueryUiState>(QueryUiState())
     fun observeSearch(): LiveData<QueryUiState> = queryLiveData
     private val filterLiveData = MutableLiveData<FilterDto>(FilterDto())
@@ -79,8 +79,11 @@ class JobSearchViewModel(
             _screenLiveData.value = SearchUiState.LoadingPagination()
         }
         viewModelScope.launch {
-            searchVacancyInteractor.searchVacancy(vacancySearchParams).collect { result ->
-                renderState(result)
+            searchVacancyInteractor.searchVacancy(vacancySearchParams).collect {
+                when (it) {
+                    is Resource.Success -> renderSuccess(it)
+                    is Resource.Error -> renderError(vacancySearchParams.page, it)
+                }
             }
         }
     }
@@ -122,30 +125,31 @@ class JobSearchViewModel(
         )
     }
 
-    private fun renderState(result: Resource<List<VacancyModel>>) {
-        when (result) {
-            is Resource.Success -> {
-                _isNextPageLoading = false
-                if (result.data.isEmpty()) {
-                    _screenLiveData.value = SearchUiState.ErrorData()
-                } else {
-                    val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
-                    _vacanciesList = _vacanciesList + vacancyInfoList
-                    _currentPage = result.page ?: 0
-                    _maxPages = result.pages ?: 0
-                    _screenLiveData.value =
-                        SearchUiState.Content(data = _vacanciesList, found = result.found ?: 0)
-                }
-            }
+    private fun renderSuccess(result: Resource.Success<List<VacancyModel>>) {
+        _isNextPageLoading = false
+        if (result.data.isEmpty()) {
+            _screenLiveData.value = SearchUiState.ErrorData()
+        } else {
+            val vacancyInfoList = mapListVacancyModelToListVacancyInfo(result.data)
+            _vacanciesList = _vacanciesList + vacancyInfoList
+            _currentPage = result.page ?: 0
+            _maxPages = result.pages ?: 0
+            _screenLiveData.value = SearchUiState.Content(data = _vacanciesList, found = result.found ?: 0)
+        }
+    }
 
-            is Resource.Error -> {
-                if (result.resultCode == ERROR_INTERNET) {
-                    _screenLiveData.value = SearchUiState.ErrorConnect()
-                } else {
-                    _screenLiveData.value = SearchUiState.ErrorServer()
-                }
-                toastLiveData.value = result.message
+    private fun renderError(page: Int, result: Resource.Error<List<VacancyModel>>) {
+        _isNextPageLoading = false
+        if (page == 0) {
+            if (result.resultCode == ERROR_INTERNET) {
+                _screenLiveData.value = SearchUiState.ErrorConnect()
+            } else {
+                _screenLiveData.value = SearchUiState.ErrorServer()
             }
+        } else {
+            _screenLiveData.value = SearchUiState.LoadingPagination(isPaginationProgressBar = false)
+            toastLiveData.value = result.message
+            _currentPage -= 1
         }
     }
 

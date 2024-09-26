@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -73,6 +74,7 @@ class JobSearchFragment : Fragment() {
         }
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
         viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
+        viewModel.getToast().observe(viewLifecycleOwner, this::showToast)
         binding.ifbFilter.setOnClickListener {
             lastQuery = binding.etSearch.text.toString()
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
@@ -106,6 +108,8 @@ class JobSearchFragment : Fragment() {
         }
     }
 
+    private fun showToast(message: String) { Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show() }
+
     private fun showScreen(uiState: SearchUiState) {
         binding.rvJobList.isVisible = uiState.isJobsList
         binding.tvJobSearchCount.isVisible = uiState.isJobsCount
@@ -124,11 +128,14 @@ class JobSearchFragment : Fragment() {
         showScreen(uiState)
         if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
+        binding.rvJobList.adapter = jobSearchViewAdapter
+        jobSearchViewAdapter?.notifyDataSetChanged()
     }
 
     private fun showDefault(uiState: SearchUiState.Default) {
         showScreen(uiState)
         jobSearchViewAdapter?.setList(listOf())
+        jobSearchViewAdapter?.notifyDataSetChanged()
     }
 
     private fun setQueryParam(query: String, filterModel: FilterModel?): VacancySearchParams {
