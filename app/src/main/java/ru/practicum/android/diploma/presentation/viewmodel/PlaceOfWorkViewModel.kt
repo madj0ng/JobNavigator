@@ -44,6 +44,7 @@ class PlaceOfWorkViewModel(
             filterInteractor.getAreas().collect { res ->
                 when (res) {
                     is Resource.Error -> {
+                        selectCountry(null)
                         getRegions(emptyList())
                         if (res.resultCode == ERROR_INTERNET) {
                             _areaLiveData.postValue(AreasScreenState.ErrorInternet)
