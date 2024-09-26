@@ -8,13 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.databinding.CountryChooseFragmentBinding
+import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.presentation.models.AreasScreenState
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class CountryChooseFragment : Fragment() {
     private var _binding: CountryChooseFragmentBinding? = null
     private val binding: CountryChooseFragmentBinding get() = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: PlaceOfWorkViewModel by activityViewModel()
     private var filtersViewAdapterCountry: FiltersViewAdapterArea? = null
 
     override fun onCreateView(
@@ -28,18 +29,18 @@ class CountryChooseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.areaLiveData.observe(viewLifecycleOwner) { areas ->
-            if (areas is AreasScreenState.Error) {
-                hideAll()
-                binding.countryError.visibility = View.VISIBLE
-            } else {
-                hideAll()
-                binding.countryRecyclerview.visibility = View.VISIBLE
-                filtersViewAdapterCountry?.setList((areas as AreasScreenState.Content).data)
+            when (areas) {
+                AreasScreenState.Error -> seeError()
+                AreasScreenState.ErrorInternet -> seeErrorNoInternet()
+                AreasScreenState.Content((areas as AreasScreenState.Content).data) -> seeContent(areas.data)
+                else -> seeError()
             }
         }
 
+        viewModel.getAreas()
+
         filtersViewAdapterCountry = FiltersViewAdapterArea { area ->
-            viewModel.selectPlaceOfWork(country = area)
+            viewModel.selectCountry(country = area)
             findNavController()
                 .navigateUp()
         }
@@ -51,9 +52,26 @@ class CountryChooseFragment : Fragment() {
         }
     }
 
+    private fun seeContent(list: List<CountryModel>) {
+        hideAll()
+        binding.countryRecyclerview.visibility = View.VISIBLE
+        filtersViewAdapterCountry?.setList(list)
+    }
+
+    private fun seeErrorNoInternet() {
+        hideAll()
+        binding.countryErrorNoInternet.visibility = View.VISIBLE
+    }
+
+    private fun seeError() {
+        hideAll()
+        binding.countryError.visibility = View.VISIBLE
+    }
+
     private fun hideAll() {
         binding.countryRecyclerview.visibility = View.GONE
         binding.countryError.visibility = View.GONE
+        binding.countryErrorNoInternet.visibility = View.GONE
     }
 
     override fun onDestroyView() {
