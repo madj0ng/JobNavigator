@@ -29,7 +29,6 @@ class JobSearchFragment : Fragment() {
     private val viewModel: JobSearchViewModel by viewModel()
     private var jobSearchViewAdapter: JobSearchViewAdapter? = null
     private var filterModel: FilterModel? = null
-    private var lastQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,9 +60,7 @@ class JobSearchFragment : Fragment() {
         }
         viewModel.getFilter()
         binding.etSearch.addTextChangedListener { query ->
-            if (lastQuery != query.toString()) {
-                viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
-            }
+            viewModel.onSearchQueryChanged(setQueryParam(query.toString(), filterModel))
         }
         jobSearchViewAdapter = JobSearchViewAdapter {
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToJobDetailsFragment(it))
@@ -76,7 +73,6 @@ class JobSearchFragment : Fragment() {
         viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
         viewModel.getToast().observe(viewLifecycleOwner, this::showToast)
         binding.ifbFilter.setOnClickListener {
-            lastQuery = binding.etSearch.text.toString()
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
         }
         binding.ivSearchClear.setOnClickListener { viewModel.onClickSearchClear() }
@@ -96,7 +92,7 @@ class JobSearchFragment : Fragment() {
     }
 
     private fun updateSearchText(state: QueryUiState) {
-        if (state.src != null) binding.ivSearchClear.setImageResource(state.src!!)
+        if (state.src != null) binding.ivSearchClear.setImageResource(state.src)
         if (!state.isClose) binding.etSearch.text = null
     }
 
@@ -108,7 +104,9 @@ class JobSearchFragment : Fragment() {
         }
     }
 
-    private fun showToast(message: String) { Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show() }
+    private fun showToast(message: String) {
+        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+    }
 
     private fun showScreen(uiState: SearchUiState) {
         binding.rvJobList.isVisible = uiState.isJobsList
@@ -126,7 +124,7 @@ class JobSearchFragment : Fragment() {
 
     private fun showContent(uiState: SearchUiState.Content) {
         showScreen(uiState)
-        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
+        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText, uiState.found)
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
         binding.rvJobList.adapter = jobSearchViewAdapter
         jobSearchViewAdapter?.notifyDataSetChanged()

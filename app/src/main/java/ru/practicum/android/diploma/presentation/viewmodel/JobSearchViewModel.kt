@@ -47,6 +47,11 @@ class JobSearchViewModel(
     ) { query ->
         searchRequest(query)
     }
+    private val debounceScroll = debounce<Boolean>(
+        delayMillis = REACHED_DEBOUNCE_DELAY,
+        coroutineScope = viewModelScope,
+        useLastParam = false
+    ) { _isNextPageLoading = it }
 
     private var _currentPage = 0
     private var _maxPages = 0
@@ -126,7 +131,7 @@ class JobSearchViewModel(
     }
 
     private fun renderSuccess(result: Resource.Success<List<VacancyModel>>) {
-        _isNextPageLoading = false
+        debounceScroll(false)
         if (result.data.isEmpty()) {
             _screenLiveData.value = SearchUiState.ErrorData()
         } else {
@@ -139,7 +144,7 @@ class JobSearchViewModel(
     }
 
     private fun renderError(page: Int, result: Resource.Error<List<VacancyModel>>) {
-        _isNextPageLoading = false
+        debounceScroll(false)
         if (page == 0) {
             if (result.resultCode == ERROR_INTERNET) {
                 _screenLiveData.value = SearchUiState.ErrorConnect()
@@ -195,6 +200,7 @@ class JobSearchViewModel(
     }
 
     companion object {
+        const val REACHED_DEBOUNCE_DELAY = 3000L
         const val SEARCH_DEBOUNCE_DELAY = 2000L
         const val ERROR_INTERNET = -1
         const val MAX_PAGE = 99
