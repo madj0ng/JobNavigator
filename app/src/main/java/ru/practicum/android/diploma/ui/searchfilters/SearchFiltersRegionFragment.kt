@@ -45,7 +45,7 @@ class SearchFiltersRegionFragment : Fragment() {
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel.selectRegion(area)
             if (area.city.isEmpty()) {
-                viewModel.saveArea()
+                viewModel.selectRegion(area)
                 findNavController()
                     .popBackStack()
             } else {

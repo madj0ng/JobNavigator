@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,11 +50,13 @@ class SearchFiltersFragment : Fragment() {
                 )
         }
         binding.placeOfWork.setOnClickListener {
+            Log.d("FILTER", "$filterToSend")
             findNavController()
                 .navigate(
                     R.id.action_searchFiltersFragment_to_placeOfWorkFragment,
                     bundleOf(FILTER to filterToSend)
                 )
+            filterToSend = ""
         }
         binding.buttonBack.setOnClickListener {
             viewModel.saveCheckSalary(binding.ischeced.isChecked)
@@ -170,6 +173,7 @@ class SearchFiltersFragment : Fragment() {
     }
 
     private fun restartPlaceOfWork() {
+        filterToSend = ""
         with(binding) {
             placeOfWorkCountryRegion.text = ""
             hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
@@ -195,6 +199,7 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        filterToSend = ""
         viewModel.getFilter()
     }
 

@@ -39,7 +39,7 @@ class PlaceOfWorkViewModel(
     private var cityList = listOf<CityModel>()
 
     fun getAreas() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             filterInteractor.getAreas().collect { res ->
                 when (res) {
                     is Resource.Error -> {
@@ -68,7 +68,12 @@ class PlaceOfWorkViewModel(
         }
         if (selectRegion != null) area = mapperFilter.mapRegion(selectRegion!!)
         if (selectCity != null) area = mapperFilter.mapCity(selectCity!!)
-        viewModelScope.launch { filterInteractor.savePlaceOfWork(country, area) }
+        viewModelScope.launch(Dispatchers.IO) {
+            filterInteractor.savePlaceOfWork(country, area)
+        }
+        selectCountry = null
+        selectRegion = null
+        selectCity = null
     }
 
     fun selectCountry(country: CountryModel?) {
@@ -111,7 +116,7 @@ class PlaceOfWorkViewModel(
     }
 
     fun getRegions() {
-        val country = placeOfWorkLiveData.value?.countryModel
+        val country = selectCountry
         if (country == null) {
             val list = mutableListOf<RegionModel>()
             areaList.forEach { list.addAll(it.regions) }
@@ -138,6 +143,20 @@ class PlaceOfWorkViewModel(
                 _cityLiveData.value = it.city
             }
         }
+    }
+
+    fun saveContryFromFilter(filter: FilterModel) {
+        if (selectCountry == null) {
+            areaList.forEach {
+                if (it.id == filter.country?.id) {
+                    selectCountry = it
+                }
+            }
+        }
+    }
+
+    fun isCountrySelect(): Boolean {
+        return selectCountry == null
     }
 
     companion object {

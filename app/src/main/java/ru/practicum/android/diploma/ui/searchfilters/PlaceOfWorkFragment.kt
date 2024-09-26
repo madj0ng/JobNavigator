@@ -11,10 +11,7 @@ import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.PlaceOfWorkFragmentBinding
-import ru.practicum.android.diploma.domain.models.CityModel
-import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.FilterModel
-import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.presentation.models.PlaceOfWorkModel
 import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
@@ -35,6 +32,7 @@ class PlaceOfWorkFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        restore()
         checkFilter()
         viewModel.placeOfWorkLiveData.observe(viewLifecycleOwner) { placeOfWork ->
             init(placeOfWork)
@@ -50,6 +48,7 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.regionBtn.setOnClickListener {
+            checkCountry(binding.countryTextarea.text.toString())
             findNavController()
                 .navigate(
                     PlaceOfWorkFragmentDirections.actionPlaceOfWorkFragmentToSearchFiltersRegionFragment()
@@ -57,22 +56,24 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
+            filter = null
             viewModel.selectCountry(null)
             findNavController()
-                .navigateUp()
+                .popBackStack()
         }
 
         binding.btnSelect.setOnClickListener {
+            filter = null
             viewModel.saveArea()
-            viewModel.selectCountry(null)
             findNavController()
-                .navigateUp()
+                .popBackStack()
         }
     }
 
     private fun init(placeOfWork: PlaceOfWorkModel) {
         restore()
         if (placeOfWork.countryModel != null) {
+            filter = null
             binding.countryTextarea.text = placeOfWork.countryModel.name
             binding.hintCountryTextarea.text = context?.getString(R.string.country)
         }
@@ -99,7 +100,7 @@ class PlaceOfWorkFragment : Fragment() {
 
     private fun checkFilter() {
         filter = gson.fromJson(requireArguments().getString(SearchFiltersFragment.FILTER), FilterModel::class.java)
-        if (filter != null) {
+        if (filter != null && viewModel.isCountrySelect()) {
             powFromFilter(filter!!)
         }
     }
@@ -110,6 +111,14 @@ class PlaceOfWorkFragment : Fragment() {
         binding.hintCountryTextarea.text = str
         binding.regionTextarea.text = str
         binding.hintRegionTextarea.text = str
+    }
+
+    private fun checkCountry(str: String) {
+        if (str.isNotEmpty()) {
+            if (filter != null){
+                viewModel.saveContryFromFilter(filter!!)
+            }
+        }
     }
 
     override fun onResume() {
