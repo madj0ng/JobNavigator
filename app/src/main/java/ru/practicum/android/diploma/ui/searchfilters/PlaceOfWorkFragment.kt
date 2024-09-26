@@ -114,10 +114,9 @@ class PlaceOfWorkFragment : Fragment() {
     }
 
     private fun checkCountry(str: String) {
-        if (str.isNotEmpty()) {
-            if (filter != null){
-                viewModel.saveContryFromFilter(filter!!)
-            }
+        if (str.isNotEmpty() && filter != null) {
+            viewModel.saveContryFromFilter(filter!!)
+
         }
     }
 
