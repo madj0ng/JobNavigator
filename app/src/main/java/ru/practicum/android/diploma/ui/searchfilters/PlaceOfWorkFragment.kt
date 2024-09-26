@@ -15,6 +15,7 @@ import ru.practicum.android.diploma.domain.models.CityModel
 import ru.practicum.android.diploma.domain.models.CountryModel
 import ru.practicum.android.diploma.domain.models.FilterModel
 import ru.practicum.android.diploma.domain.models.RegionModel
+import ru.practicum.android.diploma.presentation.models.PlaceOfWorkModel
 import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class PlaceOfWorkFragment : Fragment() {
@@ -22,6 +23,7 @@ class PlaceOfWorkFragment : Fragment() {
     private val binding: PlaceOfWorkFragmentBinding get() = _binding!!
     private val viewModel: PlaceOfWorkViewModel by activityViewModel()
     private val gson: Gson = getKoin().get()
+    private var filter: FilterModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,14 +35,9 @@ class PlaceOfWorkFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getSelectCityLiveData().observe(viewLifecycleOwner, this::init)
-        viewModel.getSelectRegionLiveData().observe(viewLifecycleOwner, this::init)
-        viewModel.getSelectCountryLiveData().observe(viewLifecycleOwner, this::init)
-
-        val filter = gson.fromJson(requireArguments().getString(SearchFiltersFragment.FILTER), FilterModel::class.java)
-
-        if (filter != null) {
-            viewModel.saveSelectedFromFilter(filter)
+        checkFilter()
+        viewModel.placeOfWorkLiveData.observe(viewLifecycleOwner) { placeOfWork ->
+            init(placeOfWork)
         }
 
         viewModel.getAreas()
@@ -60,42 +57,64 @@ class PlaceOfWorkFragment : Fragment() {
         }
 
         binding.buttonBack.setOnClickListener {
-            viewModel.selectPlaceOfWork()
+            viewModel.selectCountry(null)
             findNavController()
                 .navigateUp()
         }
 
         binding.btnSelect.setOnClickListener {
-            viewModel.selectPlaceOfWork()
             viewModel.saveArea()
+            viewModel.selectCountry(null)
             findNavController()
                 .navigateUp()
         }
     }
 
-    private fun init(country: CountryModel?) {
-        if (country != null) {
-            binding.countryTextarea.text = country.name
+    private fun init(placeOfWork: PlaceOfWorkModel) {
+        restore()
+        if (placeOfWork.countryModel != null) {
+            binding.countryTextarea.text = placeOfWork.countryModel.name
             binding.hintCountryTextarea.text = context?.getString(R.string.country)
         }
-    }
-
-    private fun init(region: RegionModel?) {
-        if (region != null) {
-            binding.regionTextarea.text = region.name
+        if (placeOfWork.regionModel != null) {
+            binding.regionTextarea.text = placeOfWork.regionModel.name
+            binding.hintRegionTextarea.text = context?.getString(R.string.region)
+        }
+        if (placeOfWork.cityModel != null) {
+            binding.regionTextarea.text = placeOfWork.cityModel.name
             binding.hintRegionTextarea.text = context?.getString(R.string.region)
         }
     }
 
-    private fun init(city: CityModel?) {
-        if (city != null) {
-            binding.regionTextarea.text = city.name
-            binding.hintRegionTextarea.text = context?.getString(R.string.region)
+    private fun powFromFilter(filterModel: FilterModel) {
+        if (filterModel.country != null) {
+            binding.countryTextarea.text = filterModel.country?.name
+            binding.hintCountryTextarea.text = context?.getString(R.string.country)
+            if (filterModel.area != null) {
+                binding.regionTextarea.text = filterModel.area?.name
+                binding.hintRegionTextarea.text = context?.getString(R.string.region)
+            }
         }
+    }
+
+    private fun checkFilter() {
+        filter = gson.fromJson(requireArguments().getString(SearchFiltersFragment.FILTER), FilterModel::class.java)
+        if (filter != null) {
+            powFromFilter(filter!!)
+        }
+    }
+
+    private fun restore() {
+        val str = ""
+        binding.countryTextarea.text = str
+        binding.hintCountryTextarea.text = str
+        binding.regionTextarea.text = str
+        binding.hintRegionTextarea.text = str
     }
 
     override fun onResume() {
         super.onResume()
+        checkFilter()
         viewModel.getAreas()
     }
 

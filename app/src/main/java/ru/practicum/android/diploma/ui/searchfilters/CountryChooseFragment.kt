@@ -40,7 +40,7 @@ class CountryChooseFragment : Fragment() {
         viewModel.getAreas()
 
         filtersViewAdapterCountry = FiltersViewAdapterArea { area ->
-            viewModel.selectPlaceOfWork(country = area)
+            viewModel.selectCountry(country = area)
             findNavController()
                 .navigateUp()
         }
