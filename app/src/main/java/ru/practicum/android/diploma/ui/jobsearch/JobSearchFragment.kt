@@ -96,7 +96,7 @@ class JobSearchFragment : Fragment() {
     }
 
     private fun updateSearchText(state: QueryUiState) {
-        if (state.src != null) binding.ivSearchClear.setImageResource(state.src!!)
+        if (state.src != null) binding.ivSearchClear.setImageResource(state.src)
         if (!state.isClose) binding.etSearch.text = null
     }
 
@@ -126,7 +126,7 @@ class JobSearchFragment : Fragment() {
 
     private fun showContent(uiState: SearchUiState.Content) {
         showScreen(uiState)
-        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
+        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText, uiState.found)
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
         binding.rvJobList.adapter = jobSearchViewAdapter
         jobSearchViewAdapter?.notifyDataSetChanged()
