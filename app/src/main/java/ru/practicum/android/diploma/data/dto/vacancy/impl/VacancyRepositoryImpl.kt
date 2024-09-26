@@ -25,7 +25,6 @@ class VacancyRepositoryImpl(
                 val isfavoriteVacancy = favoriteRepository.getJob(vacancyId) != null
                 val vacancyDetailsModel = mapper.map((response as VacancyDetailsResponse).vacancyDetails!!)
                 emit(Resource.Success(vacancyDetailsModel.copy(isFavorite = isfavoriteVacancy)))
-                emit(Resource.Success(vacancyDetailsModel))
             }
 
             RetrofitNetworkClient.ERROR_CODE_INTERNET -> emit(Resource.Error(response.resultCode, response.message))
