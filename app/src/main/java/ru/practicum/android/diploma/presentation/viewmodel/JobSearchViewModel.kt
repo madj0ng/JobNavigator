@@ -32,7 +32,7 @@ class JobSearchViewModel(
     fun getToast(): LiveData<String> = toastLiveData
     private val queryLiveData = MutableLiveData<QueryUiState>(QueryUiState())
     fun observeSearch(): LiveData<QueryUiState> = queryLiveData
-//    private val filterLiveData = MutableLiveData<FilterDto>(FilterDto())
+    private val filterLiveData = MutableLiveData<FilterDto>(FilterDto())
 
     private val _screenLiveData = MutableLiveData<SearchUiState>(SearchUiState.Default())
     val screenLiveData: LiveData<SearchUiState> get() = _screenLiveData
@@ -60,62 +60,44 @@ class JobSearchViewModel(
     private var _vacanciesList = emptyList<VacancyInfo>()
     private var _isNextPageLoading = false
 
-//    fun onSearchQueryChanged(query: VacancySearchParams) {
-//        setEmptyList()
-//
-//        val newQuery = query.vacancyName
-//        val oldQuery = queryLiveData.value?.query ?: ""
-//        val isNewQuery = newQuery != oldQuery
-//
-//        val oldFilter = filterLiveData.value as FilterDto
-//        val newFilter = getFilterFromParams(query)
-//        val isNewFilter = newFilter != oldFilter
-//
-//        if (isNewQuery || isNewFilter) debounceSearch(query)
-//        if (isNewFilter) setFilterState(newFilter)
-//        if (isNewQuery) setQueryUiState(query.vacancyName)
-//    }
-
-    fun onSearchQueryChanged(query: String) {
+    fun onSearchQueryChanged(query: VacancySearchParams) {
         setEmptyList()
 
-        val newQuery = query
+        val newQuery = query.vacancyName
         val oldQuery = queryLiveData.value?.query ?: ""
         val isNewQuery = newQuery != oldQuery
 
-        if (isNewQuery) {
-            debounceSearch(setQueryParam(query))
-            setQueryUiState(query)
-        }
+        val oldFilter = filterLiveData.value as FilterDto
+        val newFilter = getFilterFromParams(query)
+        val isNewFilter = newFilter != oldFilter
+
+        if (isNewQuery || isNewFilter) debounceSearch(query)
+        if (isNewFilter) setFilterState(newFilter)
+        if (isNewQuery) setQueryUiState(query.vacancyName)
     }
 
-    fun onSearchFilterChanged() {
-        setEmptyList()
+/*//    fun onSearchFilterChanged(filter: FilterModel?) {
+////        setEmptyList()
+//
+//        val oldFilter = filterLiveData.value as FilterDto
+//        val newFilter = filter
+//        val isNewFilter = newFilter != oldFilter
+//
+//        if(isNewFilter) debounceSearch(query)
+//    }
+
+    fun setNewQueryFlag(newQuery: Boolean?) {
+        this.newQuery = newQuery
 
         if (newQuery != null && newQuery!!) {
             this.newQuery = false
             val query = queryLiveData.value?.query ?: ""
             searchRequest(setQueryParam(query))
         }
-    }
-
-    fun onLastItemReached() {
-        if (_isNextPageLoading || _currentPage >= _maxPages - 1) {
-            return
-        }
-        var nextPage = _currentPage
-        nextPage += 1
-        if (nextPage <= MAX_PAGE) {
-            _currentPage = nextPage
-            _isNextPageLoading = true
-            _screenLiveData.value = SearchUiState.LoadingPagination()
-            searchRequest(setQueryParam(queryLiveData.value?.query ?: ""))
-        }
-    }
-
-    fun setNewQueryFlag(newQuery: Boolean?) {
-        this.newQuery = newQuery
-    }
+//        this.filterModel = filter
+//        val query = binding.etSearch.text
+//        viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
+    }*/
 
     fun searchRequest(vacancySearchParams: VacancySearchParams) {
         if (vacancySearchParams.vacancyName.isEmpty()) {
@@ -150,9 +132,9 @@ class JobSearchViewModel(
         _isNextPageLoading = false
     }
 
-//    private fun setFilterState(filter: FilterDto) {
-//        filterLiveData.postValue(filter)
-//    }
+    private fun setFilterState(filter: FilterDto) {
+        filterLiveData.postValue(filter)
+    }
 
     private fun setQueryUiState(query: String) {
         queryLiveData.postValue(
@@ -205,19 +187,19 @@ class JobSearchViewModel(
         }
     }
 
-//    fun onLastItemReached(vacancySearchParams: VacancySearchParams) {
-//        if (_isNextPageLoading || _currentPage >= _maxPages - 1) {
-//            return
-//        }
-//        var nextPage = _currentPage
-//        nextPage += 1
-//        if (nextPage <= MAX_PAGE) {
-//            _currentPage = nextPage
-//            _isNextPageLoading = true
-//            _screenLiveData.value = SearchUiState.LoadingPagination()
-//            searchRequest(vacancySearchParams.copy(page = nextPage))
-//        }
-//    }
+    fun onLastItemReached(vacancySearchParams: VacancySearchParams) {
+        if (_isNextPageLoading || _currentPage >= _maxPages - 1) {
+            return
+        }
+        var nextPage = _currentPage
+        nextPage += 1
+        if (nextPage <= MAX_PAGE) {
+            _currentPage = nextPage
+            _isNextPageLoading = true
+            _screenLiveData.value = SearchUiState.LoadingPagination()
+            searchRequest(vacancySearchParams.copy(page = nextPage))
+        }
+    }
 
     fun onClickSearchClear() {
         if (true == queryLiveData.value?.isClose) {
@@ -242,25 +224,21 @@ class JobSearchViewModel(
         )
     }
 
-    private fun setQueryParam(query: String): VacancySearchParams {
-        return if (_searchFilterLiveData.value != null) {
-            VacancySearchParams(
-                query,
-                if (_searchFilterLiveData.value?.area != null) {
-                    _searchFilterLiveData.value?.area?.id
-                } else {
-                    _searchFilterLiveData.value?.country?.id
-                },
-                _searchFilterLiveData.value?.salary,
-                _searchFilterLiveData.value?.onlyWithSalary ?: false,
-                _searchFilterLiveData.value?.industries?.id,
-                _currentPage,
-                _maxPages
-            )
-        } else {
-            VacancySearchParams(query)
-        }
-    }
+//    private fun setQueryParam(query: String): VacancySearchParams {
+//        if (_searchFilterLiveData.value != null){
+//            VacancySearchParams(
+//                query,
+//                if (_searchFilterLiveData.value?.area != null){
+//                    _searchFilterLiveData.value?.area?.id
+//                } else { filterModel.country?.id},
+//                filterModel.salary,
+//                filterModel.onlyWithSalary ?: false,
+//                filterModel.industries?.id
+//            )
+//        } else {
+//            VacancySearchParams(query)
+//        }
+//    }
 
     companion object {
         const val REACHED_DEBOUNCE_DELAY = 3000L
