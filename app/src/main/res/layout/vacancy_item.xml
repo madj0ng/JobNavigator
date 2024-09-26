@@ -32,7 +32,7 @@
         style="@style/VacancyItemBig"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dim_12dp"
+        android:layout_marginStart="@dimen/dim_12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardView_cover"
         app:layout_constraintTop_toTopOf="parent" />
