@@ -39,10 +39,12 @@ class PlaceOfWorkViewModel(
     private var cityList = listOf<CityModel>()
 
     fun getAreas() {
+        areaList = emptyList()
         viewModelScope.launch(Dispatchers.IO) {
             filterInteractor.getAreas().collect { res ->
                 when (res) {
                     is Resource.Error -> {
+                        getRegions(emptyList())
                         if (res.resultCode == ERROR_INTERNET) {
                             _areaLiveData.postValue(AreasScreenState.ErrorInternet)
                         } else {
@@ -52,6 +54,7 @@ class PlaceOfWorkViewModel(
 
                     else -> {
                         areaList = (res as Resource.Success).data
+                        getRegions(areaList)
                         _areaLiveData.postValue(AreasScreenState.Content((res as Resource.Success).data))
                     }
                 }
@@ -115,7 +118,7 @@ class PlaceOfWorkViewModel(
         _cityLiveData.value = cityList.filter { it.name.lowercase().contains(strCity.lowercase()) }
     }
 
-    fun getRegions() {
+    fun getRegions(areaList: List<CountryModel>) {
         val country = selectCountry
         if (country == null) {
             val list = mutableListOf<RegionModel>()

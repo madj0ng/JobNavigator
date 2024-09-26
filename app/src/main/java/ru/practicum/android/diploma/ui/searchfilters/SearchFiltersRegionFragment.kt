@@ -40,7 +40,7 @@ class SearchFiltersRegionFragment : Fragment() {
             }
         }
 
-        viewModel.getRegions()
+        viewModel.getAreas()
 
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel.selectRegion(area)
@@ -111,6 +111,11 @@ class SearchFiltersRegionFragment : Fragment() {
             binding.searchBtn.visibility = View.VISIBLE
             binding.clearText.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAreas()
     }
 
     override fun onDestroyView() {
