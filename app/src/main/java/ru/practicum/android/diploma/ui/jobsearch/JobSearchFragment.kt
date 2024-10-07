@@ -1,12 +1,12 @@
 package ru.practicum.android.diploma.ui.jobsearch
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -47,7 +47,8 @@ class JobSearchFragment : Fragment() {
             ?.remove<Boolean>(SearchFiltersFragment.NEW_QUERY_FLAG)
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filterModel ->
             if (filterModel != null) {
-                binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue)
+                binding.ifbFilter.background = view.resources.getDrawable(R.drawable.background_blue_small)
+                binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter_white)
                 if (newQuery != null && newQuery!!) {
                     newQuery = false
                     this.filterModel = filterModel
@@ -55,7 +56,7 @@ class JobSearchFragment : Fragment() {
                     viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
                 }
             } else {
-                filterModelIsNotNull(view.resources.getDrawable(R.drawable.background_transparent), filterModel)
+                filterModelIsNotNull(filterModel)
             }
         }
         viewModel.getFilter()
@@ -73,6 +74,7 @@ class JobSearchFragment : Fragment() {
         }
         viewModel.screenLiveData.observe(viewLifecycleOwner, this::updateUiState)
         viewModel.observeSearch().observe(viewLifecycleOwner, this::updateSearchText)
+        viewModel.getToast().observe(viewLifecycleOwner, this::showToast)
         binding.ifbFilter.setOnClickListener {
             lastQuery = binding.etSearch.text.toString()
             findNavController().navigate(JobSearchFragmentDirections.actionJobSearchFragmentToSearchFiltersFragment())
@@ -94,7 +96,7 @@ class JobSearchFragment : Fragment() {
     }
 
     private fun updateSearchText(state: QueryUiState) {
-        if (state.src != null) binding.ivSearchClear.setImageResource(state.src!!)
+        if (state.src != null) binding.ivSearchClear.setImageResource(state.src)
         if (!state.isClose) binding.etSearch.text = null
     }
 
@@ -105,6 +107,8 @@ class JobSearchFragment : Fragment() {
             else -> showScreen(uiState)
         }
     }
+
+    private fun showToast(message: String) { Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show() }
 
     private fun showScreen(uiState: SearchUiState) {
         binding.rvJobList.isVisible = uiState.isJobsList
@@ -122,13 +126,16 @@ class JobSearchFragment : Fragment() {
 
     private fun showContent(uiState: SearchUiState.Content) {
         showScreen(uiState)
-        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText!!, uiState.found)
+        if (uiState.topText != null) binding.tvJobSearchCount.text = getString(uiState.topText, uiState.found)
         jobSearchViewAdapter?.setList(uiState.data) // Обновление списка
+        binding.rvJobList.adapter = jobSearchViewAdapter
+        jobSearchViewAdapter?.notifyDataSetChanged()
     }
 
     private fun showDefault(uiState: SearchUiState.Default) {
         showScreen(uiState)
         jobSearchViewAdapter?.setList(listOf())
+        jobSearchViewAdapter?.notifyDataSetChanged()
     }
 
     private fun setQueryParam(query: String, filterModel: FilterModel?): VacancySearchParams {
@@ -151,11 +158,12 @@ class JobSearchFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    private fun filterModelIsNotNull(res: Drawable, filter: FilterModel?) {
+    private fun filterModelIsNotNull(filter: FilterModel?) {
         this.filterModel = filter
         val query = binding.etSearch.text
         viewModel.searchRequest(setQueryParam(query.toString(), filterModel))
-        binding.ifbFilter.background = res
+        binding.ifbFilter.background = view?.resources?.getDrawable(R.drawable.background_transparent)
+        binding.ifbFilter.setImageResource(R.drawable.ic_menu_filter)
     }
 
     override fun onResume() {

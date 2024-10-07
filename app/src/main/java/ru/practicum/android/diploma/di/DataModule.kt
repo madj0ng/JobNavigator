@@ -29,7 +29,7 @@ val dataModule = module {
 
     single {
         synchronized(this) {
-            Room.databaseBuilder(androidContext(), AppDatabase::class.java, "jobs.db").build()
+            Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
         }
     }
 

@@ -13,12 +13,12 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.SearchFiltersRegionFragmentBinding
 import ru.practicum.android.diploma.domain.models.RegionModel
 import ru.practicum.android.diploma.presentation.models.RegionScreenState
-import ru.practicum.android.diploma.presentation.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.presentation.viewmodel.PlaceOfWorkViewModel
 
 class SearchFiltersRegionFragment : Fragment() {
     private var _binding: SearchFiltersRegionFragmentBinding? = null
     private val binding: SearchFiltersRegionFragmentBinding get() = _binding!!
-    private val viewModel: FilterViewModel by activityViewModel()
+    private val viewModel: PlaceOfWorkViewModel by activityViewModel()
     private var filtersViewAdapterRegion: FilterViewAdapterRegion? = null
 
     override fun onCreateView(
@@ -40,10 +40,12 @@ class SearchFiltersRegionFragment : Fragment() {
             }
         }
 
+        viewModel.getAreas()
+
         filtersViewAdapterRegion = FilterViewAdapterRegion() { area ->
             viewModel.selectRegion(area)
             if (area.city.isEmpty()) {
-                viewModel.saveArea()
+                viewModel.selectRegion(area)
                 findNavController()
                     .popBackStack()
             } else {
@@ -55,7 +57,6 @@ class SearchFiltersRegionFragment : Fragment() {
             }
         }
         binding.regionRecyclerview.adapter = filtersViewAdapterRegion
-        viewModel.getRegions()
 
         binding.buttonBack.setOnClickListener {
             findNavController()
@@ -110,6 +111,11 @@ class SearchFiltersRegionFragment : Fragment() {
             binding.searchBtn.visibility = View.VISIBLE
             binding.clearText.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAreas()
     }
 
     override fun onDestroyView() {

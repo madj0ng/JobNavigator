@@ -1,13 +1,16 @@
 package ru.practicum.android.diploma.ui.searchfilters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedDispatcher
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import ru.practicum.android.diploma.R
@@ -21,6 +24,8 @@ class SearchFiltersFragment : Fragment() {
     private val binding get(): FragmentSearchFiltersBinding = _binding!!
     private val viewModel: FilterViewModel by activityViewModel()
     private val format: FormatConverter = getKoin().get()
+    private val gson: Gson = getKoin().get()
+    private var filterToSend: String = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,6 +39,7 @@ class SearchFiltersFragment : Fragment() {
         binding.groupButtons.visibility = View.GONE
         viewModel.searchFilterLiveData.observe(viewLifecycleOwner) { filter ->
             viewModel.saveSelectedFromFilter(filter)
+            filterToSend = gson.toJson(filter)
             init(filter)
         }
         viewModel.getFilter()
@@ -44,10 +50,13 @@ class SearchFiltersFragment : Fragment() {
                 )
         }
         binding.placeOfWork.setOnClickListener {
+            Log.d("FILTER", "$filterToSend")
             findNavController()
                 .navigate(
-                    SearchFiltersFragmentDirections.actionSearchFiltersFragmentToPlaceOfWorkFragment()
+                    R.id.action_searchFiltersFragment_to_placeOfWorkFragment,
+                    bundleOf(FILTER to filterToSend)
                 )
+            filterToSend = ""
         }
         binding.buttonBack.setOnClickListener {
             viewModel.saveCheckSalary(binding.ischeced.isChecked)
@@ -70,7 +79,6 @@ class SearchFiltersFragment : Fragment() {
                 ?.set(NEW_QUERY_FLAG, newQuery)
         }
         binding.buttonCancel.setOnClickListener {
-            viewModel.selectPlaceOfWork()
             viewModel.selectIndustry()
             viewModel.saveFilter(null)
             canselFilter()
@@ -98,7 +106,6 @@ class SearchFiltersFragment : Fragment() {
         }
         binding.buttonClearToPow.setOnClickListener {
             restartPlaceOfWork()
-            viewModel.selectPlaceOfWork()
             viewModel.deletePlaceOfWork()
             viewModel.getFilter()
         }
@@ -166,6 +173,7 @@ class SearchFiltersFragment : Fragment() {
     }
 
     private fun restartPlaceOfWork() {
+        filterToSend = ""
         with(binding) {
             placeOfWorkCountryRegion.text = ""
             hintPlaceOfWorkCountryRegion.text = context?.getString(R.string.empty)
@@ -191,6 +199,7 @@ class SearchFiltersFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        filterToSend = ""
         viewModel.getFilter()
     }
 
@@ -201,5 +210,6 @@ class SearchFiltersFragment : Fragment() {
 
     companion object {
         const val NEW_QUERY_FLAG = "new_query_flag"
+        const val FILTER = "filter"
     }
 }

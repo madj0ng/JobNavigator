@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.db.AppDatabase
 import ru.practicum.android.diploma.domain.favoritejobs.FavoriteJobsRepository
 import ru.practicum.android.diploma.domain.favoritejobs.mapper.MapperVacansyToJob
+import ru.practicum.android.diploma.domain.models.VacancyDetailsModel
 import ru.practicum.android.diploma.presentation.models.VacancyInfo
 
 class FavoriteJobsRepositoryImpl(
@@ -28,5 +29,22 @@ class FavoriteJobsRepositoryImpl(
     override suspend fun getJobs(): Flow<List<VacancyInfo>> = flow {
         val list = appDatabase.jobDao().getJobs()
         emit(converter.mapList(list))
+    }
+
+    override suspend fun insertVacancy(id: String, vacancy: VacancyDetailsModel) {
+        appDatabase.vacancyDao().insert(converter.map(id, vacancy))
+    }
+
+    override suspend fun deleteVacancy(id: String, vacancy: VacancyDetailsModel) {
+        appDatabase.vacancyDao().delete(converter.map(id, vacancy))
+    }
+
+    override suspend fun getVacancy(id: String): Flow<VacancyDetailsModel?> = flow {
+        val vacancy = appDatabase.vacancyDao().get(id)
+        if (vacancy != null) {
+            emit(converter.map(vacancy))
+        } else {
+            emit(null)
+        }
     }
 }

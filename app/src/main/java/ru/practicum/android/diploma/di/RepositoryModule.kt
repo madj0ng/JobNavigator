@@ -32,7 +32,7 @@ val repositoryModule = module {
         FavoriteJobsRepositoryImpl(get(), get())
     }
 
-    factory { MapperVacansyToJob() }
+    factory { MapperVacansyToJob(get()) }
 
     single<SharingRepository> {
         SharingRepositoryImpl(androidContext())
